@@ -1,2 +1,2 @@
-# config-editor-website
-config.json editor website
+# config-editor-webapp
+Config.json Editor web app
