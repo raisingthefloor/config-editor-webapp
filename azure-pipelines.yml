@@ -8,12 +8,13 @@ trigger:
 pool:
   vmImage: 'ubuntu-24.04' 
 
-resources:
-- repo: self
+#resources:
+#- repo: self
 
 variables:
-  tag: '$(Build.BuildNumber)'
+  containerRegistry: acr-morphic
   repository: 'config-editor-webapp'
+  tag: '$(Build.BuildNumber)'
 
 stages:
 - stage: Docker
@@ -26,23 +27,24 @@ stages:
       displayName: Build Docker image
       inputs:
         command: build
+        containerRegistry: $(containerRegistry)
         dockerfile: './Dockerfile'
         repository: $(repository)
         tags: $(tag)
     - task: Docker@2
-      displayName: Log in to ACR
+      displayName: Log in to container registry
       inputs:
         command: login
-        containerRegistry: acr-morphic
+        containerRegistry: $(containerRegistry)
     - task: Docker@2
       displayName: Push docker image
       inputs:
         command: push
-        containerRegistry: acr-morphic
+        containerRegistry: $(containerRegistry)
         repository: $(repository)
         tags: $(tag)
     - task: Docker@2
-      displayName: Log out of ACR
+      displayName: Log out of container registry
       inputs:
         command: logout
         containerRegistry: acr-morphic
