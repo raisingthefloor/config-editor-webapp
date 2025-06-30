@@ -38,7 +38,7 @@
             <div class="file-input-wrapper">
                 <input type="file" id="upload" accept=".json">
                 <button type="button" class="file-input-btn" onclick="document.getElementById('upload').click()">Choose
-                    File</button>
+                    File (Optional)</button>
                 <span id="fileName" class="file-name-display">No file chosen</span>
             </div>
         </div>
@@ -50,6 +50,26 @@
             <h3>Group1: Commonly Changed Settings</h3>
             <label>
                 <div class="label-text">
+                    Enable AT-on-Demand
+                    <small><b>This option is in beta testing and is not generally available yet.</b>
+                        <br>
+                        This option allows Users to be able to use their own AT they (or the enterprise) has a licence
+                        for safely on any enterprise computers. When a user signs in and AT-on-Demand is enabled, the
+                        computer will automatically pull a clean, sterile copy of the users software from the location
+                        below on the IT DEPT controlled server and install it on the computer, then set it up for the
+                        user. When they are done it disappears. For more see <a href="https://morphic.org/atod"
+                            target="_blank">https://morphic.org/atod</a>
+                        <span class="json-name"><span class="label">jsonName:</span> <span
+                                class="property">atOnDemand</span></span>
+                    </small>
+                </div>
+                <div class="control-container">
+                    <input type="checkbox" id="features.atOnDemand.enabled" disabled>
+                </div>
+            </label>
+            <label>
+                <div class="bullet-point">•</div>
+                <div class="label-text">
                     Organization Name
                     <small>This can be any name you would like to identify your organization. If you will be using
                         different config files for different groups of computers – you might want to put the location
@@ -59,6 +79,22 @@
                 </div>
                 <div class="control-container">
                     <input type="text" id="organizationName" placeholder="organization name">
+                </div>
+            </label>
+            <label>
+                <div class="bullet-point">•</div>
+                <div class="label-text">
+                    Site ID
+                    <small>For Site ID use letters or numbers only. No symbols or spaces.
+                        If organization wants separate cumulative counts for different areas (e.g. wants to track usage
+                        in classrooms, library, and other places separately ) – then provide different site ids in the
+                        config files in those different areas.
+                        <span class="json-name"><span class="label">jsonName:</span> <span
+                                class="property">siteId</span></span>
+                    </small>
+                </div>
+                <div class="control-container">
+                    <input type="text" id="telemetry.siteId" pattern="[A-Za-z0-9]*" placeholder="e.g. umd">
                 </div>
             </label>
             <label>
@@ -73,7 +109,7 @@
                     <input type="checkbox" id="features.autorunAfterLogin.enabled" checked>
                 </div>
             </label>
-            <label id="features.autorunAfterLogin.scope.label">
+            <label id="features.autorunAfterLogin.scope.label" class="dependent-option">
                 <div class="label-text">
                     Scope of AutoStart
                     <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sed.
@@ -81,7 +117,7 @@
                                 class="property">autorunAfterLogin.scope</span></span>
                     </small>
                 </div>
-                <div class="control-container">
+                <div class="control-container" style="margin-right: 10px;">
                     <select name="features.autorunAfterLogin.scope" id="features.autorunAfterLogin.scope">
                         <option value="allLocalUsers">All Local Users</option>
                         <option value="currentUser">Currently Logged In User</option>
@@ -101,21 +137,6 @@
                 </div>
                 <div class="control-container">
                     <input type="checkbox" id="features.atUseCounter.enabled">
-                </div>
-            </label>
-            <label id="siteIdLabel" class="dependent-option">
-                <div class="label-text">
-                    Site ID
-                    <small>For Site ID use letters or numbers only. No symbols or spaces.
-                        If organization wants separate cumulative counts for different areas (e.g. wants to track usage
-                        in classrooms, library, and other places separately ) – then provide different site ids in the
-                        config files in those different areas.
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                                class="property">siteId</span></span>
-                    </small>
-                </div>
-                <div class="control-container">
-                    <input type="text" id="telemetry.siteId" pattern="[A-Za-z0-9]*" placeholder="e.g. umd">
                 </div>
             </label>
             <label>
@@ -140,66 +161,19 @@
             <label id="delayMorphicDateLabel" class="dependent-option">
                 <div class="label-text">
                     Date to show MorphicBar
-                    <small>Use ISO 8601 date format. e.g. "2023-11-17" or "20231117"</small>
+                    <small>Select a date to show the MorphicBar.</small>
                 </div>
+                
                 <div class="control-container date-input-container">
                     <input type="date" id="hideMorphicAfterLoginUntil">
                 </div>
             </label>
-            <label>
-                <div class="label-text">
-                    Version
-                    <small><span class="json-name"><span class="label">jsonName:</span> <span
-                                class="property">version</span></span></small>
-                </div>
-                <div class="control-container">
-                    <input type="number" id="version" value="0" readonly>
-                </div>
-            </label>
         </div>
 
-        <div class="section two-column-layout">
-            <h3>Group 2: Future Feature Settings</h3>
-            <label>
-                <div class="label-text">
-                    Enable AT-on-Demand
-                    <small><b>This option is in beta testing and is not generally available yet.</b>
-                        This option allows Users to be able to use their own AT they (or the enterprise) has a licence
-                        for safely on any enterprise computers. When a user signs in and AT-on-Demand is enabled, the
-                        computer will automatically pull a clean, sterile copy of the users software from the location
-                        below on the IT DEPT controlled server and install it on the computer, then set it up for the
-                        user. When they are done it disappears. For more see <a href="https://morphic.org/atod"
-                            target="_blank">https://morphic.org/atod</a>
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                                class="property">atOnDemand</span></span>
-                    </small>
-                </div>
-                <div class="control-container">
-                    <input type="checkbox" id="features.atOnDemand.enabled">
-                </div>
-            </label>
 
-            <label>
-                <div class="label-text">
-                    Enable Application of User Settings
-                    <small>
-                        <b>This option is in beta testing and is not generally available yet. </b>
-                        Allows saving and restoring of setups to and from the user's ClougVault (i.e. capture/apply)
-                        This is part of AT-on-Demand.
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                                class="property">cloudSettingsTransfer</span></span>
-                    </small>
-                </div>
-                <div class="control-container">
-                    <input type="checkbox" id="features.cloudSettingsTransfer.enabled" checked>
-                </div>
-            </label>
-
-
-        </div>
 
         <div class="section two-column-layout">
-            <h3>Group 3: Settings that are not usually changed</h3>
+            <h3>Group 2: Settings that are not usually changed</h3>
             <label>
                 <div class="label-text">
                     Enable Custom Morphic Bars
@@ -217,22 +191,7 @@
                     <input type="checkbox" id="features.customMorphicBars.enabled" checked>
                 </div>
             </label>
-            <label>
-                <div class="label-text">
-                    Enable Users to Sign In
-                    <small>This setting causes the "sign in" and "sign out" feature to appear in the Morphic menu so
-                        users can sign in to get their custom MorphicBars (and later to use AT-on-Demand). Users however
-                        are not required to sign in unless they want to use custom MorphicBars or AT-on-Demand. The
-                        standard MorphicBar works without any user sign in. This feature is required for Custom
-                        MorphicBars (above) to work..
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                                class="property">signIn</span></span>
-                    </small>
-                </div>
-                <div class="control-container">
-                    <input type="checkbox" id="features.signIn.enabled" checked>
-                </div>
-            </label>
+
             <label>
                 <div class="label-text">
                     Enable Check for Updates with each Launch
@@ -250,18 +209,19 @@
                 </div>
             </label>
             <label>
+                <div class="bullet-point">•</div>
                 <div class="label-text">
                     MorphicBar Visibility after Login
                     <small>
-                        <span class="description-short" id="visibility-short">There are three settings for this. Show
-                            causes the MorphicBar to show up on login. Hide causes the MorphicBar to be hidden on login.
-                            Restore – causes the MorphicBar to assume the same state as when a user signed out.</span>
+                        <span class="description-short" id="visibility-short">There are three settings for this. <b>Show</b>
+                            causes the MorphicBar to show up on login. <b>Hide</b> causes the MorphicBar to be hidden on login.
+                            <b>Restore</b> – causes the MorphicBar to assume the same state as when a user signed out.</span>
                         <span class="description-full" id="visibility-full" style="display: none;">There are three
-                            settings for this. Show causes the MorphicBar to show up on login. Hide causes the
-                            MorphicBar to be hidden on login. Restore – causes the MorphicBar to assume the same state
+                            settings for this. <b>Show</b> causes the MorphicBar to show up on login. <b>Hide</b> causes the
+                            MorphicBar to be hidden on login. <b>Restore</b> – causes the MorphicBar to assume the same state
                             as when a user signed out. The Restore feature is only useful on personally assigned
                             computers that do not reset after users and not generally of use on shared-use enterprise
-                            computers. We very highly recommend this be set to Show. For those who do not want the
+                            computers. We very highly recommend this be set to <b>Show</b>. For those who do not want the
                             MorphicBar, it can be easily dismissed by clicking on the x in the upper right-hand corner
                             of the MorphicBar. We have found that not having the MorphicBar show on startup results in
                             very little if any use of Morphic and consequently the same very low level of awareness and
@@ -282,6 +242,7 @@
                 </div>
             </label>
             <label>
+                <div class="bullet-point">•</div>
                 <div class="label-text">
                     MorphicBar Default Location
                     <small>
@@ -322,11 +283,9 @@
             </label>
             <label id="features.resetSettings.label">
                 <div class="label-text">
-                    Reset Settings to Specified Set
-                    <small>This was a special setting created for a location that wanted any accessibility or other
-                        MorphicBar feature settings to be set back to a particular set of settings. This is not needed
-                        in most locations that automatically set things back on reboot but can be used if it is needed.
-                        The settings are stored in a file near the configuration file.
+                    Reset 5 Windows Settings to Default
+                    <small>This was a special setting created for a location that wanted to automatically reset the following Windows settings when the user signs out of Windows: TEXT SIZE(screen scale), CONTRAST, COLOR, DARKMODE & NIGHTMODE.
+                       This is not needed in most locations because they automatically set things back on reboot but can be used if it is needed.
                         <span class="json-name"><span class="label">jsonName:</span> <span
                                 class="property">resetSettings</span></span>
                     </small>
@@ -371,19 +330,21 @@
             <div class="predefined-button" id="usbButton">
                 <div class="button-header">
                     <div class="position-selector">
-                        <label>Position:
+                        <label>
                             <select name="usb.position" id="usb.position" onchange="validateUniquePositions()">
-                                <option value="">Not Used</option>
-                                <option value="1">1 (Left-most)</option>
-                                <option value="2">2 (Middle)</option>
-                                <option value="3">3 (Right-most)</option>
+                                <option value="">-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </label>
                     </div>
                     <div class="button-info">
                         <h5>USB Open/Eject</h5>
-                        <p class="button-description">Allows a user to easily open or eject all USB drives plugged into
-                            a computer</p>
+                        <small>Allows a user to easily open or eject all USB drives plugged into
+                            a computer</small>
+                        <span class="json-name"><span class="label">jsonName:</span> <span
+                        class="property">usbopeneject</span></span>
                     </div>
                     <div class="button-preview-container">
                         <div class="preview-button-group">
@@ -395,45 +356,36 @@
                         </div>
                     </div>
                 </div>
-                <div class="button-config">
-                    <div class="config-display">
-                        <strong>Type:</strong> control<br>
-                        <strong>Feature:</strong> usbopeneject
-                    </div>
-                </div>
             </div>
 
             <!-- Volume Control Button -->
             <div class="predefined-button" id="volumeButton">
                 <div class="button-header">
                     <div class="position-selector">
-                        <label>Position:
+                        <label>
                             <select name="volume.position" id="volume.position" onchange="validateUniquePositions()">
-                                <option value="">Not Used</option>
-                                <option value="1">1 (Left-most)</option>
-                                <option value="2">2 (Middle)</option>
-                                <option value="3">3 (Right-most)</option>
+                                <option value="">-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </label>
                     </div>
                     <div class="button-info">
-                        <h5>Volume Control</h5>
-                        <p class="button-description">Allows a user to easily change the volume and mute</p>
+                        <h5>Volume</h5>
+                        <small>Allows a user to easily change the volume and mute</small>
+                        <span class="json-name"><span class="label">jsonName:</span> <span
+                        class="property">volume</span></span>
                     </div>
                     <div class="button-preview-container">
                         <div class="preview-button-group">
                             <div class="button-label">Volume</div>
                             <div class="split-button-container">
                                 <button class="split-button left">+</button>
-                                <button class="split-button right">-</button>
+                                <button class="split-button middle">-</button>
+                                <button class="split-button right">Mute</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="button-config">
-                    <div class="config-display">
-                        <strong>Type:</strong> control<br>
-                        <strong>Feature:</strong> volume
                     </div>
                 </div>
             </div>
@@ -442,18 +394,21 @@
             <div class="predefined-button" id="voiceButton">
                 <div class="button-header">
                     <div class="position-selector">
-                        <label>Position:
+                        <label>
                             <select name="voice.position" id="voice.position" onchange="validateUniquePositions()">
-                                <option value="">Not Used</option>
-                                <option value="1">1 (Left-most)</option>
-                                <option value="2">2 (Middle)</option>
-                                <option value="3">3 (Right-most)</option>
+                                <option value="">-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </label>
                     </div>
                     <div class="button-info">
                         <h5>Voice Control</h5>
-                        <p class="button-description">Turns on Voice Access in Windows</p>
+                        <small>Turns on Voice Access in Windows</small>
+                        <span class="json-name"><span class="label">jsonName:</span> <span
+                        class="property">voice control</span></span>
+                        
                     </div>
                     <div class="button-preview-container">
                         <div class="preview-button-group">
@@ -465,32 +420,56 @@
                         </div>
                     </div>
                 </div>
-                <div class="button-config">
-                    <div class="config-display">
-                        <strong>Type:</strong> control<br>
-                        <strong>Feature:</strong> voice
+                
+            </div>
+
+            <!--Sign Out Button-->
+            <div class="predefined-button" id="signOutButton">
+                <div class="button-header">
+                    <div class="position-selector">
+                        <label>
+                            <select name="signOut.position" id="signOut.position" onchange="validateUniquePositions()">
+                                <option value="">-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="button-info">
+                        <h5>Sign Out</h5>
+                        <small>Signs out the current user</small>
+                        <span class="json-name"><span class="label">jsonName:</span> <span
+                        class="property">signout</span></span>
+                    </div>
+                    <div class="button-preview-container">
+                        <div class="preview-button-group">
+                            <div class="preview-button action-button">
+                                <span id="signOutLabel">Sign <br> Out</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div>  
 
             <!-- Custom URL Button 1 -->
             <div class="predefined-button" id="customUrl1">
                 <div class="button-header">
                     <div class="position-selector">
-                        <label>Position:
+                        <label>
                             <select name="customUrl1.position" id="customUrl1.position"
                                 onchange="validateUniquePositions()">
-                                <option value="">Not Used</option>
-                                <option value="1">1 (Left-most)</option>
-                                <option value="2">2 (Middle)</option>
-                                <option value="3">3 (Right-most)</option>
+                                <option value="">-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </label>
                     </div>
                     <div class="button-info">
                         <h5>Custom URL Button 1</h5>
-                        <p class="button-description">Create a custom button that opens a specific website or web
-                            application</p>
+                        <small>Create a custom button that opens a specific website or web
+                            application</small>
                     </div>
                     <div class="button-preview-container">
                         <div class="preview-button url-button" id="customUrl1Preview">
@@ -499,29 +478,35 @@
                     </div>
                 </div>
                 <div class="button-config">
-                    <div class="config-display">
-                        <strong>Type:</strong> link
-                    </div>
-                    <div class="url-inputs">
-                        <label>Button Text:
-                            <input type="text" id="customUrl1.label" placeholder="Button Text (use \n for line breaks)"
-                                oninput="updateUrlButtonPreview('customUrl1')">
-                        </label>
-                        <label>Tooltip Header:
-                            <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text"
-                                oninput="updateUrlButtonPreview('customUrl1')">
-                        </label>
-                        <label>Tooltip Text:
-                            <input type="text" id="customUrl1.tooltipText" placeholder="Description text"
-                                oninput="updateUrlButtonPreview('customUrl1')">
-                        </label>
-                        <label style="align-items: center;">URL:
-                            <div class="url-input-wrapper">
-                                <input type="url" id="customUrl1.url" placeholder="https://example.com">
-                                <button type="button" class="test-url-btn" onclick="testURL('customUrl1.url')"
-                                    title="Test URL in new tab">Test</button>
+                    <div class="url-inputs-container">
+                        <div class="url-inputs">
+                            <label><b>Button Text:</b>   
+                                <input type="text" id="customUrl1.label" placeholder="Button Text (use \n for line breaks)"
+                                    oninput="updateUrlButtonPreview('customUrl1')">
+                            </label>
+                            <label><b>Tooltip Header:</b>
+                                <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text"
+                                    oninput="updateUrlButtonPreview('customUrl1')">
+                            </label>
+                            <label><b>Tooltip Text:</b>
+                                <input type="text" id="customUrl1.tooltipText" placeholder="Description text"
+                                    oninput="updateUrlButtonPreview('customUrl1')">
+                            </label>
+                            <label><b>URL:</b>
+                                <div class="url-input-wrapper">
+                                    <input type="url" id="customUrl1.url" placeholder="https://example.com">
+                                    <button type="button" class="test-url-btn" onclick="testURL('customUrl1.url')"
+                                        title="Test URL in new tab">Test URL</button>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="tooltip-preview">
+                            <h6>Tooltip Preview</h6>
+                            <div class="tooltip-preview-box" id="customUrl1TooltipPreview">
+                                <div class="tooltip-header" id="customUrl1TooltipHeaderPreview">Header text</div>
+                                <div class="tooltip-text" id="customUrl1TooltipTextPreview">Description text</div>
                             </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -530,20 +515,20 @@
             <div class="predefined-button" id="customUrl2">
                 <div class="button-header">
                     <div class="position-selector">
-                        <label>Position:
+                        <label>
                             <select name="customUrl2.position" id="customUrl2.position"
                                 onchange="validateUniquePositions()">
-                                <option value="">Not Used</option>
-                                <option value="1">1 (Left-most)</option>
-                                <option value="2">2 (Middle)</option>
-                                <option value="3">3 (Right-most)</option>
+                                <option value="">-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </label>
                     </div>
                     <div class="button-info">
                         <h5>Custom URL Button 2</h5>
-                        <p class="button-description">Create a second custom button that opens a specific website or web
-                            application</p>
+                        <small>Create a second custom button that opens a specific website or web
+                            application</small>
                     </div>
                     <div class="button-preview-container">
                         <div class="preview-button url-button" id="customUrl2Preview">
@@ -553,29 +538,35 @@
                     </div>
                 </div>
                 <div class="button-config">
-                    <div class="config-display">
-                        <strong>Type:</strong> link
-                    </div>
-                    <div class="url-inputs">
-                        <label>Button Text:
-                            <input type="text" id="customUrl2.label" placeholder="Button Text"
-                                oninput="updateUrlButtonPreview('customUrl2')">
-                        </label>
-                        <label>Tooltip Header:
-                            <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text"
-                                oninput="updateUrlButtonPreview('customUrl2')">
-                        </label>
-                        <label>Tooltip Text:
-                            <input type="text" id="customUrl2.tooltipText" placeholder="Description text"
-                                oninput="updateUrlButtonPreview('customUrl2')">
-                        </label>
-                        <label style="align-items: center;">URL:
-                            <div class="url-input-wrapper">
-                                <input type="url" id="customUrl2.url" placeholder="https://example.com">
-                                <button type="button" class="test-url-btn" onclick="testURL('customUrl2.url')"
-                                    title="Test URL in new tab">Test</button>
+                    <div class="url-inputs-container">
+                        <div class="url-inputs">
+                            <label><b>Button Text:</b>
+                                <input type="text" id="customUrl2.label" placeholder="Button Text"
+                                    oninput="updateUrlButtonPreview('customUrl2')">
+                            </label>
+                            <label><b>Tooltip Header:</b>
+                                <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text"
+                                    oninput="updateUrlButtonPreview('customUrl2')">
+                            </label>
+                            <label><b>Tooltip Text:</b>
+                                <input type="text" id="customUrl2.tooltipText" placeholder="Description text"
+                                    oninput="updateUrlButtonPreview('customUrl2')">
+                            </label>
+                            <label><b>URL:</b>
+                                <div class="url-input-wrapper">
+                                    <input type="url" id="customUrl2.url" placeholder="https://example.com">
+                                    <button type="button" class="test-url-btn" onclick="testURL('customUrl2.url')"
+                                        title="Test URL in new tab">Test URL</button>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="tooltip-preview">
+                            <h6>Tooltip Preview</h6>
+                            <div class="tooltip-preview-box" id="customUrl2TooltipPreview">
+                                <div class="tooltip-header" id="customUrl2TooltipHeaderPreview">Header text</div>
+                                <div class="tooltip-text" id="customUrl2TooltipTextPreview">Description text</div>
                             </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -584,20 +575,20 @@
             <div class="predefined-button" id="customUrl3">
                 <div class="button-header">
                     <div class="position-selector">
-                        <label>Position:
+                        <label>
                             <select name="customUrl3.position" id="customUrl3.position"
                                 onchange="validateUniquePositions()">
-                                <option value="">Not Used</option>
-                                <option value="1">1 (Left-most)</option>
-                                <option value="2">2 (Middle)</option>
-                                <option value="3">3 (Right-most)</option>
+                                <option value="">-</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </label>
                     </div>
                     <div class="button-info">
                         <h5>Custom URL Button 3</h5>
-                        <p class="button-description">Create a third custom button that opens a specific website or web
-                            application</p>
+                        <small>Create a third custom button that opens a specific website or web
+                            application</small>
                     </div>
                     <div class="button-preview-container">
                         <div class="preview-button url-button" id="customUrl3Preview">
@@ -607,29 +598,35 @@
                     </div>
                 </div>
                 <div class="button-config">
-                    <div class="config-display">
-                        <strong>Type:</strong> link
-                    </div>
-                    <div class="url-inputs">
-                        <label>Button Text:
-                            <input type="text" id="customUrl3.label" placeholder="Button Text"
-                                oninput="updateUrlButtonPreview('customUrl3')">
-                        </label>
-                        <label>Tooltip Header:
-                            <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text"
-                                oninput="updateUrlButtonPreview('customUrl3')">
-                        </label>
-                        <label>Tooltip Text:
-                            <input type="text" id="customUrl3.tooltipText" placeholder="Description text"
-                                oninput="updateUrlButtonPreview('customUrl3')">
-                        </label>
-                        <label style="align-items: center;">URL:
-                            <div class="url-input-wrapper">
-                                <input type="url" id="customUrl3.url" placeholder="https://example.com">
-                                <button type="button" class="test-url-btn" onclick="testURL('customUrl3.url')"
-                                    title="Test URL in new tab">Test URL</button>
+                    <div class="url-inputs-container">
+                        <div class="url-inputs">
+                            <label><b>Button Text:</b>
+                                <input type="text" id="customUrl3.label" placeholder="Button Text"
+                                    oninput="updateUrlButtonPreview('customUrl3')">
+                            </label>
+                            <label><b>Tooltip Header:</b>
+                                <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text"
+                                    oninput="updateUrlButtonPreview('customUrl3')">
+                            </label>
+                            <label><b>Tooltip Text:</b>
+                                <input type="text" id="customUrl3.tooltipText" placeholder="Description text"
+                                    oninput="updateUrlButtonPreview('customUrl3')">
+                            </label>
+                            <label><b>URL:</b>
+                                <div class="url-input-wrapper">
+                                    <input type="url" id="customUrl3.url" placeholder="https://example.com">
+                                    <button type="button" class="test-url-btn" onclick="testURL('customUrl3.url')"
+                                        title="Test URL in new tab">Test URL</button>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="tooltip-preview">
+                            <h6>Tooltip Preview</h6>
+                            <div class="tooltip-preview-box" id="customUrl3TooltipPreview">
+                                <div class="tooltip-header" id="customUrl3TooltipHeaderPreview">Header text</div>
+                                <div class="tooltip-text" id="customUrl3TooltipTextPreview">Description text</div>
                             </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -645,7 +642,54 @@
                     <div class="custom-buttons-container" id="customButtonsContainer">
                         <!-- Buttons will be dynamically added here -->
                     </div>
+                    <div class="button-preview-container">
+                        <div class="preview-button-group">
+                            <div class="button-label">Text Size</div>
+                            <div class="split-button-container">
+                                <button class="split-button left">+</button>
+                                <button class="split-button right">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-preview-container">
+                        <div class="preview-button-group">
+                            <div class="button-label">Magnifier</div>
+                            <div class="split-button-container">
+                                <button class="split-button left">Show</button>
+                                <button class="split-button right">Hide</button>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="button-preview-container">
+                        <div class="preview-button-group">
+                            <div class="button-label">Snip</div>
+                            <div class="split-button-container">
+                                <button class="split-button">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-preview-container">
+                        <div class="preview-button-group">
+                            <div class="button-label">Read Selected</div>
+                            <div class="split-button-container">
+                                <button class="split-button left">P</button>
+                                <button class="split-button right">P</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-preview-container">
+                        <div class="preview-button-group">
+                            <div class="button-label">Contrast & color</div>
+                            <div class="split-button-container">
+                                <button class="split-button left">Contrast</button>
+                                <button class="split-button middle">Color</button>
+                                <button class="split-button middle">Dark</button>
+                                <button class="split-button right">Night</button>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Morphic logo -->
                     <div class="morphic-logo">
                         <img src="assets/morphic_logo.jpeg" alt="Morphic Logo" height="34px" width="34px"
@@ -657,6 +701,7 @@
             <!-- Button source information and conflicts-->
             <div class="button-sources" id="buttonSources">
                 <!-- Button source info and conflicts will be shown here -->
+                
             </div>
         </div>
 

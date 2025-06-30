@@ -2,6 +2,11 @@ document.getElementById('upload').addEventListener('change', handleFileUpload);
 document.getElementById('download').addEventListener('click', handleDownloadClick);
 document.getElementById('checkErrors').addEventListener('click', checkForErrors);
 
+const checkbox = document.getElementById('features.atOnDemand.enabled');
+checkbox.indeterminate = true;
+
+
+
 // Update file name display when file is selected
 document.getElementById('upload').addEventListener('change', function(event) {
     const fileNameDisplay = document.getElementById('fileName');
@@ -20,25 +25,27 @@ document.getElementById('features.autorunAfterLogin.enabled').addEventListener('
 // This controls the access to the delay morphic date field
 document.getElementById('enableDelayMorphic').addEventListener('change', toggleDelayMorphicAccess);
 
-// This controls the access to the Site ID field
-document.getElementById('features.atUseCounter.enabled').addEventListener('change', toggleSiteIdAccess);
-
-
 
 // Function to enable/disable the scope dropdown and reset settings
 function toggleScopeAccess() {
     const autorunEnabled = document.getElementById('features.autorunAfterLogin.enabled').checked;
     const scopeSelect = document.getElementById('features.autorunAfterLogin.scope');
+    const scopeLabel = document.getElementById('features.autorunAfterLogin.scope.label');
     const resetCheckbox = document.getElementById('features.resetSettings.enabled');
+    const resetLabel = document.getElementById('features.resetSettings.label');
+
     
     if (autorunEnabled) {
         // Enable dependent options when autorun is enabled
         scopeSelect.disabled = false;
         resetCheckbox.disabled = false;
-        
+        scopeLabel.disabled = false;
+        resetLabel.disabled = false;
         // Remove visual styling for disabled state
         scopeSelect.style.opacity = '1';
         resetCheckbox.style.opacity = '1';
+        scopeLabel.style.opacity = '1';
+        resetLabel.style.opacity = '1';
         scopeSelect.style.cursor = 'pointer';
         resetCheckbox.style.cursor = 'pointer';
     } 
@@ -47,7 +54,8 @@ function toggleScopeAccess() {
         // Disable dependent options when autorun is disabled
         scopeSelect.disabled = true;
         resetCheckbox.disabled = true;
-        
+        scopeLabel.disabled = true;
+        resetLabel.disabled = true;
         // Set default values when disabled
         scopeSelect.value = 'allLocalUsers';
         resetCheckbox.checked = false;
@@ -55,6 +63,8 @@ function toggleScopeAccess() {
         // Add visual styling to indicate disabled state
         scopeSelect.style.opacity = '0.6';
         resetCheckbox.style.opacity = '0.6';
+        scopeLabel.style.opacity = '0.6';
+        resetLabel.style.opacity = '0.6';
         scopeSelect.style.cursor = 'not-allowed';
         resetCheckbox.style.cursor = 'not-allowed';
     }
@@ -76,8 +86,6 @@ function toggleDelayMorphicAccess() {
         
         // Enable telemetry (AT Use Counter) when delay morphic is enabled
         telemetryCheckbox.checked = true;
-        // Trigger the site ID access toggle since telemetry is now enabled
-        toggleSiteIdAccess();
     } else {
         // Disable date input when delay is disabled
         dateInput.disabled = true;
@@ -93,29 +101,6 @@ function toggleDelayMorphicAccess() {
     }
 }
 
-// Function to enable/disable the Site ID field
-function toggleSiteIdAccess() {
-    const telemetryEnabled = document.getElementById('features.atUseCounter.enabled').checked;
-    const siteIdInput = document.getElementById('telemetry.siteId');
-    const siteIdLabel = document.getElementById('siteIdLabel');
-    
-    if (telemetryEnabled) {
-        // Enable Site ID input when telemetry is enabled
-        siteIdInput.disabled = false;
-        siteIdLabel.style.opacity = '1';
-        siteIdInput.style.opacity = '1';
-        siteIdInput.style.cursor = 'pointer';
-    } else {
-        // Disable Site ID input when telemetry is disabled
-        siteIdInput.disabled = true;
-        siteIdInput.value = '';
-        
-        // Add visual styling to indicate disabled state
-        siteIdLabel.style.opacity = '0.6';
-        siteIdInput.style.opacity = '0.6';
-        siteIdInput.style.cursor = 'not-allowed';
-    }
-}
 
 // Function to toggle description visibility (for "see more" functionality)
 function toggleDescription(descriptionId) {
@@ -154,7 +139,6 @@ function resetValidationState() {
 window.addEventListener('load', function() {
     toggleScopeAccess();
     toggleDelayMorphicAccess();
-    toggleSiteIdAccess();
     updatePositionPreview();
     
     // Add change listeners to reset validation when inputs change
@@ -170,7 +154,7 @@ document.getElementById('telemetry.siteId').addEventListener('input', validateSi
 
 // Add event listeners for position dropdowns to update preview
 document.addEventListener('DOMContentLoaded', function() {
-    const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position'];
+    const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position', 'signOut.position'];
     
     positionSelects.forEach(selectId => {
         const select = document.getElementById(selectId);
@@ -274,7 +258,7 @@ function testURL(inputId) {
 // Populates the predefined buttons from loaded config
 function populatePredefinedButtons(extraItems) {
     // Reset all buttons to "Not Used" first
-    const buttonIds = ['usb', 'volume', 'voice', 'customUrl1', 'customUrl2', 'customUrl3'];
+    const buttonIds = ['usb', 'volume', 'voice', 'signOut', 'customUrl1', 'customUrl2', 'customUrl3'];
     buttonIds.forEach(buttonId => {
         const positionSelect = document.getElementById(`${buttonId}.position`);
         if (positionSelect) {
@@ -303,6 +287,19 @@ function populatePredefinedButtons(extraItems) {
                 'usbopeneject': 'usb',
                 'volume': 'volume',
                 'voice': 'voice'
+            };
+            
+            const buttonId = featureMap[item.feature];
+            if (buttonId) {
+                const positionSelect = document.getElementById(`${buttonId}.position`);
+                if (positionSelect) {
+                    positionSelect.value = (index + 1).toString();
+                }
+            }
+        } else if (item.type === 'action') {
+            // Map action features to button IDs
+            const featureMap = {
+                'signout': 'signOut'
             };
             
             const buttonId = featureMap[item.feature];
@@ -351,6 +348,7 @@ function collectPredefinedButtons() {
         { id: 'usb', type: 'control', feature: 'usbopeneject' },
         { id: 'volume', type: 'control', feature: 'volume' },
         { id: 'voice', type: 'control', feature: 'voice' },
+        { id: 'signOut', type: 'action', feature: 'signout' },
         { id: 'customUrl1', type: 'link' },
         { id: 'customUrl2', type: 'link' },
         { id: 'customUrl3', type: 'link' }
@@ -368,7 +366,7 @@ function collectPredefinedButtons() {
                 position: position
             };
             
-            if (config.type === 'control') {
+            if (config.type === 'control' || config.type === 'action') {
                 buttonData.feature = config.feature;
             } else if (config.type === 'link') {
                 buttonData.label = document.getElementById(`${config.id}.label`).value || '';
@@ -413,6 +411,9 @@ function handleFileUpload(event) {
 
 //Populates the entire UI from a loaded config object
 function populateUI(config) {
+    // Basic settings
+    document.getElementById('organizationName').value = config.organizationName ?? "";
+    
     // Features section - handle nested structure
     // Also provides backward compatibility with old flat dotted notation if needed
     document.getElementById('features.atOnDemand.enabled').checked = 
@@ -424,10 +425,9 @@ function populateUI(config) {
     document.getElementById('features.autorunAfterLogin.scope').value = 
         config.features?.autorunAfterLogin?.scope ?? config["features.autorunAfterLogin.scope"] ?? "allLocalUsers";
     document.getElementById('features.checkForUpdates.enabled').checked = config.features?.checkForUpdates?.enabled ?? false;
-    document.getElementById('features.cloudSettingsTransfer.enabled').checked = config.features?.cloudSettingsTransfer?.enabled ?? true;
     document.getElementById('features.customMorphicBars.enabled').checked = config.features?.customMorphicBars?.enabled ?? true;
     document.getElementById('features.resetSettings.enabled').checked = config.features?.resetSettings?.enabled ?? false;
-    document.getElementById('features.signIn.enabled').checked = config.features?.signIn?.enabled ?? true;
+    // signIn is now automatically controlled by customMorphicBars setting, so no UI element to populate
 
     // MorphicBar section - handle nested structure
     document.getElementById('morphicBar.defaultLocation').value = config.morphicBar?.defaultLocation ?? "bottomTrailing";
@@ -436,7 +436,7 @@ function populateUI(config) {
     // Advanced settings - some nested, some top-level
     document.getElementById('telemetry.siteId').value = config.telemetry?.siteId ?? "";
     document.getElementById('hideMorphicAfterLoginUntil').value = config.hideMorphicAfterLoginUntil ?? "";
-    document.getElementById('version').value = config.version ?? 0;
+    
 
     // Handle extra buttons/items - nested under morphicBar
     populatePredefinedButtons(config.morphicBar?.extraItems ?? []);
@@ -573,7 +573,8 @@ function downloadConfig() {
 
     // Build the config
     const config = {
-        "version": parseInt(document.getElementById('version').value),
+        "version": 0,  // Default version value
+        "organizationName": document.getElementById('organizationName').value.trim(),
         
         "features": {
             "atOnDemand": {
@@ -590,9 +591,6 @@ function downloadConfig() {
             "checkForUpdates": {
                 "enabled": document.getElementById('features.checkForUpdates.enabled').checked
             },
-            "cloudSettingsTransfer": {
-                "enabled": document.getElementById('features.cloudSettingsTransfer.enabled').checked
-            },
             "customMorphicBars": {
                 "enabled": document.getElementById('features.customMorphicBars.enabled').checked
             },
@@ -601,7 +599,8 @@ function downloadConfig() {
                 "enabled": isAutoRunEnabled ? document.getElementById('features.resetSettings.enabled').checked : false
             },
             "signIn": {
-                "enabled": document.getElementById('features.signIn.enabled').checked
+                // Automatically enabled when customMorphicBars is enabled
+                "enabled": document.getElementById('features.customMorphicBars.enabled').checked
             }
         },
 
@@ -639,7 +638,7 @@ function downloadConfig() {
 
 // Function to update URL button preview dynamically
 function updateUrlButtonPreview(buttonId) {
-    const label = document.getElementById(`${buttonId}.label`).value || 'Custom';
+    const label = document.getElementById(`${buttonId}.label`).value || 'Custom Button';
     const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value || 'Header text';
     const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value || 'Description text';
     
@@ -657,6 +656,18 @@ function updateUrlButtonPreview(buttonId) {
         previewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
     }
     
+    // Update tooltip preview area
+    const tooltipHeaderPreview = document.getElementById(`${buttonId}TooltipHeaderPreview`);
+    const tooltipTextPreview = document.getElementById(`${buttonId}TooltipTextPreview`);
+    
+    if (tooltipHeaderPreview) {
+        tooltipHeaderPreview.textContent = tooltipHeader;
+    }
+    
+    if (tooltipTextPreview) {
+        tooltipTextPreview.textContent = tooltipText;
+    }
+    
     // Update position preview when button details change
     updatePositionPreview();
 }
@@ -667,6 +678,7 @@ function validateUniquePositions() {
         'usb.position',
         'volume.position', 
         'voice.position',
+        'signOut.position',
         'customUrl1.position',
         'customUrl2.position',
         'customUrl3.position'
@@ -747,6 +759,12 @@ function updatePositionPreview() {
             displayText: 'Voice Control'
         },
         { 
+            id: 'signOut',
+            name: 'Sign Out',
+            type: 'action',
+            displayText: 'Sign Out'
+        },
+        { 
             id: 'customUrl1', 
             name: 'Custom URL Button 1', 
             type: 'url',
@@ -799,8 +817,8 @@ function updatePositionPreview() {
     orderedButtons.forEach(button => {
         let sourceElement = null;
         
-        if (button.type === 'control') {
-            // Find the existing preview button group for control buttons
+        if (button.type === 'control' || button.type === 'action') {
+            // Find the existing preview button group for control and action buttons
             const buttonSection = document.getElementById(`${button.id}Button`);
             if (buttonSection) {
                 sourceElement = buttonSection.querySelector('.preview-button-group');
