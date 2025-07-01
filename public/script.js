@@ -423,12 +423,7 @@ function populatePredefinedButtons(extraItems) {
                     positionSelect.value = (index + 1).toString();
                     
                     // Populate the Application button fields
-                    const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
-                    const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
                     const appIdInput = document.getElementById(`${buttonId}.appId`);
-                    
-                    if (tooltipHeaderInput) tooltipHeaderInput.value = item.tooltipHeader || '';
-                    if (tooltipTextInput) tooltipTextInput.value = item.tooltipText || '';
                     if (appIdInput) appIdInput.value = item.appId || '';
                     
                     // Update the preview
@@ -496,11 +491,10 @@ function collectPredefinedButtons() {
             } else if (config.type === 'application') {
                 const appId = document.getElementById(`${config.id}.appId`).value || '';
                 buttonData.appId = appId;
-                buttonData.label = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-                const tooltipHeader = document.getElementById(`${config.id}.tooltipHeader`).value || '';
-                const tooltipText = document.getElementById(`${config.id}.tooltipText`).value || '';
-                if (tooltipHeader) buttonData.tooltipHeader = tooltipHeader;
-                if (tooltipText) buttonData.tooltipText = tooltipText;
+                const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+                buttonData.label = appName;
+                buttonData.tooltipHeader = appName;
+                buttonData.tooltipText = `This launches the ${appName} application.`;
             }
             
             positionedButtons.push(buttonData);
@@ -796,7 +790,7 @@ function updateUrlButtonPreview(buttonId) {
         previewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
     }
     
-    // Update tooltip preview area
+    // Update tooltip preview area - keep this for URL buttons
     const tooltipHeaderPreview = document.getElementById(`${buttonId}TooltipHeaderPreview`);
     const tooltipTextPreview = document.getElementById(`${buttonId}TooltipTextPreview`);
     
@@ -833,8 +827,10 @@ const applicationNames = {
 function updateAppButtonPreview(buttonId) {
     const appId = document.getElementById(`${buttonId}.appId`).value;
     const label = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-    const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value || 'Header text';
-    const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value || 'Description text';
+    
+    // Auto-generate tooltip header and text based on application name
+    const tooltipHeader = label;
+    const tooltipText = `This launches the ${label} application.`;
     
     // Update preview button label
     const labelElement = document.getElementById(`${buttonId}Label`);
@@ -852,17 +848,7 @@ function updateAppButtonPreview(buttonId) {
         previewButton.classList.add('application-button');
     }
     
-    // Update tooltip preview area
-    const tooltipHeaderPreview = document.getElementById(`${buttonId}TooltipHeaderPreview`);
-    const tooltipTextPreview = document.getElementById(`${buttonId}TooltipTextPreview`);
-    
-    if (tooltipHeaderPreview) {
-        tooltipHeaderPreview.textContent = tooltipHeader;
-    }
-    
-    if (tooltipTextPreview) {
-        tooltipTextPreview.textContent = tooltipText;
-    }
+    // Tooltip preview has been removed from HTML, so no need to update it
     
     // Update position preview when button details change
     updatePositionPreview();

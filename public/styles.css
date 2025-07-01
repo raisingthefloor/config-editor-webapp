@@ -564,6 +564,7 @@ input[type="file"] {
 
 .url-inputs {
     gap: 8px;
+    margin-top: -10px;
 }
 
 .url-inputs label b {
@@ -594,7 +595,7 @@ input[type="file"] {
 }
 
 .url-inputs select {
-    width: 100%;
+    width: 36%;
     max-width: none;
     margin-top: 0px;
     padding: 4px 8px;
