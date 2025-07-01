@@ -71,16 +71,17 @@ function toggleDelayMorphicAccess() {
         dateInput.style.opacity = '1';
         dateInput.style.cursor = 'pointer';
         
-        // Force enable telemetry (AT Use Counter) and disable the checkbox
-        // since delay morphic requires telemetry to work
+        // Force enable telemetry and prevent unchecking
         telemetryCheckbox.checked = true;
-        // Keep normal appearance even when disabled (override CSS disabled styling)
-        telemetryCheckbox.style.setProperty('opacity', '1', 'important');
-        telemetryCheckbox.style.setProperty('cursor', 'pointer', 'important');
-        telemetryCheckbox.style.setProperty('accent-color', '#3182ce', 'important');
-        telemetryCheckbox.style.setProperty('background-color', 'initial', 'important');
-        telemetryCheckbox.style.setProperty('color', 'initial', 'important');
-        telemetryCheckbox.disabled = true;
+        
+        // Remove previous event listener if exists (to avoid duplicates)
+        telemetryCheckbox.removeEventListener('click', preventUnchecking);
+        
+        // Add event listener to prevent unchecking
+        telemetryCheckbox.addEventListener('click', preventUnchecking);
+        
+        // Visual indication that it can't be unchecked without disabling it
+        telemetryCheckbox.style.cursor = 'not-allowed';
     } else {
         // Disable date input when delay is disabled
         dateInput.disabled = true;
@@ -91,15 +92,23 @@ function toggleDelayMorphicAccess() {
         dateInput.style.opacity = '0.6';
         dateInput.style.cursor = 'not-allowed';
         
-        // Re-enable the telemetry checkbox so users can control it independently
-        telemetryCheckbox.disabled = false;
-        telemetryCheckbox.style.opacity = '1';
+        // Remove the event listener so checkbox can be changed again
+        telemetryCheckbox.removeEventListener('click', preventUnchecking);
         telemetryCheckbox.style.cursor = 'pointer';
-        // Keep telemetry setting as-is when delay is disabled
-        // since users might want telemetry for other purposes
     }
 }
 
+// Function to prevent unchecking the telemetry checkbox
+function preventUnchecking(event) {
+    // Prevent the default action
+    event.preventDefault();
+    // Keep the checkbox checked
+    this.checked = true;
+    
+    // Optional: Show a message explaining why it can't be unchecked
+    const message = "Telemetry is required when 'Delay Morphic Appearance' is enabled.";
+    alert(message);
+}
 
 // Function to toggle description visibility (for "see more" functionality)
 function toggleDescription(descriptionId) {
