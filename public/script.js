@@ -6,19 +6,6 @@ const checkbox = document.getElementById('features.atOnDemand.enabled');
 checkbox.indeterminate = true;
 
 
-
-// Update file name display when file is selected
-document.getElementById('upload').addEventListener('change', function(event) {
-    const fileNameDisplay = document.getElementById('fileName');
-    const file = event.target.files[0];
-    if (file) {
-        fileNameDisplay.textContent = file.name;
-    } else {
-        fileNameDisplay.textContent = 'No file chosen';
-    }
-});
-
-
 // This controls the access to dependent options (scope and reset settings)
 document.getElementById('features.autorunAfterLogin.enabled').addEventListener('change', toggleScopeAccess);
 
@@ -84,8 +71,12 @@ function toggleDelayMorphicAccess() {
         dateInput.style.opacity = '1';
         dateInput.style.cursor = 'pointer';
         
-        // Enable telemetry (AT Use Counter) when delay morphic is enabled
+        // Force enable telemetry (AT Use Counter) and disable the checkbox
+        // since delay morphic requires telemetry to work
         telemetryCheckbox.checked = true;
+        telemetryCheckbox.disabled = true;
+        telemetryCheckbox.style.opacity = '0.6';
+        telemetryCheckbox.style.cursor = 'not-allowed';
     } else {
         // Disable date input when delay is disabled
         dateInput.disabled = true;
@@ -96,7 +87,11 @@ function toggleDelayMorphicAccess() {
         dateInput.style.opacity = '0.6';
         dateInput.style.cursor = 'not-allowed';
         
-        // We keep telemetry setting as-is when delay is disabled
+        // Re-enable the telemetry checkbox so users can control it independently
+        telemetryCheckbox.disabled = false;
+        telemetryCheckbox.style.opacity = '1';
+        telemetryCheckbox.style.cursor = 'pointer';
+        // Keep telemetry setting as-is when delay is disabled
         // since users might want telemetry for other purposes
     }
 }
@@ -152,9 +147,12 @@ window.addEventListener('load', function() {
 // Dynamically validate Site ID as user types
 document.getElementById('telemetry.siteId').addEventListener('input', validateSiteId);
 
+// Dynamically validate Organization Name as user types
+document.getElementById('organizationName').addEventListener('input', validateOrganizationName);
+
 // Add event listeners for position dropdowns to update preview
 document.addEventListener('DOMContentLoaded', function() {
-    const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position', 'signOut.position'];
+    const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position', 'customApp1.position', 'customApp2.position', 'customApp3.position', 'signOut.position'];
     
     positionSelects.forEach(selectId => {
         const select = document.getElementById(selectId);
@@ -186,16 +184,42 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+    
+    // Add event listeners for custom application inputs to update preview
+    const customAppIds = ['customApp1', 'customApp2', 'customApp3'];
+    customAppIds.forEach(buttonId => {
+        const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
+        const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
+        const appIdInput = document.getElementById(`${buttonId}.appId`);
+        
+        if (tooltipHeaderInput) {
+            tooltipHeaderInput.addEventListener('input', () => {
+                updateAppButtonPreview(buttonId);
+            });
+        }
+        if (tooltipTextInput) {
+            tooltipTextInput.addEventListener('input', () => {
+                updateAppButtonPreview(buttonId);
+            });
+        }
+        if (appIdInput) {
+            appIdInput.addEventListener('change', () => {
+                updateAppButtonPreview(buttonId);
+            });
+        }
+    });
 });
 
 //Validates that the Site ID contains only ASCII letters and numbers
 function validateSiteId() {
     const siteIdInput = document.getElementById('telemetry.siteId');
+    const siteIdError = document.getElementById('siteIdError');
     const siteId = siteIdInput.value.trim();
     
     // Clear previous error styling
     siteIdInput.style.borderColor = '';
     siteIdInput.title = '';
+    siteIdError.style.display = 'none';
     
     // Its valid if empty (but later when checking for errors, we'll make sure it's filled in)
     if (!siteId) {
@@ -206,13 +230,44 @@ function validateSiteId() {
     const validPattern = /^[A-Za-z0-9]+$/;
     
     if (!validPattern.test(siteId)) {
-        // Invalid Site ID - apply error styling
+        // Invalid Site ID - apply error styling and show error message
         siteIdInput.style.borderColor = 'red';
         siteIdInput.title = 'Site ID must contain only ASCII letters and numbers (no spaces or symbols)';
+        siteIdError.style.display = 'block';
         return false;
     }
     
     return true; // Valid Site ID
+}
+
+//Validates that the Organization Name doesn't contain forbidden characters
+function validateOrganizationName() {
+    const orgNameInput = document.getElementById('organizationName');
+    const orgNameError = document.getElementById('organizationNameError');
+    const orgName = orgNameInput.value;
+    
+    // Clear previous error styling
+    orgNameInput.style.borderColor = '';
+    orgNameInput.title = '';
+    orgNameError.style.display = 'none';
+    
+    // Its valid if empty (but later when checking for errors, we'll make sure it's filled in)
+    if (!orgName) {
+        return true;
+    }
+    
+    // Check for forbidden characters: double quotes, backslash, and line breaks
+    const forbiddenChars = /["\\\n\r]/;
+    
+    if (forbiddenChars.test(orgName)) {
+        // Invalid Organization Name - apply error styling and show error message
+        orgNameInput.style.borderColor = 'red';
+        orgNameInput.title = 'Organization Name cannot contain double quotes (") or backslash (\\)';
+        orgNameError.style.display = 'block';
+        return false;
+    }
+    
+    return true; // Valid Organization Name
 }
 
 //Tests a URL by opening it in a new tab
@@ -258,7 +313,7 @@ function testURL(inputId) {
 // Populates the predefined buttons from loaded config
 function populatePredefinedButtons(extraItems) {
     // Reset all buttons to "Not Used" first
-    const buttonIds = ['usb', 'volume', 'voice', 'signOut', 'customUrl1', 'customUrl2', 'customUrl3'];
+    const buttonIds = ['usb', 'volume', 'voice', 'signOut', 'customUrl1', 'customUrl2', 'customUrl3', 'customApp1', 'customApp2', 'customApp3'];
     buttonIds.forEach(buttonId => {
         const positionSelect = document.getElementById(`${buttonId}.position`);
         if (positionSelect) {
@@ -276,6 +331,17 @@ function populatePredefinedButtons(extraItems) {
             if (tooltipHeaderInput) tooltipHeaderInput.value = '';
             if (tooltipTextInput) tooltipTextInput.value = '';
             if (urlInput) urlInput.value = '';
+        }
+        
+        // Clear Application button fields
+        if (buttonId.includes('customApp')) {
+            const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
+            const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
+            const appIdInput = document.getElementById(`${buttonId}.appId`);
+            
+            if (tooltipHeaderInput) tooltipHeaderInput.value = '';
+            if (tooltipTextInput) tooltipTextInput.value = '';
+            if (appIdInput) appIdInput.value = '';
         }
     });
     
@@ -334,6 +400,35 @@ function populatePredefinedButtons(extraItems) {
                     break;
                 }
             }
+        } else if (item.type === 'application') {
+            // Find the first available custom application button
+            const customAppButtons = ['customApp1', 'customApp2', 'customApp3'];
+            for (const buttonId of customAppButtons) {
+                const positionSelect = document.getElementById(`${buttonId}.position`);
+                if (positionSelect && positionSelect.value === '') {
+                    // This custom button is available
+                    positionSelect.value = (index + 1).toString();
+                    
+                    // Populate the Application button fields
+                    const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
+                    const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
+                    const appIdInput = document.getElementById(`${buttonId}.appId`);
+                    
+                    if (tooltipHeaderInput) tooltipHeaderInput.value = item.tooltipHeader || '';
+                    if (tooltipTextInput) tooltipTextInput.value = item.tooltipText || '';
+                    if (appIdInput) appIdInput.value = item.appId || '';
+                    
+                    // Update the preview
+                    updateAppButtonPreview(buttonId);
+                    
+                    // Ensure the preview button gets the application class for proper styling
+                    const previewButton = document.getElementById(`${buttonId}Preview`);
+                    if (previewButton) {
+                        previewButton.classList.add('application-button');
+                    }
+                    break;
+                }
+            }
         }
     });
     
@@ -351,7 +446,10 @@ function collectPredefinedButtons() {
         { id: 'signOut', type: 'action', feature: 'signout' },
         { id: 'customUrl1', type: 'link' },
         { id: 'customUrl2', type: 'link' },
-        { id: 'customUrl3', type: 'link' }
+        { id: 'customUrl3', type: 'link' },
+        { id: 'customApp1', type: 'application' },
+        { id: 'customApp2', type: 'application' },
+        { id: 'customApp3', type: 'application' }
     ];
     
     // Collect buttons that have positions assigned
@@ -366,13 +464,30 @@ function collectPredefinedButtons() {
                 position: position
             };
             
-            if (config.type === 'control' || config.type === 'action') {
+            if (config.type === 'control') {
                 buttonData.feature = config.feature;
+            } else if (config.type === 'action') {
+                if (config.feature === 'signout') {
+                    buttonData.label = "Sign\nOut";
+                    buttonData.tooltipHeader = "Sign Out";
+                    buttonData.tooltipText = "Sign out of this computer";
+                    buttonData.function = "signOut";
+                } else {
+                    buttonData.feature = config.feature;
+                }
             } else if (config.type === 'link') {
                 buttonData.label = document.getElementById(`${config.id}.label`).value || '';
                 buttonData.tooltipHeader = document.getElementById(`${config.id}.tooltipHeader`).value || '';
                 buttonData.tooltipText = document.getElementById(`${config.id}.tooltipText`).value || '';
                 buttonData.url = document.getElementById(`${config.id}.url`).value || '';
+            } else if (config.type === 'application') {
+                const appId = document.getElementById(`${config.id}.appId`).value || '';
+                buttonData.appId = appId;
+                buttonData.label = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+                const tooltipHeader = document.getElementById(`${config.id}.tooltipHeader`).value || '';
+                const tooltipText = document.getElementById(`${config.id}.tooltipText`).value || '';
+                if (tooltipHeader) buttonData.tooltipHeader = tooltipHeader;
+                if (tooltipText) buttonData.tooltipText = tooltipText;
             }
             
             positionedButtons.push(buttonData);
@@ -443,6 +558,9 @@ function populateUI(config) {
 
     // Update scope visibility after loading config
     toggleScopeAccess();
+    
+    // Update delay morphic access and ensure telemetry dependency is enforced
+    toggleDelayMorphicAccess();
 }
 
 //Generates and downloads the final config.json file
@@ -487,15 +605,14 @@ function checkForErrors() {
         }
     }
     
-    // Validate Site ID is filled in (only if telemetry is enabled)
-    const atUseCounterEnabled = document.getElementById('features.atUseCounter.enabled').checked;
+    // Validate Site ID is filled in
     const siteId = document.getElementById('telemetry.siteId').value.trim();
-    if (atUseCounterEnabled && !siteId) {
-        errors.push('Site ID is required when AT Use Counter is enabled.');
+    if (!siteId) {
+        errors.push('Site ID is required.');
     }
     
-    // Validate Site ID format (only if telemetry is enabled and Site ID has content)
-    if (atUseCounterEnabled && siteId && !validateSiteId()) {
+    // Validate Site ID format (if Site ID has content)
+    if (siteId && !validateSiteId()) {
         errors.push('Site ID must contain only ASCII letters and numbers (no spaces or symbols).');
     }
     
@@ -506,11 +623,9 @@ function checkForErrors() {
         errors.push('Date to show MorphicBar is required when Delay Morphic Appearance is enabled.');
     }
     
-    // Validate that telemetry is enabled when delay morphic is enabled
-    const telemetryEnabled = document.getElementById('features.atUseCounter.enabled').checked;
-    if (delayMorphicEnabled && !telemetryEnabled) {
-        errors.push('AT Use Counter (telemetry) must be enabled when Delay Morphic Appearance is enabled.');
-    }
+    // Note: No need to validate that telemetry is enabled when delay morphic is enabled
+    // because the UI now automatically forces telemetry to be enabled and disabled
+    // when delay morphic is checked
     
     // Validate custom URL buttons have all required fields if position is selected
     const customUrlButtons = ['customUrl1', 'customUrl2', 'customUrl3'];
@@ -538,6 +653,19 @@ function checkForErrors() {
             }
             if (!tooltipText) {
                 errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')} (Position ${position}): Tooltip Text is required.`);
+            }
+        }
+    });
+    
+    // Validate custom application buttons have all required fields if position is selected
+    const customAppButtons = ['customApp1', 'customApp2', 'customApp3'];
+    customAppButtons.forEach(buttonId => {
+        const position = document.getElementById(`${buttonId}.position`).value;
+        if (position) {
+            const appId = document.getElementById(`${buttonId}.appId`).value.trim();
+            
+            if (!appId) {
+                errors.push(`${buttonId.replace('customApp', 'Custom Application Button ')} (Position ${position}): Application selection is required.`);
             }
         }
     });
@@ -611,10 +739,9 @@ function downloadConfig() {
         }
     };
 
-    // Add optional fields only if they have values and their dependencies are enabled
-    const telemetryEnabled = document.getElementById('features.atUseCounter.enabled').checked;
+    // Add optional fields only if they have values
     const siteId = document.getElementById('telemetry.siteId').value.trim();
-    if (telemetryEnabled && siteId) {
+    if (siteId) {
         config.telemetry = {
             "siteId": siteId
         };
@@ -638,7 +765,7 @@ function downloadConfig() {
 
 // Function to update URL button preview dynamically
 function updateUrlButtonPreview(buttonId) {
-    const label = document.getElementById(`${buttonId}.label`).value || 'Custom Button';
+    const label = document.getElementById(`${buttonId}.label`).value || 'Button<br>Text';
     const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value || 'Header text';
     const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value || 'Description text';
     
@@ -672,6 +799,62 @@ function updateUrlButtonPreview(buttonId) {
     updatePositionPreview();
 }
 
+// Application ID to display name mapping
+const applicationNames = {
+    'calculator': 'Calculator',
+    'firefox': 'Firefox',
+    'googleChrome': 'Google Chrome',
+    'microsoftAccess': 'Microsoft Access',
+    'microsoftEdge': 'Microsoft Edge',
+    'microsoftExcel': 'Microsoft Excel',
+    'microsoftOneNote': 'Microsoft OneNote',
+    'microsoftOutlook': 'Microsoft Outlook',
+    'microsoftPowerPoint': 'Microsoft PowerPoint',
+    'microsoftQuickAssist': 'Quick Assist',
+    'microsoftTeams': 'Microsoft Teams',
+    'microsoftWord': 'Microsoft Word',
+    'opera': 'Opera'
+};
+
+// Function to update Application button preview dynamically
+function updateAppButtonPreview(buttonId) {
+    const appId = document.getElementById(`${buttonId}.appId`).value;
+    const label = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+    const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value || 'Header text';
+    const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value || 'Description text';
+    
+    // Update preview button label
+    const labelElement = document.getElementById(`${buttonId}Label`);
+    if (labelElement) {
+        // For application buttons, break at spaces to ensure all text fits without truncation
+        const labelWithBreaks = label.replace(/\s/g, '<br>');
+        labelElement.innerHTML = labelWithBreaks;
+    }
+    
+    // Update button title attribute for browser tooltip and add application class
+    const previewButton = document.getElementById(`${buttonId}Preview`);
+    if (previewButton) {
+        previewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
+        // Add class to identify this as an application button for CSS styling
+        previewButton.classList.add('application-button');
+    }
+    
+    // Update tooltip preview area
+    const tooltipHeaderPreview = document.getElementById(`${buttonId}TooltipHeaderPreview`);
+    const tooltipTextPreview = document.getElementById(`${buttonId}TooltipTextPreview`);
+    
+    if (tooltipHeaderPreview) {
+        tooltipHeaderPreview.textContent = tooltipHeader;
+    }
+    
+    if (tooltipTextPreview) {
+        tooltipTextPreview.textContent = tooltipText;
+    }
+    
+    // Update position preview when button details change
+    updatePositionPreview();
+}
+
 // Updated function to validate unique positions for predefined buttons
 function validateUniquePositions() {
     const positionSelects = [
@@ -681,7 +864,10 @@ function validateUniquePositions() {
         'signOut.position',
         'customUrl1.position',
         'customUrl2.position',
-        'customUrl3.position'
+        'customUrl3.position',
+        'customApp1.position',
+        'customApp2.position',
+        'customApp3.position'
     ];
     
     const usedPositions = new Map(); // Map position to button ID that uses it
@@ -706,14 +892,24 @@ function validateUniquePositions() {
         const select = document.getElementById(selectId);
         if (select) {
             const position = select.value;
+            const positionSelector = select.closest('.position-selector');
+            
             if (position && conflicts.has(position)) {
-                // Mark as conflicted
-                select.style.borderColor = '#e53e3e';
-                select.style.backgroundColor = '#fed7d7';
+                
+                // Add conflict indicator if it doesn't exist
+                let conflictIndicator = positionSelector.querySelector('.conflict-indicator');
+                if (!conflictIndicator) {
+                    conflictIndicator = document.createElement('div');
+                    conflictIndicator.className = 'conflict-indicator';
+                    conflictIndicator.textContent = 'Conflict';
+                    positionSelector.insertBefore(conflictIndicator, select.parentElement);
+                }
             } else {
-                // Remove conflict styling
-                select.style.borderColor = '#e2e8f0';
-                select.style.backgroundColor = '#ffffff';
+                // Remove conflict indicator if it exists
+                const conflictIndicator = positionSelector.querySelector('.conflict-indicator');
+                if (conflictIndicator) {
+                    conflictIndicator.remove();
+                }
             }
         }
     });
@@ -781,6 +977,33 @@ function updatePositionPreview() {
             name: 'Custom URL Button 3', 
             type: 'url',
             displayText: () => document.getElementById('customUrl3.label').value || 'Custom Button'
+        },
+        { 
+            id: 'customApp1', 
+            name: 'Custom Application Button 1', 
+            type: 'application',
+            displayText: () => {
+                const appId = document.getElementById('customApp1.appId').value;
+                return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+            }
+        },
+        { 
+            id: 'customApp2', 
+            name: 'Custom Application Button 2', 
+            type: 'application',
+            displayText: () => {
+                const appId = document.getElementById('customApp2.appId').value;
+                return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+            }
+        },
+        { 
+            id: 'customApp3', 
+            name: 'Custom Application Button 3', 
+            type: 'application',
+            displayText: () => {
+                const appId = document.getElementById('customApp3.appId').value;
+                return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+            }
         }
     ];
     
@@ -823,8 +1046,8 @@ function updatePositionPreview() {
             if (buttonSection) {
                 sourceElement = buttonSection.querySelector('.preview-button-group');
             }
-        } else if (button.type === 'url') {
-            // Find the existing preview button for URL buttons
+        } else if (button.type === 'url' || button.type === 'application') {
+            // Find the existing preview button for URL and application buttons
             const previewButton = document.getElementById(`${button.id}Preview`);
             if (previewButton) {
                 sourceElement = previewButton;
