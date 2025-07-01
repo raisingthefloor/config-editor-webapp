@@ -48,15 +48,16 @@
 
         <div class="section two-column-layout">
             <h3>Group1: Commonly Changed Settings</h3>
-           
+
             <label>
                 <div class="bullet-point">•</div>
                 <div class="label-text">
                     Organization Name
+                    <font class="required">Required</font>
                     <small>This can be any name you would like to identify your organization. If you will be using
                         different config files for different groups of computers – you might want to put the location
                         that this config.file will be used in here so you can identify which config file this is. You
-                        can use any characters except these three characters “ or \
+                        can use any characters except these three characters " or \
                     </small>
                 </div>
                 <div class="control-container">
@@ -70,6 +71,7 @@
                 <div class="bullet-point">•</div>
                 <div class="label-text">
                     Site ID
+                    <font class="required">Required</font>
                     <small>For Site ID use letters or numbers only. No symbols or spaces.
                         If organization wants separate cumulative counts for different areas (e.g. wants to track usage
                         in classrooms, library, and other places separately ) – then provide different site ids in the
@@ -136,8 +138,9 @@
                         right away – but delay the appearance of Morphic until the date you set below. On that date (at
                         midnight + 1 minute) the MorphicBar will show up on all computers at the same time. You can then
                         see from the telemetry how much Morphic has helped. To date it has yielded increases of 700%,
-                        10,000% and more. <strong>This feature automatically turns on "Enable AT Use Counter" (telemetry) above since that is how it
-                        works.</strong>
+                        10,000% and more. <strong>This feature automatically turns on "Enable AT Use Counter"
+                            (telemetry) above since that is how it
+                            works.</strong>
                         <span class="json-name"><span class="label">jsonName:</span> <span
                                 class="property">hideMorphicAfterLoginUntil</span></span>
                     </small>
@@ -151,7 +154,7 @@
                     Date to show MorphicBar
                     <small>Select a date to show the MorphicBar.</small>
                 </div>
-                
+
                 <div class="control-container date-input-container">
                     <input type="date" id="hideMorphicAfterLoginUntil">
                 </div>
@@ -159,7 +162,8 @@
             <label>
                 <div class="label-text">
                     Enable AT-on-Demand (Windows Only)
-                    <small><b style="color: #e53e3e;">This option is in beta testing and is not generally available yet.</b>
+                    <small><b style="color: #e53e3e;">This option is in beta testing and is not generally available
+                            yet.</b>
                         <br>
                         This option allows Users to be able to use their own AT they (or the enterprise) has a licence
                         for safely on any enterprise computers. When a user signs in and AT-on-Demand is enabled, the
@@ -220,15 +224,21 @@
                 <div class="label-text">
                     MorphicBar Visibility after Login
                     <small>
-                        <span class="description-short" id="visibility-short">There are three settings for this. <b>Show</b>
-                            causes the MorphicBar to show up on login. <b>Hide</b> causes the MorphicBar to be hidden on login.
-                            <b>Restore</b> – causes the MorphicBar to assume the same state as when a user signed out.</span>
+                        <span class="description-short" id="visibility-short">There are three settings for this.
+                            <b>Show</b>
+                            causes the MorphicBar to show up on login. <b>Hide</b> causes the MorphicBar to be hidden on
+                            login.
+                            <b>Restore</b> – causes the MorphicBar to assume the same state as when a user signed
+                            out.</span>
                         <span class="description-full" id="visibility-full" style="display: none;">There are three
-                            settings for this. <b>Show</b> causes the MorphicBar to show up on login. <b>Hide</b> causes the
-                            MorphicBar to be hidden on login. <b>Restore</b> – causes the MorphicBar to assume the same state
+                            settings for this. <b>Show</b> causes the MorphicBar to show up on login. <b>Hide</b> causes
+                            the
+                            MorphicBar to be hidden on login. <b>Restore</b> – causes the MorphicBar to assume the same
+                            state
                             as when a user signed out. The Restore feature is only useful on personally assigned
                             computers that do not reset after users and not generally of use on shared-use enterprise
-                            computers. We very highly recommend this be set to <b>Show</b>. For those who do not want the
+                            computers. We very highly recommend this be set to <b>Show</b>. For those who do not want
+                            the
                             MorphicBar, it can be easily dismissed by clicking on the x in the upper right-hand corner
                             of the MorphicBar. We have found that not having the MorphicBar show on startup results in
                             very little if any use of Morphic and consequently the same very low level of awareness and
@@ -291,8 +301,11 @@
             <label id="features.resetSettings.label">
                 <div class="label-text">
                     Reset 5 Windows Settings to Default
-                    <small>This was a special setting created for a location that wanted to automatically reset the following Windows settings when the user signs out of Windows: TEXT SIZE(screen scale), CONTRAST, COLOR, DARKMODE & NIGHTMODE.
-                       This is not needed in most locations because they automatically set things back on reboot but can be used if it is needed.
+                    <small>This was a special setting created for a location that wanted to automatically reset the
+                        following Windows settings when the user signs out of Windows: TEXT SIZE(screen scale),
+                        CONTRAST, COLOR, DARKMODE & NIGHTMODE.
+                        This is not needed in most locations because they automatically set things back on reboot but
+                        can be used if it is needed.
                         <span class="json-name"><span class="label">jsonName:</span> <span
                                 class="property">resetSettings</span></span>
                     </small>
@@ -305,22 +318,26 @@
 
         <div class="section two-column-layout">
             <h3>Group 3: Custom MorphicBar Buttons</h3>
-            <p>Enterprises can add up to three extra buttons on the MorphicBar using the config file.</p>
+            <p style="margin-left: 30px;">Enterprises can add up to three extra buttons on the MorphicBar using the
+                config file.</p>
 
-            <p>The three buttons can be the same for all computers at the organization, or different for different
+            <p style="margin-left: 30px;">The three buttons can be the same for all computers at the organization, or
+                different for different
                 locations. For example, a school may want a different set of 3 buttons for computers in the classrooms
                 than they do for the computers in the library, or labs or tutor center or in general areas.</p>
 
-            <p>This can be easily done but just creating different config files for the computers in the different
+            <p style="margin-left: 30px;">This can be easily done but just creating different config files for the
+                computers in the different
                 locations.</p>
 
-            <h6>Available Options</h6>
-            <p>Below is a list of the standard 'extra' buttons from Morphic. In addition, at the bottom, are places
+            <h6 style="margin-left: 30px;">Available Options</h6>
+            <p style="margin-left: 30px;">Below is a list of the standard 'extra' buttons from Morphic. In addition, at
+                the bottom, are places
                 where 3 custom buttons can be defined by the organization.
                 You can choose any combination of 3 buttons from the custom and standard buttons.</p>
 
-            <h6>Instructions</h6>
-            <ul>
+            <h6 style="margin-left: 30px;">Instructions</h6>
+            <ul style="margin-left: 40px;">
                 <li>Fill in the numbers 1 2 and 3 before the buttons you want. You will see them appear in that location
                     in the MorphicBar at the bottom of the page</li>
                 <li>For custom buttons, just fill in the blanks for that button. The appearance of the button and the
@@ -328,524 +345,17 @@
                 <li>You do not have to add 3 buttons – but that is the max you can add at this time.</li>
             </ul>
 
-            <h6>Available Extra Buttons</h6>
-            <p>Choose up to 3 buttons from the 10 options below. Select the position (1-3) for each
+            <h6 style="margin-left: 30px;">Available Extra Buttons</h6>
+            <p style="margin-left: 30px;">Choose up to 3 buttons from the 10 options below. Select the position (1-3)
+                for each
                 button you want to include.</p>
 
-            <div class="button-container">
-
-            <!-- USB Control Button -->
-            <div class="predefined-button" id="usbButton">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="usb.position" id="usb.position" onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>USB Open/Eject</h5>
-                        <small>Allows a user to easily open or eject all USB drives plugged into
-                            a computer</small>
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                        class="property">usbopeneject</span></span>
-                    </div>
-                    <div class="button-preview-container">
-                        <div class="preview-button-group">
-                            <div class="button-label">USB Drives (All)</div>
-                            <div class="split-button-container">
-                                <button class="split-button left">Open</button>
-                                <button class="split-button right">Eject</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Volume Control Button -->
-            <div class="predefined-button" id="volumeButton">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="volume.position" id="volume.position" onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Volume</h5>
-                        <small>Allows a user to easily change the volume and mute (but not the microphone volume)</small>
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                        class="property">volume</span></span>
-                    </div>
-                    <div class="button-preview-container">
-                        <div class="preview-button-group">
-                            <div class="button-label">Volume</div>
-                            <div class="split-button-container">
-                                <button class="split-button left">+</button>
-                                <button class="split-button middle">-</button>
-                                <button class="split-button right">Mute</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Voice Control Button -->
-            <div class="predefined-button" id="voiceButton">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="voice.position" id="voice.position" onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Voice Control (Windows Only)</h5>
-                        <small>Turns on Voice Access in Windows</small>
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                        class="property">voice control</span></span>
-                        
-                    </div>
-                    <div class="button-preview-container">
-                        <div class="preview-button-group">
-                            <div class="button-label">Voice Control</div>
-                            <div class="split-button-container">
-                                <button class="split-button left">On</button>
-                                <button class="split-button right">Off</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-
-            <!--Sign Out Button-->
-            <div class="predefined-button" id="signOutButton">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="signOut.position" id="signOut.position" onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Sign Out (Windows Only)</h5>
-                        <small>Signs out the current user out of Windows in one click</small>
-                        <span class="json-name"><span class="label">jsonName:</span> <span
-                        class="property">signout</span></span>
-                    </div>
-                    <div class="button-preview-container">
-                        <div class="preview-button-group">
-                            <div class="preview-button action-button">
-                                <span id="signOutLabel">Sign <br> Out</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>  
-
-            <!-- Custom Application Button 1 -->
-            <div class="predefined-button" id="customApp1">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="customApp1.position" id="customApp1.position"
-                                onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Custom Application Button</h5>
-                        <small>Create a custom button that launches a specific application</small>
-                    </div>
-                  
-                </div>
-                <div class="button-config">
-                    <div class="url-inputs-container">
-                        <div class="url-inputs">
-                            <label><b>Application:</b>
-                                <select id="customApp1.appId" onchange="updateAppButtonPreview('customApp1')">
-                                    <option value="">Select Application</option>
-                                    <option value="calculator">Calculator</option>
-                                    <option value="firefox">Firefox</option>
-                                    <option value="googleChrome">Google Chrome</option>
-                                    <option value="microsoftAccess">Microsoft Access</option>
-                                    <option value="microsoftEdge">Microsoft Edge</option>
-                                    <option value="microsoftExcel">Microsoft Excel</option>
-                                    <option value="microsoftOneNote">Microsoft OneNote</option>
-                                    <option value="microsoftOutlook">Microsoft Outlook</option>
-                                    <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
-                                    <option value="microsoftQuickAssist">Microsoft Quick Assist (Windows Only)</option>
-                                    <option value="microsoftTeams">Microsoft Teams</option>
-                                    <option value="microsoftWord">Microsoft Word</option>
-                                    <option value="opera">Opera</option>
-                                </select>
-                            </label>
-                            <label><b>Tooltip Header:</b>
-                                <input type="text" id="customApp1.tooltipHeader" placeholder="Header text (optional)"
-                                    oninput="updateAppButtonPreview('customApp1')">
-                            </label>
-                            <label><b>Tooltip Text:</b>
-                                <input type="text" id="customApp1.tooltipText" placeholder="Description text (optional)"
-                                    oninput="updateAppButtonPreview('customApp1')">
-                            </label>
-                        </div>
-                        <div class="tooltip-preview">
-                            <div class="button-preview-container" style="margin-bottom: 10px;">
-                                <div class="preview-button url-button" id="customApp1Preview">
-                                    <span id="customApp1Label">Custom<br>App</span>
-                                </div>
-                            </div>
-                            <div class="tooltip-preview-box" id="customApp1TooltipPreview">
-                                <div class="tooltip-header" id="customApp1TooltipHeaderPreview">Header text</div>
-                                <div class="tooltip-text" id="customApp1TooltipTextPreview">Description text</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Custom Application Button 2 -->
-            <div class="predefined-button" id="customApp2">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="customApp2.position" id="customApp2.position"
-                                onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Custom Application Button</h5>
-                        <small>Create a second custom button that launches a specific application</small>
-                    </div>
-                  
-                </div>
-                <div class="button-config">
-                    <div class="url-inputs-container">
-                        <div class="url-inputs">
-                            <label><b>Application:</b>
-                                <select id="customApp2.appId" onchange="updateAppButtonPreview('customApp2')">
-                                    <option value="">Select Application</option>
-                                    <option value="calculator">Calculator</option>
-                                    <option value="firefox">Firefox</option>
-                                    <option value="googleChrome">Google Chrome</option>
-                                    <option value="microsoftAccess">Microsoft Access</option>
-                                    <option value="microsoftEdge">Microsoft Edge</option>
-                                    <option value="microsoftExcel">Microsoft Excel</option>
-                                    <option value="microsoftOneNote">Microsoft OneNote</option>
-                                    <option value="microsoftOutlook">Microsoft Outlook</option>
-                                    <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
-                                    <option value="microsoftQuickAssist">Microsoft Quick Assist</option>
-                                    <option value="microsoftTeams">Microsoft Teams</option>
-                                    <option value="microsoftWord">Microsoft Word</option>
-                                    <option value="opera">Opera</option>
-                                </select>
-                            </label>
-                            <label><b>Tooltip Header:</b>
-                                <input type="text" id="customApp2.tooltipHeader" placeholder="Header text (optional)"
-                                    oninput="updateAppButtonPreview('customApp2')">
-                            </label>
-                            <label><b>Tooltip Text:</b>
-                                <input type="text" id="customApp2.tooltipText" placeholder="Description text (optional)"
-                                    oninput="updateAppButtonPreview('customApp2')">
-                            </label>
-                        </div>
-                        <div class="tooltip-preview">
-                            <div class="button-preview-container" style="margin-bottom: 10px;">
-                                <div class="preview-button url-button" id="customApp2Preview">
-                                    <span id="customApp2Label">Custom<br>App</span>
-                                </div>
-        
-                            </div>
-                            <div class="tooltip-preview-box" id="customApp2TooltipPreview">
-                                <div class="tooltip-header" id="customApp2TooltipHeaderPreview">Header text</div>
-                                <div class="tooltip-text" id="customApp2TooltipTextPreview">Description text</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Custom Application Button 3 -->
-            <div class="predefined-button" id="customApp3">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="customApp3.position" id="customApp3.position"
-                                onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Custom Application Button</h5>
-                        <small>Create a third custom button that launches a specific application</small>
-                    </div>
-                 
-                </div>
-                <div class="button-config">
-                    <div class="url-inputs-container">
-                        <div class="url-inputs">
-                            <label><b>Application:</b>
-                                <select id="customApp3.appId" onchange="updateAppButtonPreview('customApp3')">
-                                    <option value="">Select Application</option>
-                                    <option value="calculator">Calculator</option>
-                                    <option value="firefox">Firefox</option>
-                                    <option value="googleChrome">Google Chrome</option>
-                                    <option value="microsoftAccess">Microsoft Access</option>
-                                    <option value="microsoftEdge">Microsoft Edge</option>
-                                    <option value="microsoftExcel">Microsoft Excel</option>
-                                    <option value="microsoftOneNote">Microsoft OneNote</option>
-                                    <option value="microsoftOutlook">Microsoft Outlook</option>
-                                    <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
-                                    <option value="microsoftQuickAssist">Microsoft Quick Assist</option>
-                                    <option value="microsoftTeams">Microsoft Teams</option>
-                                    <option value="microsoftWord">Microsoft Word</option>
-                                    <option value="opera">Opera</option>
-                                </select>
-                            </label>
-                            <label><b>Tooltip Header:</b>
-                                <input type="text" id="customApp3.tooltipHeader" placeholder="Header text (optional)"
-                                    oninput="updateAppButtonPreview('customApp3')">
-                            </label>
-                            <label><b>Tooltip Text:</b>
-                                <input type="text" id="customApp3.tooltipText" placeholder="Description text (optional)"
-                                    oninput="updateAppButtonPreview('customApp3')">
-                            </label>
-                        </div>
-                        <div class="tooltip-preview">
-                            <div class="button-preview-container" style="margin-bottom: 10px;">
-                                <div class="preview-button url-button" id="customApp3Preview">
-                                    <span id="customApp3Label">Custom<br>App</span>
-                                </div>
-        
-                            </div>
-                            <div class="tooltip-preview-box" id="customApp3TooltipPreview">
-                                <div class="tooltip-header" id="customApp3TooltipHeaderPreview">Header text</div>
-                                <div class="tooltip-text" id="customApp3TooltipTextPreview">Description text</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Custom URL Button 1 -->
-            <div class="predefined-button" id="customUrl1">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="customUrl1.position" id="customUrl1.position"
-                                onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Custom URL Button</h5>
-                        <small>Create a custom button that opens a specific website or web
-                            application</small>
-                    </div>
-                  
-                </div>
-                <div class="button-config">
-                    <div class="url-inputs-container">
-                        <div class="url-inputs">
-                            <label><b>Button Text:</b>   
-                                <input type="text" id="customUrl1.label" placeholder="Button Text (use \n for line breaks)"
-                                    oninput="updateUrlButtonPreview('customUrl1')">
-                            </label>
-                            <label><b>Tooltip Header:</b>
-                                <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text"
-                                    oninput="updateUrlButtonPreview('customUrl1')">
-                            </label>
-                            <label><b>Tooltip Text:</b>
-                                <input type="text" id="customUrl1.tooltipText" placeholder="Description text"
-                                    oninput="updateUrlButtonPreview('customUrl1')">
-                            </label>
-                            <label><b>URL:</b>
-                                <div class="url-input-wrapper">
-                                    <input type="url" id="customUrl1.url" placeholder="https://example.com">
-                                    <button type="button" class="test-url-btn" onclick="testURL('customUrl1.url')"
-                                        title="Test URL in new tab">Test URL</button>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="tooltip-preview">
-                            <div class="button-preview-container" style="margin-bottom: 10px;">
-                                <div class="preview-button url-button" id="customUrl1Preview">
-                                    <span id="customUrl1Label">Button<br>Text</span>
-                                </div>
-                            </div>
-                            <div class="tooltip-preview-box" id="customUrl1TooltipPreview">
-                                <div class="tooltip-header" id="customUrl1TooltipHeaderPreview">Header text</div>
-                                <div class="tooltip-text" id="customUrl1TooltipTextPreview">Description text</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Custom URL Button 2 -->
-            <div class="predefined-button" id="customUrl2">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="customUrl2.position" id="customUrl2.position"
-                                onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Custom URL Button</h5>
-                        <small>Create a second custom button that opens a specific website or web
-                            application</small>
-                    </div>
-                  
-                </div>
-                <div class="button-config">
-                    <div class="url-inputs-container">
-                        <div class="url-inputs">
-                            <label><b>Button Text:</b>
-                                <input type="text" id="customUrl2.label" placeholder="Button Text"
-                                    oninput="updateUrlButtonPreview('customUrl2')">
-                            </label>
-                            <label><b>Tooltip Header:</b>
-                                <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text"
-                                    oninput="updateUrlButtonPreview('customUrl2')">
-                            </label>
-                            <label><b>Tooltip Text:</b>
-                                <input type="text" id="customUrl2.tooltipText" placeholder="Description text"
-                                    oninput="updateUrlButtonPreview('customUrl2')">
-                            </label>
-                            <label><b>URL:</b>
-                                <div class="url-input-wrapper">
-                                    <input type="url" id="customUrl2.url" placeholder="https://example.com">
-                                    <button type="button" class="test-url-btn" onclick="testURL('customUrl2.url')"
-                                        title="Test URL in new tab">Test URL</button>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="tooltip-preview">
-                            <div class="button-preview-container" style="margin-bottom: 10px;">
-                                <div class="preview-button url-button" id="customUrl2Preview">
-                                    <span id="customUrl2Label">Button<br>Text</span>
-                                </div>
-        
-                            </div>
-                            <div class="tooltip-preview-box" id="customUrl2TooltipPreview">
-                                <div class="tooltip-header" id="customUrl2TooltipHeaderPreview">Header text</div>
-                                <div class="tooltip-text" id="customUrl2TooltipTextPreview">Description text</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Custom URL Button 3 -->
-            <div class="predefined-button" id="customUrl3">
-                <div class="button-header">
-                    <div class="position-selector">
-                        <label>
-                            <select name="customUrl3.position" id="customUrl3.position"
-                                onchange="validateUniquePositions()">
-                                <option value="">-</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="button-info">
-                        <h5>Custom URL Button</h5>
-                        <small>Create a third custom button that opens a specific website or web
-                            application</small>
-                    </div>
-                 
-                </div>
-                <div class="button-config">
-                    <div class="url-inputs-container">
-                        <div class="url-inputs">
-                            <label><b>Button Text:</b>
-                                <input type="text" id="customUrl3.label" placeholder="Button Text"
-                                    oninput="updateUrlButtonPreview('customUrl3')">
-                            </label>
-                            <label><b>Tooltip Header:</b>
-                                <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text"
-                                    oninput="updateUrlButtonPreview('customUrl3')">
-                            </label>
-                            <label><b>Tooltip Text:</b>
-                                <input type="text" id="customUrl3.tooltipText" placeholder="Description text"
-                                    oninput="updateUrlButtonPreview('customUrl3')">
-                            </label>
-                            <label><b>URL:</b>
-                                <div class="url-input-wrapper">
-                                    <input type="url" id="customUrl3.url" placeholder="https://example.com">
-                                    <button type="button" class="test-url-btn" onclick="testURL('customUrl3.url')"
-                                        title="Test URL in new tab">Test URL</button>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="tooltip-preview">
-                            <div class="button-preview-container" style="margin-bottom: 10px;">
-                                <div class="preview-button url-button" id="customUrl3Preview">
-                                    <span id="customUrl3Label">Button<br>Text</span>
-                                </div>
-        
-                            </div>
-                            <div class="tooltip-preview-box" id="customUrl3TooltipPreview">
-                                <div class="tooltip-header" id="customUrl3TooltipHeaderPreview">Header text</div>
-                                <div class="tooltip-text" id="customUrl3TooltipTextPreview">Description text</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-        <div class="section">
-            <h4>MorphicBar Preview</h4>
-            <p class="description">Preview of how your custom buttons will appear on the actual MorphicBar:</p>
-
             <div class="morphic-bar-preview">
+                <h4>MorphicBar Preview</h4>
+                <p class="description">Preview of how your custom buttons will appear on the actual MorphicBar:</p>
                 <div class="morphic-bar-container">
                     <!-- Custom buttons will be inserted here -->
-                    <div class="custom-buttons-container" id="customButtonsContainer">
+                    <div class="custom-buttons-container" id="topCustomButtonsContainer">
                         <!-- Buttons will be dynamically added here -->
                     </div>
                     <div style="margin-right: 10px;"></div>
@@ -898,12 +408,595 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Button source information and conflicts-->
+                <div class="button-sources" id="topButtonSources">
+                    <!-- Button source info and conflicts will be shown here -->
+
+                </div>
+            </div>
+
+            <div class="button-container">
+
+                <!-- USB Control Button -->
+                <div class="predefined-button" id="usbButton">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="usb.position" id="usb.position" onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>USB Open/Eject</h5>
+                            <small>Allows a user to easily open or eject all USB drives plugged into
+                                a computer</small>
+                            <span class="json-name"><span class="label">jsonName:</span> <span
+                                    class="property">usbopeneject</span></span>
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">USB Drives (All)</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">Open</button>
+                                    <button class="split-button right">Eject</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Volume Control Button -->
+                <div class="predefined-button" id="volumeButton">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="volume.position" id="volume.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Volume</h5>
+                            <small>Allows a user to easily change the volume and mute (but not the microphone
+                                volume)</small>
+                            <span class="json-name"><span class="label">jsonName:</span> <span
+                                    class="property">volume</span></span>
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Volume</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">+</button>
+                                    <button class="split-button middle">-</button>
+                                    <button class="split-button right">Mute</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Control Button -->
+                <div class="predefined-button" id="voiceButton">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="voice.position" id="voice.position" onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Voice Control (Windows Only)</h5>
+                            <small>Turns on Voice Access in Windows</small>
+                            <span class="json-name"><span class="label">jsonName:</span> <span class="property">voice
+                                    control</span></span>
+
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Voice Control</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">On</button>
+                                    <button class="split-button right">Off</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--Sign Out Button-->
+                <div class="predefined-button" id="signOutButton">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="signOut.position" id="signOut.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Sign Out (Windows Only)</h5>
+                            <small>Signs out the current user out of Windows in one click</small>
+                            <span class="json-name"><span class="label">jsonName:</span> <span
+                                    class="property">signout</span></span>
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="preview-button action-button">
+                                    <span id="signOutLabel">Sign <br> Out</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom URL Button 1 -->
+                <div class="predefined-button" id="customUrl1">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="customUrl1.position" id="customUrl1.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Custom URL Button</h5>
+                            <small>Create a custom button that opens a specific website or web
+                                application</small>
+                        </div>
+
+                    </div>
+                    <div class="button-config">
+                        <div class="url-inputs-container">
+                            <div class="url-inputs">
+                                <label><b>Button Text:</b>
+                                    <input type="text" id="customUrl1.label"
+                                        placeholder="Button Text (use \n for line breaks)"
+                                        oninput="updateUrlButtonPreview('customUrl1')">
+                                </label>
+                                <label><b>Tooltip Header:</b>
+                                    <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text"
+                                        oninput="updateUrlButtonPreview('customUrl1')">
+                                </label>
+                                <label><b>Tooltip Text:</b>
+                                    <input type="text" id="customUrl1.tooltipText" placeholder="Description text"
+                                        oninput="updateUrlButtonPreview('customUrl1')">
+                                </label>
+                                <label><b>URL:</b>
+                                    <div class="url-input-wrapper">
+                                        <input type="url" id="customUrl1.url" placeholder="https://example.com">
+                                        <button type="button" class="test-url-btn" onclick="testURL('customUrl1.url')"
+                                            title="Test URL in new tab">Test URL</button>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="tooltip-preview">
+                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                    <div class="preview-button url-button" id="customUrl1Preview">
+                                        <span id="customUrl1Label">Button<br>Text</span>
+                                    </div>
+                                </div>
+                                <div class="tooltip-preview-box" id="customUrl1TooltipPreview">
+                                    <div class="tooltip-header" id="customUrl1TooltipHeaderPreview">Header text</div>
+                                    <div class="tooltip-text" id="customUrl1TooltipTextPreview">Description text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom URL Button 2 -->
+                <div class="predefined-button" id="customUrl2">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="customUrl2.position" id="customUrl2.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Custom URL Button</h5>
+                            <small>Create a second custom button that opens a specific website or web
+                                application</small>
+                        </div>
+
+                    </div>
+                    <div class="button-config">
+                        <div class="url-inputs-container">
+                            <div class="url-inputs">
+                                <label><b>Button Text:</b>
+                                    <input type="text" id="customUrl2.label" placeholder="Button Text"
+                                        oninput="updateUrlButtonPreview('customUrl2')">
+                                </label>
+                                <label><b>Tooltip Header:</b>
+                                    <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text"
+                                        oninput="updateUrlButtonPreview('customUrl2')">
+                                </label>
+                                <label><b>Tooltip Text:</b>
+                                    <input type="text" id="customUrl2.tooltipText" placeholder="Description text"
+                                        oninput="updateUrlButtonPreview('customUrl2')">
+                                </label>
+                                <label><b>URL:</b>
+                                    <div class="url-input-wrapper">
+                                        <input type="url" id="customUrl2.url" placeholder="https://example.com">
+                                        <button type="button" class="test-url-btn" onclick="testURL('customUrl2.url')"
+                                            title="Test URL in new tab">Test URL</button>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="tooltip-preview">
+                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                    <div class="preview-button url-button" id="customUrl2Preview">
+                                        <span id="customUrl2Label">Button<br>Text</span>
+                                    </div>
+
+                                </div>
+                                <div class="tooltip-preview-box" id="customUrl2TooltipPreview">
+                                    <div class="tooltip-header" id="customUrl2TooltipHeaderPreview">Header text</div>
+                                    <div class="tooltip-text" id="customUrl2TooltipTextPreview">Description text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom URL Button 3 -->
+                <div class="predefined-button" id="customUrl3">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="customUrl3.position" id="customUrl3.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Custom URL Button</h5>
+                            <small>Create a third custom button that opens a specific website or web
+                                application</small>
+                        </div>
+
+                    </div>
+                    <div class="button-config">
+                        <div class="url-inputs-container">
+                            <div class="url-inputs">
+                                <label><b>Button Text:</b>
+                                    <input type="text" id="customUrl3.label" placeholder="Button Text"
+                                        oninput="updateUrlButtonPreview('customUrl3')">
+                                </label>
+                                <label><b>Tooltip Header:</b>
+                                    <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text"
+                                        oninput="updateUrlButtonPreview('customUrl3')">
+                                </label>
+                                <label><b>Tooltip Text:</b>
+                                    <input type="text" id="customUrl3.tooltipText" placeholder="Description text"
+                                        oninput="updateUrlButtonPreview('customUrl3')">
+                                </label>
+                                <label><b>URL:</b>
+                                    <div class="url-input-wrapper">
+                                        <input type="url" id="customUrl3.url" placeholder="https://example.com">
+                                        <button type="button" class="test-url-btn" onclick="testURL('customUrl3.url')"
+                                            title="Test URL in new tab">Test URL</button>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="tooltip-preview">
+                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                    <div class="preview-button url-button" id="customUrl3Preview">
+                                        <span id="customUrl3Label">Button<br>Text</span>
+                                    </div>
+
+                                </div>
+                                <div class="tooltip-preview-box" id="customUrl3TooltipPreview">
+                                    <div class="tooltip-header" id="customUrl3TooltipHeaderPreview">Header text</div>
+                                    <div class="tooltip-text" id="customUrl3TooltipTextPreview">Description text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Application Button 1 -->
+                <div class="predefined-button" id="customApp1">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="customApp1.position" id="customApp1.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Custom Application Button</h5>
+                            <small>Create a custom button that launches a specific application</small>
+                        </div>
+
+                    </div>
+                    <div class="button-config">
+                        <div class="url-inputs-container">
+                            <div class="url-inputs">
+                                <label><b>Application:</b>
+                                    <select id="customApp1.appId" onchange="updateAppButtonPreview('customApp1')">
+                                        <option value="">Select Application</option>
+                                        <option value="calculator">Calculator</option>
+                                        <option value="firefox">Firefox</option>
+                                        <option value="googleChrome">Google Chrome</option>
+                                        <option value="microsoftAccess">Microsoft Access</option>
+                                        <option value="microsoftEdge">Microsoft Edge</option>
+                                        <option value="microsoftExcel">Microsoft Excel</option>
+                                        <option value="microsoftOneNote">Microsoft OneNote</option>
+                                        <option value="microsoftOutlook">Microsoft Outlook</option>
+                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
+                                        <option value="microsoftQuickAssist">Microsoft Quick Assist (Windows Only)
+                                        </option>
+                                        <option value="microsoftTeams">Microsoft Teams</option>
+                                        <option value="microsoftWord">Microsoft Word</option>
+                                        <option value="opera">Opera</option>
+                                    </select>
+                                </label>
+                                <label><b>Tooltip Header:</b>
+                                    <input type="text" id="customApp1.tooltipHeader"
+                                        placeholder="Header text (optional)"
+                                        oninput="updateAppButtonPreview('customApp1')">
+                                </label>
+                                <label><b>Tooltip Text:</b>
+                                    <input type="text" id="customApp1.tooltipText"
+                                        placeholder="Description text (optional)"
+                                        oninput="updateAppButtonPreview('customApp1')">
+                                </label>
+                            </div>
+                            <div class="tooltip-preview">
+                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                    <div class="preview-button url-button" id="customApp1Preview">
+                                        <span id="customApp1Label">Custom<br>App</span>
+                                    </div>
+                                </div>
+                                <div class="tooltip-preview-box" id="customApp1TooltipPreview">
+                                    <div class="tooltip-header" id="customApp1TooltipHeaderPreview">Header text</div>
+                                    <div class="tooltip-text" id="customApp1TooltipTextPreview">Description text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Application Button 2 -->
+                <div class="predefined-button" id="customApp2">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="customApp2.position" id="customApp2.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Custom Application Button</h5>
+                            <small>Create a second custom button that launches a specific application</small>
+                        </div>
+
+                    </div>
+                    <div class="button-config">
+                        <div class="url-inputs-container">
+                            <div class="url-inputs">
+                                <label><b>Application:</b>
+                                    <select id="customApp2.appId" onchange="updateAppButtonPreview('customApp2')">
+                                        <option value="">Select Application</option>
+                                        <option value="calculator">Calculator</option>
+                                        <option value="firefox">Firefox</option>
+                                        <option value="googleChrome">Google Chrome</option>
+                                        <option value="microsoftAccess">Microsoft Access</option>
+                                        <option value="microsoftEdge">Microsoft Edge</option>
+                                        <option value="microsoftExcel">Microsoft Excel</option>
+                                        <option value="microsoftOneNote">Microsoft OneNote</option>
+                                        <option value="microsoftOutlook">Microsoft Outlook</option>
+                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
+                                        <option value="microsoftQuickAssist">Microsoft Quick Assist</option>
+                                        <option value="microsoftTeams">Microsoft Teams</option>
+                                        <option value="microsoftWord">Microsoft Word</option>
+                                        <option value="opera">Opera</option>
+                                    </select>
+                                </label>
+                                <label><b>Tooltip Header:</b>
+                                    <input type="text" id="customApp2.tooltipHeader"
+                                        placeholder="Header text (optional)"
+                                        oninput="updateAppButtonPreview('customApp2')">
+                                </label>
+                                <label><b>Tooltip Text:</b>
+                                    <input type="text" id="customApp2.tooltipText"
+                                        placeholder="Description text (optional)"
+                                        oninput="updateAppButtonPreview('customApp2')">
+                                </label>
+                            </div>
+                            <div class="tooltip-preview">
+                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                    <div class="preview-button url-button" id="customApp2Preview">
+                                        <span id="customApp2Label">Custom<br>App</span>
+                                    </div>
+
+                                </div>
+                                <div class="tooltip-preview-box" id="customApp2TooltipPreview">
+                                    <div class="tooltip-header" id="customApp2TooltipHeaderPreview">Header text</div>
+                                    <div class="tooltip-text" id="customApp2TooltipTextPreview">Description text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Application Button 3 -->
+                <div class="predefined-button" id="customApp3">
+                    <div class="button-header">
+                        <div class="position-selector">
+                            <label>
+                                <select name="customApp3.position" id="customApp3.position"
+                                    onchange="validateUniquePositions()">
+                                    <option value="">-</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="button-info">
+                            <h5>Custom Application Button</h5>
+                            <small>Create a third custom button that launches a specific application</small>
+                        </div>
+
+                    </div>
+                    <div class="button-config">
+                        <div class="url-inputs-container">
+                            <div class="url-inputs">
+                                <label><b>Application:</b>
+                                    <select id="customApp3.appId" onchange="updateAppButtonPreview('customApp3')">
+                                        <option value="">Select Application</option>
+                                        <option value="calculator">Calculator</option>
+                                        <option value="firefox">Firefox</option>
+                                        <option value="googleChrome">Google Chrome</option>
+                                        <option value="microsoftAccess">Microsoft Access</option>
+                                        <option value="microsoftEdge">Microsoft Edge</option>
+                                        <option value="microsoftExcel">Microsoft Excel</option>
+                                        <option value="microsoftOneNote">Microsoft OneNote</option>
+                                        <option value="microsoftOutlook">Microsoft Outlook</option>
+                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
+                                        <option value="microsoftQuickAssist">Microsoft Quick Assist</option>
+                                        <option value="microsoftTeams">Microsoft Teams</option>
+                                        <option value="microsoftWord">Microsoft Word</option>
+                                        <option value="opera">Opera</option>
+                                    </select>
+                                </label>
+                                <label><b>Tooltip Header:</b>
+                                    <input type="text" id="customApp3.tooltipHeader"
+                                        placeholder="Header text (optional)"
+                                        oninput="updateAppButtonPreview('customApp3')">
+                                </label>
+                                <label><b>Tooltip Text:</b>
+                                    <input type="text" id="customApp3.tooltipText"
+                                        placeholder="Description text (optional)"
+                                        oninput="updateAppButtonPreview('customApp3')">
+                                </label>
+                            </div>
+                            <div class="tooltip-preview">
+                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                    <div class="preview-button url-button" id="customApp3Preview">
+                                        <span id="customApp3Label">Custom<br>App</span>
+                                    </div>
+
+                                </div>
+                                <div class="tooltip-preview-box" id="customApp3TooltipPreview">
+                                    <div class="tooltip-header" id="customApp3TooltipHeaderPreview">Header text</div>
+                                    <div class="tooltip-text" id="customApp3TooltipTextPreview">Description text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4>MorphicBar Preview</h4>
+        <p class="description">Preview of how your custom buttons will appear on the actual MorphicBar:</p>
+
+        <div class="morphic-bar-preview">
+            <div class="morphic-bar-container">
+                <!-- Custom buttons will be inserted here -->
+                <div class="custom-buttons-container" id="customButtonsContainer">
+                    <!-- Buttons will be dynamically added here -->
+                </div>
+                <div style="margin-right: 10px;"></div>
+                <div class="button-preview-container">
+                    <div class="preview-button-group">
+                        <div class="button-label">Text Size</div>
+                        <div class="split-button-container">
+                            <button class="split-button left">+</button>
+                            <button class="split-button right">-</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-preview-container">
+                    <div class="preview-button-group">
+                        <div class="button-label">Magnifier</div>
+                        <div class="split-button-container">
+                            <button class="split-button left">Show</button>
+                            <button class="split-button right">Hide</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-preview-container">
+                    <div class="preview-button-group">
+                        <div class="button-label">Snip</div>
+                        <div class="split-button-container">
+                            <button class="split-button" style="margin-left: 5px;">Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-preview-container">
+                    <div class="preview-button-group">
+                        <div class="button-label">Read Selected</div>
+                        <div class="split-button-container">
+                            <button class="split-button left">P</button>
+                            <button class="split-button right">P</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-preview-container">
+                    <div class="preview-button-group">
+                        <div class="button-label">Contrast & color</div>
+                        <div class="split-button-container">
+                            <button class="split-button left">Contrast</button>
+                            <button class="split-button middle">Color</button>
+                            <button class="split-button middle">Dark</button>
+                            <button class="split-button right">Night</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Button source information and conflicts-->
             <div class="button-sources" id="buttonSources">
                 <!-- Button source info and conflicts will be shown here -->
-                
+
             </div>
         </div>
         <h2>3. Download the new config.json file</h2>

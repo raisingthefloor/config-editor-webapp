@@ -20,6 +20,13 @@ body {
     margin: 0 auto;
 }
 
+.required {
+    color: #e53e3e;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
 h1 {
     margin: 0 0 16px 0;
     color: #000;
@@ -77,7 +84,7 @@ h6 {
 p {
     margin: 0 0 12px 0;
     color: #000;
-    line-height: 1.0;
+    line-height: 1.2;
     max-width: 800px;
 }
 
@@ -89,7 +96,7 @@ ol, ul {
 
 li {
     margin-bottom: 8px;
-    line-height: 1.0;
+    line-height: 1.2;
 }
 
 /* Section styling - Much more spacing */
@@ -146,11 +153,11 @@ input[type="radio"] {
     accent-color: #3182ce;
 }
 
-/* Disabled checkbox styling */
-input[type="checkbox"]:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    position: relative;
+/* Add thicker appearance for two-column checkboxes */
+.two-column-layout input[type="checkbox"] {
+    box-shadow: 0 0 0 1px black;
+    width: 20px;
+    height: 20px;
 }
 
 /* Small text styling */
@@ -449,7 +456,7 @@ input[type="file"] {
 
 .error-messages li {
     margin-bottom: 6px;
-    line-height: 1.5;
+    line-height: 1.2;
 }
 
 .success-message {
@@ -811,7 +818,7 @@ input[type="file"] {
 
 /* Empty state styling */
 .custom-buttons-container:empty::before {
-    content: "No custom buttons selected";
+    content: "Your custom buttons will appear here";
     color: #a0aec0;
     font-style: italic;
     font-size: 12px;
@@ -882,9 +889,9 @@ input[type="file"] {
     .two-column-layout label .control-container {
         min-width: auto;
         align-self: flex-start;
+        width: 100%;
     }
     
-
     .custom-buttons-container {
         margin-right: 0;
         justify-content: center;
@@ -902,7 +909,9 @@ input[type="file"] {
     
     .tooltip-preview {
         padding: 8px;
-        order: -1; 
+        order: -1;
+        width: 100%;
+        align-items: center;
     }   
     
     .tooltip-preview h6 {
@@ -912,7 +921,9 @@ input[type="file"] {
     
     .tooltip-preview-box {
         max-width: 100%;
-        padding: 6px 8px;
+        min-width: auto;
+        width: 100%;
+        padding: 12px;
     }
     
     .tooltip-header {
@@ -923,6 +934,83 @@ input[type="file"] {
     .tooltip-text {
         font-size: 14px;
         max-height: 34px;
+    }
+
+    /* Improve input fields on mobile */
+    .url-inputs {
+        width: 100%;
+    }
+
+    .url-inputs label {
+        margin-left: 0;
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .url-inputs label b {
+        max-width: 100%;
+        min-width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .url-inputs input[type="text"],
+    .url-inputs input[type="url"],
+    .url-inputs select {
+        width: 100%;
+        max-width: none;
+    }
+
+    .url-inputs .url-input-wrapper {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .button-fields .url-input-wrapper input[type="url"],
+    .url-inputs .url-input-wrapper input[type="url"] {
+        width: 100%;
+        max-width: none;
+    }
+
+    .test-url-btn {
+        width: 100%;
+        max-width: none;
+        padding: 8px;
+        min-height: 40px;
+        font-size: 16px;
+    }
+
+    .button-fields label {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .button-fields label > span:first-child {
+        min-width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .button-fields input[type="text"],
+    .button-fields select {
+        width: 100%;
+        max-width: none;
+        min-width: auto;
+    }
+
+    /* Responsive button styles */
+    #download, #checkErrors {
+        min-width: auto;
+        width: 45%;
+        padding: 10px 16px;
+        font-size: 15px;
+    }
+    
+    .download-section > div {
+        flex-wrap: wrap;
+        gap: 10px;
     }
 }
 
@@ -937,7 +1025,7 @@ input[type="file"] {
     }
     
     .tooltip-preview-box {
-        padding: 6px 8px;
+        padding: 8px;
     }
     
     .tooltip-header {
@@ -952,6 +1040,51 @@ input[type="file"] {
     .url-inputs input[type="text"],
     .url-inputs input[type="url"] {
         font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    /* Additional mobile improvements */
+    .predefined-button {
+        padding: 10px;
+    }
+
+    .button-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .button-info {
+        width: 100%;
+    }
+
+    .button-preview-container {
+        align-self: center;
+        margin-top: 8px;
+    }
+
+    .preview-button, 
+    .position-content .button-info {
+        min-width: 60px;
+        min-height: 60px;
+    }
+
+    .test-url-btn {
+        min-height: 44px;
+        font-weight: 600;
+    }
+
+    /* Smaller buttons for smallest screens */
+    #download, #checkErrors {
+        width: 100%;
+        min-width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .download-section > div {
+        flex-direction: column;
+        gap: 8px;
     }
 }
 
@@ -1002,13 +1135,13 @@ select:focus-visible {
     color: #2d3748;
     display: block;
     margin-top: 6px;
-    line-height: 1.6;
+    line-height: 1.2;
 }
 
 /* Small text in date container */
 .date-input-container small {
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.2;   
     display: block;
     margin-top: 6px;
     color: #718096;
@@ -1214,5 +1347,25 @@ select:focus-visible {
     background-color:#3182ce;
     padding: 10px;
     padding-bottom: 3px;
-    border-radius: px;
+    border-radius: 20px;
+}
+
+.no-buttons-message {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    color: #718096;
+    text-align: center;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+}
+
+/* Add this media query to hide morphic bar preview on small screens */
+@media (max-width: 900px) {
+    .morphic-bar-preview {
+        display: none;
+    }
 }

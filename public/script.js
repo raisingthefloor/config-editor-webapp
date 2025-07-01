@@ -74,9 +74,13 @@ function toggleDelayMorphicAccess() {
         // Force enable telemetry (AT Use Counter) and disable the checkbox
         // since delay morphic requires telemetry to work
         telemetryCheckbox.checked = true;
+        // Keep normal appearance even when disabled (override CSS disabled styling)
+        telemetryCheckbox.style.setProperty('opacity', '1', 'important');
+        telemetryCheckbox.style.setProperty('cursor', 'pointer', 'important');
+        telemetryCheckbox.style.setProperty('accent-color', '#3182ce', 'important');
+        telemetryCheckbox.style.setProperty('background-color', 'initial', 'important');
+        telemetryCheckbox.style.setProperty('color', 'initial', 'important');
         telemetryCheckbox.disabled = true;
-        telemetryCheckbox.style.opacity = '0.6';
-        telemetryCheckbox.style.cursor = 'not-allowed';
     } else {
         // Disable date input when delay is disabled
         dateInput.disabled = true;
@@ -923,16 +927,20 @@ function validateUniquePositions() {
 
 // Updated function to update the Morphic bar preview
 function updatePositionPreview() {
-    const customButtonsContainer = document.getElementById('customButtonsContainer');
-    const buttonSources = document.getElementById('buttonSources');
+    const topButtonsContainer = document.getElementById('topCustomButtonsContainer');
+    const bottomButtonsContainer = document.getElementById('customButtonsContainer');
+    const topButtonSources = document.getElementById('topButtonSources');
+    const bottomButtonSources = document.getElementById('buttonSources');
     
-    if (!customButtonsContainer || !buttonSources) {
+    if ((!topButtonsContainer && !bottomButtonsContainer) || (!topButtonSources && !bottomButtonSources)) {
         return;
     }
     
     // Clear existing content
-    customButtonsContainer.innerHTML = '';
-    buttonSources.innerHTML = '';
+    if (topButtonsContainer) topButtonsContainer.innerHTML = '';
+    if (bottomButtonsContainer) bottomButtonsContainer.innerHTML = '';
+    if (topButtonSources) topButtonSources.innerHTML = '';
+    if (bottomButtonSources) bottomButtonSources.innerHTML = '';
     
     // Define button configurations
     const buttonConfigs = [
@@ -1036,43 +1044,83 @@ function updatePositionPreview() {
         }
     }
     
-    // Create button elements for the Morphic bar by cloning existing previews
-    orderedButtons.forEach(button => {
-        let sourceElement = null;
+    // Create button elements for both Morphic bars by cloning existing previews
+    const updateContainer = (container) => {
+        if (!container) return;
         
-        if (button.type === 'control' || button.type === 'action') {
-            // Find the existing preview button group for control and action buttons
-            const buttonSection = document.getElementById(`${button.id}Button`);
-            if (buttonSection) {
-                sourceElement = buttonSection.querySelector('.preview-button-group');
-            }
-        } else if (button.type === 'url' || button.type === 'application') {
-            // Find the existing preview button for URL and application buttons
-            const previewButton = document.getElementById(`${button.id}Preview`);
-            if (previewButton) {
-                sourceElement = previewButton;
-            }
+        // If no buttons are assigned, show a message
+        if (orderedButtons.length === 0) {
+            const placeholderMsg = document.createElement('div');
+            placeholderMsg.className = 'no-buttons-message';
+            placeholderMsg.textContent = 'Your custom buttons will appear here';
+            container.appendChild(placeholderMsg);
+            return;
         }
         
-        // Clone the existing element if found
-        if (sourceElement) {
-            const clonedElement = sourceElement.cloneNode(true);
-            customButtonsContainer.appendChild(clonedElement);
-        }
-    });
-    
-    // Show source information
-    let sourcesHTML = '';
-
-    sourcesHTML += '<div style="margin-bottom: 8px;"><strong>Conflicts:</strong></div>';
-    
-    if (conflicts.length > 0) {
-        conflicts.forEach(conflict => {
-            sourcesHTML += `<div class="button-source-item conflict">⚠️ ${conflict}</div>`;
+        // Add selected buttons
+        orderedButtons.forEach(button => {
+            let sourceElement = null;
+            
+            if (button.type === 'control' || button.type === 'action') {
+                // Find the existing preview button group for control and action buttons
+                const buttonSection = document.getElementById(`${button.id}Button`);
+                if (buttonSection) {
+                    sourceElement = buttonSection.querySelector('.preview-button-group');
+                }
+            } else if (button.type === 'url') {
+                // Find the existing preview button for URL buttons
+                const previewButton = document.getElementById(`${button.id}Preview`);
+                if (previewButton) {
+                    sourceElement = previewButton;
+                }
+            } else if (button.type === 'application') {
+                // For application buttons, recreate instead of clone to ensure current app name is used
+                const appId = document.getElementById(`${button.id}.appId`).value;
+                const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+                
+                // Create a new button element
+                const newButton = document.createElement('div');
+                newButton.className = 'preview-button url-button application-button';
+                
+                // Create span with app name
+                const span = document.createElement('span');
+                const appNameWithBreaks = appName.replace(/\s/g, '<br>');
+                span.innerHTML = appNameWithBreaks;
+                
+                newButton.appendChild(span);
+                container.appendChild(newButton);
+                sourceElement = null; // Skip the clone step below for this button
+            }
+            
+            // Clone the existing element if found
+            if (sourceElement) {
+                const clonedElement = sourceElement.cloneNode(true);
+                container.appendChild(clonedElement);
+            }
         });
-    } else {
-        sourcesHTML += '<div class="button-source-item">No conflicts</div>';
-    }
+    };
     
-    buttonSources.innerHTML = sourcesHTML;
+    // Update both containers
+    updateContainer(topButtonsContainer);
+    updateContainer(bottomButtonsContainer);
+    
+    // Generate source information HTML
+    const generateSourcesHTML = () => {
+        let sourcesHTML = '';
+        sourcesHTML += '<div style="margin-bottom: 8px;"><strong>Conflicts:</strong></div>';
+        
+        if (conflicts.length > 0) {
+            conflicts.forEach(conflict => {
+                sourcesHTML += `<div class="button-source-item conflict">⚠️ ${conflict}</div>`;
+            });
+        } else {
+            sourcesHTML += '<div class="button-source-item">No conflicts</div>';
+        }
+        
+        return sourcesHTML;
+    };
+    
+    // Update both button sources containers
+    if (topButtonSources) topButtonSources.innerHTML = generateSourcesHTML();
+    if (bottomButtonSources) bottomButtonSources.innerHTML = generateSourcesHTML();
 }
