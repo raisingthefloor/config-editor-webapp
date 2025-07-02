@@ -1,0 +1,50 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- dev
+
+pool:
+  vmImage: 'ubuntu-24.04' 
+
+#resources:
+#- repo: self
+
+variables:
+  containerRegistry: acr-morphic
+  repository: 'config-editor-webapp'
+  tag: '$(Build.BuildNumber)'
+
+stages:
+- stage: Docker
+  displayName: Build and push Docker image
+  jobs:
+  - job: DockerBuildAndPush
+    displayName: Build and push Docker image
+    steps:
+    - task: Docker@2
+      displayName: Build Docker image
+      inputs:
+        command: build
+        containerRegistry: $(containerRegistry)
+        dockerfile: './Dockerfile'
+        repository: $(repository)
+        tags: $(tag)
+    - task: Docker@2
+      displayName: Log in to container registry
+      inputs:
+        command: login
+        containerRegistry: $(containerRegistry)
+    - task: Docker@2
+      displayName: Push docker image
+      inputs:
+        command: push
+        containerRegistry: $(containerRegistry)
+        repository: $(repository)
+        tags: $(tag)
+    - task: Docker@2
+      displayName: Log out of container registry
+      inputs:
+        command: logout
+        containerRegistry: acr-morphic
