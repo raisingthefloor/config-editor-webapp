@@ -3,6 +3,18 @@
     box-sizing: border-box;
 }
 
+:root {
+    --checkbox-size: 1em;
+    --checkbox-border: 2px;
+    --checkbox-border-color-light: black;
+    --checkbox-border-color-dark: white;
+    --checkbox-fill-color-light: black;
+    --checkbox-fill-color-dark: white;
+    --checkbox-background-light: white;
+    --checkbox-background-dark: #222;
+  }
+
+  
 body {
     font-family: sans-serif;
     background-color: #f5f7fa;
@@ -155,9 +167,28 @@ input[type="radio"] {
 
 /* Add thicker appearance for two-column checkboxes */
 .two-column-layout input[type="checkbox"] {
-    box-shadow: 0 0 0 1px black;
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: 0 0 0 1.5px black;
+    border-radius: 4px;
     width: 20px;
     height: 20px;
+}
+
+.two-column-layout input[type="checkbox"]:checked {
+    background-color: #3182ce;
+    border-color: #3182ce;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 8.5l3 3 7-7' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E");
+    background-size: 85%;
+    background-position: center;
+}
+
+/* Style for indeterminate checkbox state (AT on Demand) */
+.two-column-layout input[type="checkbox"]:indeterminate {
+    background-color: #a0aec0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 8h8' stroke='white' stroke-width='2.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+    background-size: 75%;
+    background-position: center;
 }
 
 /* Small text styling */
