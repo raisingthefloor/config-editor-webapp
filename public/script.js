@@ -1054,22 +1054,34 @@ function updatePositionPreview() {
         
         // Add selected buttons
         orderedButtons.forEach(button => {
-            let sourceElement = null;
-            
             if (button.type === 'control' || button.type === 'action') {
                 // Find the existing preview button group for control and action buttons
                 const buttonSection = document.getElementById(`${button.id}Button`);
                 if (buttonSection) {
-                    sourceElement = buttonSection.querySelector('.preview-button-group');
+                    const sourceElement = buttonSection.querySelector('.preview-button-group');
+                    if (sourceElement) {
+                        const clonedElement = sourceElement.cloneNode(true);
+                        container.appendChild(clonedElement);
+                    }
                 }
             } else if (button.type === 'url') {
-                // Find the existing preview button for URL buttons
-                const previewButton = document.getElementById(`${button.id}Preview`);
-                if (previewButton) {
-                    sourceElement = previewButton;
-                }
+                // For URL buttons, create a new element with the current label value
+                const labelInput = document.getElementById(`${button.id}.label`);
+                const labelValue = labelInput ? labelInput.value : 'Custom Button';
+                
+                // Create new button element instead of cloning
+                const newButton = document.createElement('div');
+                newButton.className = 'preview-button url-button';
+                
+                // Create span with label text
+                const span = document.createElement('span');
+                const labelWithBreaks = labelValue ? labelValue.replace(/\\n/g, '<br>') : 'Button<br>Text';
+                span.innerHTML = labelWithBreaks;
+                
+                newButton.appendChild(span);
+                container.appendChild(newButton);
             } else if (button.type === 'application') {
-                // For application buttons, recreate instead of clone to ensure current app name is used
+                // For application buttons, create new element with current app name
                 const appId = document.getElementById(`${button.id}.appId`).value;
                 const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
                 
@@ -1084,13 +1096,6 @@ function updatePositionPreview() {
                 
                 newButton.appendChild(span);
                 container.appendChild(newButton);
-                sourceElement = null; // Skip the clone step below for this button
-            }
-            
-            // Clone the existing element if found
-            if (sourceElement) {
-                const clonedElement = sourceElement.cloneNode(true);
-                container.appendChild(clonedElement);
             }
         });
     };
