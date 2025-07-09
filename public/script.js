@@ -21,7 +21,7 @@ function toggleScopeAccess() {
     const resetCheckbox = document.getElementById('features.resetSettings.enabled');
     const resetLabel = document.getElementById('features.resetSettings.label');
 
-    
+
     if (autorunEnabled) {
         // Enable dependent options when autorun is enabled
         scopeSelect.disabled = false;
@@ -35,9 +35,8 @@ function toggleScopeAccess() {
         resetLabel.style.opacity = '1';
         scopeSelect.style.cursor = 'pointer';
         resetCheckbox.style.cursor = 'pointer';
-    } 
-    else 
-    {
+    }
+    else {
         // Disable dependent options when autorun is disabled
         scopeSelect.disabled = true;
         resetCheckbox.disabled = true;
@@ -46,7 +45,7 @@ function toggleScopeAccess() {
         // Set default values when disabled
         scopeSelect.value = 'allLocalUsers';
         resetCheckbox.checked = false;
-        
+
         // Add visual styling to indicate disabled state
         scopeSelect.style.opacity = '0.6';
         resetCheckbox.style.opacity = '0.6';
@@ -63,35 +62,35 @@ function toggleDelayMorphicAccess() {
     const dateInput = document.getElementById('hideMorphicAfterLoginUntil');
     const dateLabel = document.getElementById('delayMorphicDateLabel');
     const telemetryCheckbox = document.getElementById('features.atUseCounter.enabled');
-    
+
     if (delayEnabled) {
         // Enable date input when delay is enabled
         dateInput.disabled = false;
         dateLabel.style.opacity = '1';
         dateInput.style.opacity = '1';
         dateInput.style.cursor = 'pointer';
-        
+
         // Force enable telemetry and prevent unchecking
         telemetryCheckbox.checked = true;
-        
+
         // Remove previous event listener if exists (to avoid duplicates)
         telemetryCheckbox.removeEventListener('click', preventUnchecking);
-        
+
         // Add event listener to prevent unchecking
         telemetryCheckbox.addEventListener('click', preventUnchecking);
-        
+
         // Visual indication that it can't be unchecked without disabling it
         telemetryCheckbox.style.cursor = 'not-allowed';
     } else {
         // Disable date input when delay is disabled
         dateInput.disabled = true;
         dateInput.value = '';
-        
+
         // Add visual styling to indicate disabled state
         dateLabel.style.opacity = '0.6';
         dateInput.style.opacity = '0.6';
         dateInput.style.cursor = 'not-allowed';
-        
+
         // Remove the event listener so checkbox can be changed again
         telemetryCheckbox.removeEventListener('click', preventUnchecking);
         telemetryCheckbox.style.cursor = 'pointer';
@@ -104,7 +103,7 @@ function preventUnchecking(event) {
     event.preventDefault();
     // Keep the checkbox checked
     this.checked = true;
-    
+
     // Optional: Show a message explaining why it can't be unchecked
     const message = "Telemetry is required when 'Delay Morphic Appearance' is enabled.";
     alert(message);
@@ -115,7 +114,7 @@ function toggleDescription(descriptionId) {
     const shortSpan = document.getElementById(`${descriptionId}-short`);
     const fullSpan = document.getElementById(`${descriptionId}-full`);
     const toggleLink = document.getElementById(`${descriptionId}-toggle`);
-    
+
     if (fullSpan.style.display === 'none') {
         // Show full description
         shortSpan.style.display = 'none';
@@ -134,7 +133,7 @@ function resetValidationState() {
     const errorMessages = document.getElementById('errorMessages');
     const successMessage = document.getElementById('successMessage');
     const downloadBtn = document.getElementById('download');
-    
+
     if (errorMessages) errorMessages.style.display = 'none';
     if (successMessage) successMessage.style.display = 'none';
     if (downloadBtn) {
@@ -144,11 +143,11 @@ function resetValidationState() {
 }
 
 // Set initial state when page loads
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     toggleScopeAccess();
     toggleDelayMorphicAccess();
     updatePositionPreview();
-    
+
     // Add change listeners to reset validation when inputs change
     const formInputs = document.querySelectorAll('input, select, textarea');
     formInputs.forEach(input => {
@@ -164,23 +163,23 @@ document.getElementById('telemetry.siteId').addEventListener('input', validateSi
 document.getElementById('organizationName').addEventListener('input', validateOrganizationName);
 
 // Add event listeners for position dropdowns to update preview
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position', 'customApp1.position', 'customApp2.position', 'customApp3.position', 'signOut.position'];
-    
+
     positionSelects.forEach(selectId => {
         const select = document.getElementById(selectId);
         if (select) {
             select.addEventListener('change', updatePositionPreview);
         }
     });
-    
+
     // Add event listeners for custom URL inputs to update preview
     const customUrlIds = ['customUrl1', 'customUrl2', 'customUrl3'];
     customUrlIds.forEach(buttonId => {
         const labelInput = document.getElementById(`${buttonId}.label`);
         const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
         const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
-        
+
         if (labelInput) {
             labelInput.addEventListener('input', () => {
                 updateUrlButtonPreview(buttonId);
@@ -197,14 +196,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    
+
     // Add event listeners for custom application inputs to update preview
     const customAppIds = ['customApp1', 'customApp2', 'customApp3'];
     customAppIds.forEach(buttonId => {
         const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
         const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
         const appIdInput = document.getElementById(`${buttonId}.appId`);
-        
+
         if (tooltipHeaderInput) {
             tooltipHeaderInput.addEventListener('input', () => {
                 updateAppButtonPreview(buttonId);
@@ -228,20 +227,20 @@ function validateSiteId() {
     const siteIdInput = document.getElementById('telemetry.siteId');
     const siteIdError = document.getElementById('siteIdError');
     const siteId = siteIdInput.value.trim();
-    
+
     // Clear previous error styling
     siteIdInput.style.borderColor = '';
     siteIdInput.title = '';
     siteIdError.style.display = 'none';
-    
+
     // Its valid if empty (but later when checking for errors, we'll make sure it's filled in)
     if (!siteId) {
         return true;
     }
-    
+
     // Check if Site ID contains only ASCII letters and numbers
     const validPattern = /^[A-Za-z0-9]+$/;
-    
+
     if (!validPattern.test(siteId)) {
         // Invalid Site ID - apply error styling and show error message
         siteIdInput.style.borderColor = 'red';
@@ -249,7 +248,7 @@ function validateSiteId() {
         siteIdError.style.display = 'block';
         return false;
     }
-    
+
     return true; // Valid Site ID
 }
 
@@ -258,20 +257,20 @@ function validateOrganizationName() {
     const orgNameInput = document.getElementById('organizationName');
     const orgNameError = document.getElementById('organizationNameError');
     const orgName = orgNameInput.value;
-    
+
     // Clear previous error styling
     orgNameInput.style.borderColor = '';
     orgNameInput.title = '';
     orgNameError.style.display = 'none';
-    
+
     // Its valid if empty (but later when checking for errors, we'll make sure it's filled in)
     if (!orgName) {
         return true;
     }
-    
+
     // Check for forbidden characters: double quotes, backslash, and line breaks
     const forbiddenChars = /["\\\n\r]/;
-    
+
     if (forbiddenChars.test(orgName)) {
         // Invalid Organization Name - apply error styling and show error message
         orgNameInput.style.borderColor = 'red';
@@ -279,7 +278,7 @@ function validateOrganizationName() {
         orgNameError.style.display = 'block';
         return false;
     }
-    
+
     return true; // Valid Organization Name
 }
 
@@ -290,26 +289,26 @@ function testURL(inputId) {
         console.error('URL input field not found:', inputId);
         return;
     }
-    
+
     const url = urlInput.value.trim();
-    
+
     // Its valid if empty (but later when checking for errors, we'll make sure it's filled in)
     if (!url) {
         alert('Please enter a URL first');
         urlInput.focus();
         return;
     }
-    
+
     // Basic URL validation - check if it starts with http:// or https://
     let finalUrl = url;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
         // If no protocol specified, assume https://
         finalUrl = 'https://' + url;
-        
+
         // Update the input field to show the corrected URL
         urlInput.value = finalUrl;
     }
-    
+
     // Try to open the URL in a new tab
     try {
         const newWindow = window.open(finalUrl, '_blank');
@@ -332,32 +331,32 @@ function populatePredefinedButtons(extraItems) {
         if (positionSelect) {
             positionSelect.value = '';
         }
-        
+
         // Clear URL button fields
         if (buttonId.includes('customUrl')) {
             const labelInput = document.getElementById(`${buttonId}.label`);
             const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
             const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
             const urlInput = document.getElementById(`${buttonId}.url`);
-            
+
             if (labelInput) labelInput.value = '';
             if (tooltipHeaderInput) tooltipHeaderInput.value = '';
             if (tooltipTextInput) tooltipTextInput.value = '';
             if (urlInput) urlInput.value = '';
         }
-        
+
         // Clear Application button fields
         if (buttonId.includes('customApp')) {
             const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
             const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
             const appIdInput = document.getElementById(`${buttonId}.appId`);
-            
+
             if (tooltipHeaderInput) tooltipHeaderInput.value = '';
             if (tooltipTextInput) tooltipTextInput.value = '';
             if (appIdInput) appIdInput.value = '';
         }
     });
-    
+
     // Populate from config data
     extraItems.forEach((item, index) => {
         if (item.type === 'control') {
@@ -367,7 +366,7 @@ function populatePredefinedButtons(extraItems) {
                 'volume': 'volume',
                 'voice': 'voice'
             };
-            
+
             const buttonId = featureMap[item.feature];
             if (buttonId) {
                 const positionSelect = document.getElementById(`${buttonId}.position`);
@@ -380,7 +379,7 @@ function populatePredefinedButtons(extraItems) {
             const featureMap = {
                 'signout': 'signOut'
             };
-            
+
             const buttonId = featureMap[item.feature];
             if (buttonId) {
                 const positionSelect = document.getElementById(`${buttonId}.position`);
@@ -396,18 +395,18 @@ function populatePredefinedButtons(extraItems) {
                 if (positionSelect && positionSelect.value === '') {
                     // This custom button is available
                     positionSelect.value = (index + 1).toString();
-                    
+
                     // Populate the URL button fields
                     const labelInput = document.getElementById(`${buttonId}.label`);
                     const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
                     const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
                     const urlInput = document.getElementById(`${buttonId}.url`);
-                    
+
                     if (labelInput) labelInput.value = item.label || '';
                     if (tooltipHeaderInput) tooltipHeaderInput.value = item.tooltipHeader || '';
                     if (tooltipTextInput) tooltipTextInput.value = item.tooltipText || '';
                     if (urlInput) urlInput.value = item.url || '';
-                    
+
                     // Update the preview
                     updateUrlButtonPreview(buttonId);
                     break;
@@ -421,14 +420,14 @@ function populatePredefinedButtons(extraItems) {
                 if (positionSelect && positionSelect.value === '') {
                     // This custom button is available
                     positionSelect.value = (index + 1).toString();
-                    
+
                     // Populate the Application button fields
                     const appIdInput = document.getElementById(`${buttonId}.appId`);
                     if (appIdInput) appIdInput.value = item.appId || '';
-                    
+
                     // Update the preview
                     updateAppButtonPreview(buttonId);
-                    
+
                     // Ensure the preview button gets the application class for proper styling
                     const previewButton = document.getElementById(`${buttonId}Preview`);
                     if (previewButton) {
@@ -439,7 +438,7 @@ function populatePredefinedButtons(extraItems) {
             }
         }
     });
-    
+
     // Update position preview after loading
     updatePositionPreview();
 }
@@ -459,10 +458,10 @@ function collectPredefinedButtons() {
         { id: 'customApp2', type: 'application' },
         { id: 'customApp3', type: 'application' }
     ];
-    
+
     // Collect buttons that have positions assigned
     const positionedButtons = [];
-    
+
     buttonConfigs.forEach(config => {
         const positionSelect = document.getElementById(`${config.id}.position`);
         if (positionSelect && positionSelect.value && positionSelect.value !== '') {
@@ -471,7 +470,7 @@ function collectPredefinedButtons() {
                 type: config.type,
                 position: position
             };
-            
+
             if (config.type === 'control') {
                 buttonData.feature = config.feature;
             } else if (config.type === 'action') {
@@ -496,15 +495,15 @@ function collectPredefinedButtons() {
                 buttonData.tooltipHeader = appName;
                 buttonData.tooltipText = `This launches the ${appName} application.`;
             }
-            
+
             positionedButtons.push(buttonData);
         }
     });
-    
+
     // Sort by position and remove position property (as its not needed in final config)
     positionedButtons.sort((a, b) => a.position - b.position);
     positionedButtons.forEach(button => delete button.position);
-    
+
     return positionedButtons;
 }
 
@@ -517,8 +516,8 @@ function handleFileUpload(event) {
         try {
             // Attempt to parse the uploaded file as JSON
             const config = JSON.parse(e.target.result);
-            console.log('Parsed config:', config); 
-            
+            //console.log('Parsed config:', config);
+
             // Populate the entire UI with the loaded configuration
             populateUI(config);
             alert("Config file loaded successfully!");
@@ -535,17 +534,16 @@ function handleFileUpload(event) {
 function populateUI(config) {
     // Basic settings
     document.getElementById('organizationName').value = config.organizationName ?? "";
-    
+
     // Features section - handle nested structure
-    // Also provides backward compatibility with old flat dotted notation if needed
-    document.getElementById('features.atOnDemand.enabled').checked = 
-        config.features?.atOnDemand?.enabled ?? config["features.atOnDemand.enabled"] ?? false;
-    document.getElementById('features.atUseCounter.enabled').checked = 
-        config.features?.atUseCounter?.enabled ?? config["features.atUseCounter.enabled"] ?? false;
-    document.getElementById('features.autorunAfterLogin.enabled').checked = 
-        config.features?.autorunAfterLogin?.enabled ?? config["features.autorunAfterLogin.enabled"] ?? true;
-    document.getElementById('features.autorunAfterLogin.scope').value = 
-        config.features?.autorunAfterLogin?.scope ?? config["features.autorunAfterLogin.scope"] ?? "allLocalUsers";
+    document.getElementById('features.atOnDemand.enabled').checked =
+        config.features?.atOnDemand?.enabled ?? false;
+    document.getElementById('features.atUseCounter.enabled').checked =
+        config.features?.atUseCounter?.enabled ?? false;
+    document.getElementById('features.autorunAfterLogin.enabled').checked =
+        config.features?.autorunAfterLogin?.enabled ?? true;
+    document.getElementById('features.autorunAfterLogin.scope').value =
+        config.features?.autorunAfterLogin?.scope ?? "allLocalUsers";
     document.getElementById('features.checkForUpdates.enabled').checked = config.features?.checkForUpdates?.enabled ?? false;
     document.getElementById('features.customMorphicBars.enabled').checked = config.features?.customMorphicBars?.enabled ?? true;
     document.getElementById('features.resetSettings.enabled').checked = config.features?.resetSettings?.enabled ?? false;
@@ -558,14 +556,14 @@ function populateUI(config) {
     // Advanced settings - some nested, some top-level
     document.getElementById('telemetry.siteId').value = config.telemetry?.siteId ?? "";
     document.getElementById('hideMorphicAfterLoginUntil').value = config.hideMorphicAfterLoginUntil ?? "";
-    
+
 
     // Handle extra buttons/items - nested under morphicBar
     populatePredefinedButtons(config.morphicBar?.extraItems ?? []);
 
     // Update scope visibility after loading config
     toggleScopeAccess();
-    
+
     // Update delay morphic access and ensure telemetry dependency is enforced
     toggleDelayMorphicAccess();
 }
@@ -587,19 +585,19 @@ function checkForErrors() {
     const errorMessages = document.getElementById('errorMessages');
     const successMessage = document.getElementById('successMessage');
     const downloadBtn = document.getElementById('download');
-    
+
     // Clear previous messages
     errorMessages.style.display = 'none';
     successMessage.style.display = 'none';
-    errorMessages.innerHTML = '';
-    
+    errorMessages.replaceChildren();
+
     const errors = [];
-    
+
     // Validate unique positions
     if (!validateUniquePositions()) {
         errors.push('Duplicate button positions detected. Each button must have a unique position (1, 2, or 3).');
     }
-    
+
     // Validate organization name is not empty and doesn't contain forbidden characters
     const orgName = document.getElementById('organizationName').value.trim();
     if (!orgName) {
@@ -611,29 +609,25 @@ function checkForErrors() {
             errors.push('Organization Name cannot contain double quotes ("), backslash (\\), or line breaks.');
         }
     }
-    
+
     // Validate Site ID is filled in
     const siteId = document.getElementById('telemetry.siteId').value.trim();
     if (!siteId) {
         errors.push('Site ID is required.');
     }
-    
+
     // Validate Site ID format (if Site ID has content)
     if (siteId && !validateSiteId()) {
         errors.push('Site ID must contain only ASCII letters and numbers (no spaces or symbols).');
     }
-    
+
     // Validate Date to show MorphicBar is filled in (only if delay morphic is enabled)
     const delayMorphicEnabled = document.getElementById('enableDelayMorphic').checked;
     const morphicShowDate = document.getElementById('hideMorphicAfterLoginUntil').value;
     if (delayMorphicEnabled && !morphicShowDate) {
         errors.push('Date to show MorphicBar is required when Delay Morphic Appearance is enabled.');
     }
-    
-    // Note: No need to validate that telemetry is enabled when delay morphic is enabled
-    // because the UI now automatically forces telemetry to be enabled and disabled
-    // when delay morphic is checked
-    
+
     // Validate custom URL buttons have all required fields if position is selected
     const customUrlButtons = ['customUrl1', 'customUrl2', 'customUrl3'];
     customUrlButtons.forEach(buttonId => {
@@ -643,7 +637,7 @@ function checkForErrors() {
             const url = document.getElementById(`${buttonId}.url`).value.trim();
             const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value.trim();
             const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value.trim();
-            
+
             if (!label) {
                 errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')} (Position ${position}): Button Text is required.`);
             }
@@ -663,20 +657,20 @@ function checkForErrors() {
             }
         }
     });
-    
+
     // Validate custom application buttons have all required fields if position is selected
     const customAppButtons = ['customApp1', 'customApp2', 'customApp3'];
     customAppButtons.forEach(buttonId => {
         const position = document.getElementById(`${buttonId}.position`).value;
         if (position) {
             const appId = document.getElementById(`${buttonId}.appId`).value.trim();
-            
+
             if (!appId) {
                 errors.push(`${buttonId.replace('customApp', 'Custom Application Button ')} (Position ${position}): Application selection is required.`);
             }
         }
     });
-    
+
     // Validate hide until date if delay morphic is enabled and date is provided
     if (delayMorphicEnabled && morphicShowDate) {
         const selectedDate = new Date(morphicShowDate);
@@ -685,16 +679,26 @@ function checkForErrors() {
             errors.push('Date to show MorphicBar must be in the future.');
         }
     }
-    
+
+
+
     // Display results
+
     if (errors.length > 0) {
-        errorMessages.innerHTML = '<h4>Errors found:</h4><ul>' + 
-            errors.map(error => `<li>${error}</li>`).join('') + 
-            '</ul>';
+        const h4 = document.createElement('h4');
+        h4.textContent = 'Errors found:';
+        const ul = document.createElement('ul');
+        errors.forEach(error => {
+            const li = document.createElement('li');
+            li.textContent = error;
+            ul.appendChild(li)
+        })
         errorMessages.style.display = 'block';
         downloadBtn.disabled = true;
         downloadBtn.classList.add('disabled');
-    } else {
+        errorMessages.replaceChildren(h4, ul);
+    }
+    else {
         successMessage.style.display = 'block';
         downloadBtn.disabled = false;
         downloadBtn.classList.remove('disabled');
@@ -703,14 +707,14 @@ function checkForErrors() {
 
 function downloadConfig() {
     // All validation should already be done by checkForErrors()
-    
+
     const isAutoRunEnabled = document.getElementById('features.autorunAfterLogin.enabled').checked;
 
     // Build the config
     const config = {
         "version": 0,  // Default version value
         "organizationName": document.getElementById('organizationName').value.trim(),
-        
+
         "features": {
             "atOnDemand": {
                 "enabled": document.getElementById('features.atOnDemand.enabled').checked
@@ -761,7 +765,7 @@ function downloadConfig() {
     }
 
     const json = JSON.stringify(config, null, 2);
-    
+
     // Create downloadable file
     const blob = new Blob([json], { type: 'application/json' });
     const a = document.createElement('a');
@@ -772,36 +776,47 @@ function downloadConfig() {
 
 // Function to update URL button preview dynamically
 function updateUrlButtonPreview(buttonId) {
-    const label = document.getElementById(`${buttonId}.label`).value || 'Button<br>Text';
+    const label = document.getElementById(`${buttonId}.label`).value || 'Button\nText';
     const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value || 'Header text';
     const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value || 'Description text';
-    
+
     // Update preview button label - convert \n to line breaks
     const labelElement = document.getElementById(`${buttonId}Label`);
     if (labelElement) {
         // Convert \n to <br> tags for HTML display
-        const labelWithBreaks = label.replace(/\\n/g, '<br>');
-        labelElement.innerHTML = labelWithBreaks;
+        labelElement.replaceChildren();
+        // Split by \n and create text nodes with <br> elements
+        const parts = label.split('\\n');
+        parts.forEach((part, index) => {
+            if (index > 0) {
+                // Add <br> before each part except the first
+                labelElement.appendChild(document.createElement('br'));
+            }
+            // Add the text part
+            if (part) { // Only add non-empty parts
+                labelElement.appendChild(document.createTextNode(part));
+            }
+        });
     }
-    
+
     // Update button title attribute for browser tooltip
     const previewButton = document.getElementById(`${buttonId}Preview`);
     if (previewButton) {
         previewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
     }
-    
+
     // Update tooltip preview area - keep this for URL buttons
     const tooltipHeaderPreview = document.getElementById(`${buttonId}TooltipHeaderPreview`);
     const tooltipTextPreview = document.getElementById(`${buttonId}TooltipTextPreview`);
-    
+
     if (tooltipHeaderPreview) {
         tooltipHeaderPreview.textContent = tooltipHeader;
     }
-    
+
     if (tooltipTextPreview) {
         tooltipTextPreview.textContent = tooltipText;
     }
-    
+
     // Update position preview when button details change
     updatePositionPreview();
 }
@@ -827,19 +842,27 @@ const applicationNames = {
 function updateAppButtonPreview(buttonId) {
     const appId = document.getElementById(`${buttonId}.appId`).value;
     const label = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-    
+
     // Auto-generate tooltip header and text based on application name
     const tooltipHeader = label;
     const tooltipText = `This launches the ${label} application.`;
-    
+
     // Update preview button label
     const labelElement = document.getElementById(`${buttonId}Label`);
     if (labelElement) {
         // For application buttons, break at spaces to ensure all text fits without truncation
-        const labelWithBreaks = label.replace(/\s/g, '<br>');
-        labelElement.innerHTML = labelWithBreaks;
+        labelElement.replaceChildren();
+        const parts = label.split(' ');
+        parts.forEach((part, index) => {
+            if (index > 0) {
+                labelElement.appendChild(document.createElement('br'));
+            }
+            if (part) {
+                labelElement.appendChild(document.createTextNode(part));
+            }
+        });
     }
-    
+
     // Update button title attribute for browser tooltip and add application class
     const previewButton = document.getElementById(`${buttonId}Preview`);
     if (previewButton) {
@@ -847,9 +870,9 @@ function updateAppButtonPreview(buttonId) {
         // Add class to identify this as an application button for CSS styling
         previewButton.classList.add('application-button');
     }
-    
+
     // Tooltip preview has been removed from HTML, so no need to update it
-    
+
     // Update position preview when button details change
     updatePositionPreview();
 }
@@ -858,7 +881,7 @@ function updateAppButtonPreview(buttonId) {
 function validateUniquePositions() {
     const positionSelects = [
         'usb.position',
-        'volume.position', 
+        'volume.position',
         'voice.position',
         'signOut.position',
         'customUrl1.position',
@@ -868,10 +891,10 @@ function validateUniquePositions() {
         'customApp2.position',
         'customApp3.position'
     ];
-    
+
     const usedPositions = new Map(); // Map position to button ID that uses it
     const conflicts = new Set(); // Set of positions that have conflicts
-    
+
     // Collect all selected positions
     positionSelects.forEach(selectId => {
         const select = document.getElementById(selectId);
@@ -885,16 +908,16 @@ function validateUniquePositions() {
             }
         }
     });
-    
+
     // Update visual indicators for conflicts
     positionSelects.forEach(selectId => {
         const select = document.getElementById(selectId);
         if (select) {
             const position = select.value;
             const positionSelector = select.closest('.position-selector');
-            
+
             if (position && conflicts.has(position)) {
-                
+
                 // Add conflict indicator if it doesn't exist
                 let conflictIndicator = positionSelector.querySelector('.conflict-indicator');
                 if (!conflictIndicator) {
@@ -912,10 +935,10 @@ function validateUniquePositions() {
             }
         }
     });
-    
+
     // Update position preview
     updatePositionPreview();
-    
+
     // Return true if no conflicts, false if conflicts exist
     return conflicts.size === 0;
 }
@@ -926,82 +949,82 @@ function updatePositionPreview() {
     const bottomButtonsContainer = document.getElementById('customButtonsContainer');
     const topButtonSources = document.getElementById('topButtonSources');
     const bottomButtonSources = document.getElementById('buttonSources');
-    
+
     if ((!topButtonsContainer && !bottomButtonsContainer) || (!topButtonSources && !bottomButtonSources)) {
         return;
     }
-    
+
     // Clear existing content
-    if (topButtonsContainer) topButtonsContainer.innerHTML = '';
-    if (bottomButtonsContainer) bottomButtonsContainer.innerHTML = '';
-    if (topButtonSources) topButtonSources.innerHTML = '';
-    if (bottomButtonSources) bottomButtonSources.innerHTML = '';
-    
+    if (topButtonsContainer) topButtonsContainer.replaceChildren();
+    if (bottomButtonsContainer) bottomButtonsContainer.replaceChildren();
+    if (topButtonSources) topButtonSources.replaceChildren();
+    if (bottomButtonSources) bottomButtonSources.replaceChildren();
+
     // Define button configurations
     const buttonConfigs = [
-        { 
-            id: 'usb', 
-            name: 'USB Open/Eject', 
+        {
+            id: 'usb',
+            name: 'USB Open/Eject',
             type: 'control',
             displayText: 'USB Drives (All)'
         },
-        { 
-            id: 'volume', 
-            name: 'Volume Control', 
+        {
+            id: 'volume',
+            name: 'Volume Control',
             type: 'control',
             displayText: 'Volume'
         },
-        { 
-            id: 'voice', 
-            name: 'Voice Control', 
+        {
+            id: 'voice',
+            name: 'Voice Control',
             type: 'control',
             displayText: 'Voice Control'
         },
-        { 
+        {
             id: 'signOut',
             name: 'Sign Out',
             type: 'action',
             displayText: 'Sign Out'
         },
-        { 
-            id: 'customUrl1', 
-            name: 'Custom URL Button 1', 
+        {
+            id: 'customUrl1',
+            name: 'Custom URL Button 1',
             type: 'url',
             displayText: () => document.getElementById('customUrl1.label').value || 'Custom Button'
         },
-        { 
-            id: 'customUrl2', 
-            name: 'Custom URL Button 2', 
+        {
+            id: 'customUrl2',
+            name: 'Custom URL Button 2',
             type: 'url',
             displayText: () => document.getElementById('customUrl2.label').value || 'Custom Button'
         },
-        { 
-            id: 'customUrl3', 
-            name: 'Custom URL Button 3', 
+        {
+            id: 'customUrl3',
+            name: 'Custom URL Button 3',
             type: 'url',
             displayText: () => document.getElementById('customUrl3.label').value || 'Custom Button'
         },
-        { 
-            id: 'customApp1', 
-            name: 'Custom Application Button 1', 
+        {
+            id: 'customApp1',
+            name: 'Custom Application Button 1',
             type: 'application',
             displayText: () => {
                 const appId = document.getElementById('customApp1.appId').value;
                 return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
             }
         },
-        { 
-            id: 'customApp2', 
-            name: 'Custom Application Button 2', 
+        {
+            id: 'customApp2',
+            name: 'Custom Application Button 2',
             type: 'application',
             displayText: () => {
                 const appId = document.getElementById('customApp2.appId').value;
                 return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
             }
         },
-        { 
-            id: 'customApp3', 
-            name: 'Custom Application Button 3', 
+        {
+            id: 'customApp3',
+            name: 'Custom Application Button 3',
             type: 'application',
             displayText: () => {
                 const appId = document.getElementById('customApp3.appId').value;
@@ -1009,11 +1032,11 @@ function updatePositionPreview() {
             }
         }
     ];
-    
+
     const positionAssignments = new Map(); // Track which buttons are assigned to which positions
     const sourceInfo = [];
     const conflicts = [];
-    
+
     // Collect position assignments
     buttonConfigs.forEach(config => {
         const select = document.getElementById(`${config.id}.position`);
@@ -1025,12 +1048,12 @@ function updatePositionPreview() {
             positionAssignments.get(position).push(config);
         }
     });
-    
+
     // Check for conflicts and create ordered button list
     const orderedButtons = [];
     for (let pos = 1; pos <= 3; pos++) {
         const assignedButtons = positionAssignments.get(pos) || [];
-        
+
         if (assignedButtons.length === 1) {
             orderedButtons.push(assignedButtons[0]);
             sourceInfo.push(`Position ${pos}: ${assignedButtons[0].name}`);
@@ -1038,11 +1061,11 @@ function updatePositionPreview() {
             conflicts.push(`Position ${pos}: ${assignedButtons.map(b => b.name).join(', ')}`);
         }
     }
-    
+
     // Create button elements for both Morphic bars by cloning existing previews
     const updateContainer = (container) => {
         if (!container) return;
-        
+
         // If no buttons are assigned, show a message
         if (orderedButtons.length === 0) {
             const placeholderMsg = document.createElement('div');
@@ -1051,7 +1074,7 @@ function updatePositionPreview() {
             container.appendChild(placeholderMsg);
             return;
         }
-        
+
         // Add selected buttons
         orderedButtons.forEach(button => {
             if (button.type === 'control' || button.type === 'action') {
@@ -1068,59 +1091,99 @@ function updatePositionPreview() {
                 // For URL buttons, create a new element with the current label value
                 const labelInput = document.getElementById(`${button.id}.label`);
                 const labelValue = labelInput ? labelInput.value : 'Custom Button';
-                
+
                 // Create new button element instead of cloning
                 const newButton = document.createElement('div');
                 newButton.className = 'preview-button url-button';
-                
+
                 // Create span with label text
                 const span = document.createElement('span');
-                const labelWithBreaks = labelValue ? labelValue.replace(/\\n/g, '<br>') : 'Button<br>Text';
-                span.innerHTML = labelWithBreaks;
-                
+        
+                span.replaceChildren();
+                if(labelValue){
+                const parts = labelValue.split('\\n');
+                parts.forEach((part, index) => {
+                    if (index > 0) {
+                        span.appendChild(document.createElement('br'));
+                    }
+                    if (part) {
+                        span.appendChild(document.createTextNode(part));
+                    }
+                });
+            }
+            else{
+                span.appendChild(document.createTextNode('Button\nText'));
+            }
+
                 newButton.appendChild(span);
                 container.appendChild(newButton);
             } else if (button.type === 'application') {
                 // For application buttons, create new element with current app name
                 const appId = document.getElementById(`${button.id}.appId`).value;
                 const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-                
+
                 // Create a new button element
                 const newButton = document.createElement('div');
                 newButton.className = 'preview-button url-button application-button';
-                
+
                 // Create span with app name
                 const span = document.createElement('span');
-                const appNameWithBreaks = appName.replace(/\s/g, '<br>');
-                span.innerHTML = appNameWithBreaks;
-                
+                span.replaceChildren();
+                const parts = appName.split(' ');
+                parts.forEach((part, index) => {
+                    if (index > 0) {
+                        span.appendChild(document.createElement('br'));
+                    }
+                    span.appendChild(document.createTextNode(part));
+                });
+
                 newButton.appendChild(span);
                 container.appendChild(newButton);
             }
         });
     };
-    
+
     // Update both containers
     updateContainer(topButtonsContainer);
     updateContainer(bottomButtonsContainer);
-    
+
     // Generate source information HTML
     const generateSourcesHTML = () => {
-        let sourcesHTML = '';
-        sourcesHTML += '<div style="margin-bottom: 8px;"><strong>Conflicts:</strong></div>';
-        
+        const container = document.createDocumentFragment();
+
+        const div = document.createElement('div');
+        div.style.marginBottom = '8px';
+        div.textContent = 'Conflicts:';
+        div.style.fontWeight = 'bold';
+        div.appendChild(document.createElement('br'));
+        container.appendChild(div);
+        //sourcesHTML += '<div style="margin-bottom: 8px;"><strong>Conflicts:</strong></div>';
+
         if (conflicts.length > 0) {
             conflicts.forEach(conflict => {
-                sourcesHTML += `<div class="button-source-item conflict">⚠️ ${conflict}</div>`;
+                //sourcesHTML += `<div class="button-source-item conflict">⚠️ ${conflict}</div>`;
+                const div2 = document.createElement('div');
+                div2.className = 'button-source-item conflict';
+                div2.textContent = '⚠️ ' + conflict;
+                div2.appendChild(document.createElement('br'));
+                container.appendChild(div2);
             });
         } else {
-            sourcesHTML += '<div class="button-source-item">No conflicts</div>';
+            //sourcesHTML += '<div class="button-source-item">No conflicts</div>';
+            const div3 = document.createElement('div');
+            div3.className = 'button-source-item';
+            div3.textContent = 'No conflicts';
+            div3.appendChild(document.createElement('br'));
+            container.appendChild(div3);
         }
-        
-        return sourcesHTML;
+
+        return container;
     };
-    
+
     // Update both button sources containers
-    if (topButtonSources) topButtonSources.innerHTML = generateSourcesHTML();
-    if (bottomButtonSources) bottomButtonSources.innerHTML = generateSourcesHTML();
+    //if (topButtonSources) topButtonSources.innerHTML = generateSourcesHTML();
+    //if (bottomButtonSources) bottomButtonSources.innerHTML = generateSourcesHTML();
+
+    if (topButtonSources) topButtonSources.replaceChildren(generateSourcesHTML());
+    if (bottomButtonSources) bottomButtonSources.replaceChildren(generateSourcesHTML());
 }
