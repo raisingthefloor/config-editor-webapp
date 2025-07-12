@@ -77,6 +77,11 @@ stages:
         targetType: 'inline'
         workingDirectory: ./
         script: |
+          # if any command returns an error, stop the script
+          set -e
+
+          # print all commands to the terminal (for debugging)
+
           # download the specific version of Kustomize which we have tested
           docker pull registry.k8s.io/kustomize/kustomize:v5.7.0
 
