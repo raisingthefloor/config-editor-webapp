@@ -80,7 +80,7 @@ stages:
         TAG: $(tag)
         BRANCH: main
         GITHUB_USERNAME: deploybot-rtf
-        GITHUB_ACCESS_TOKEN: ${DeploybotAccessToken}
+        GITHUB_ACCESS_TOKEN: $(DeploybotAccessToken)
       inputs:
         targetType: 'inline'
         workingDirectory: ./
