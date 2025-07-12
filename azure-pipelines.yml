@@ -24,7 +24,7 @@ resources:
     type: github
     endpoint: raisingthefloor
     name: raisingthefloor/deploy-config-editor-webapp
-    ref: dev
+    ref: main
 
 stages:
 - stage: Docker
