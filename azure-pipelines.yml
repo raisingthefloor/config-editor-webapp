@@ -18,6 +18,14 @@ variables:
   repository: 'config-editor-webapp'
   tag: '$(Build.BuildNumber)'
 
+resources:
+  repositories:
+  - repository: deploy-config-editor-webapp
+    type: github
+    endpoint: raisingthefloor
+    name: raisingthefloor/deploy-config-editor-webapp
+    ref: dev
+
 stages:
 - stage: Docker
   displayName: Build and push Docker image
@@ -64,9 +72,16 @@ stages:
     - task: Bash@3
       env:
         TAG: $(tag)
+        BRANCH: dev
       inputs:
         targetType: 'inline'
         workingDirectory: ./
         script: |
+          # download the specific version of Kustomize which we have tested
           docker pull registry.k8s.io/kustomize/kustomize:v5.7.0
+
+          # check out the deployment repo
+          git checkout ${BRANCH}
+
+          # test Kustomize
           docker run registry.k8s.io/kustomize/kustomize:v5.7.0 version
