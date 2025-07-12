@@ -86,7 +86,9 @@ stages:
 
           # NOTE: at this point, we should be in the deploy-config-editor-webapp's source directory
 
-          ls
+          ls -a
+
+          git branch
 
           # check out the branch (so we can push it back in after modification)
           git checkout ${BRANCH}
