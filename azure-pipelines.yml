@@ -69,6 +69,7 @@ stages:
       displayName: Pull deployment repo
       persistCredentials: true
       path: deploy-config-editor-webapp
+      workspaceRepo: true
     - task: Bash@3
       env:
         TAG: $(tag)
@@ -84,6 +85,11 @@ stages:
           set -x
 
           # NOTE: at this point, we should be in the deploy-config-editor-webapp's source directory
+
+          ls
+
+          # check out the branch (so we can push it back in after modification)
+          git checkout ${BRANCH}
 
           # DEBUG: print out the dev deployment file
           # cat config-editor-webapp-dev-deployment.yaml
