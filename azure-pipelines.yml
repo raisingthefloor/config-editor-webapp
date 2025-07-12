@@ -23,7 +23,7 @@ resources:
   - repository: deploy-repository
     type: github
     name: raisingthefloor/deploy-config-editor-webapp
-    endpoint: deploybot-rtf
+    endpoint: 'deploybot-rtf (1)'
     ref: main
 
 stages:
