@@ -22,7 +22,7 @@ resources:
   repositories:
   - repository: deploy-config-editor-webapp
     type: github
-    endpoint: raisingthefloor
+    endpoint: deployboy-rtf
     name: raisingthefloor/deploy-config-editor-webapp
     ref: main
 
