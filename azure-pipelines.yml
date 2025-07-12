@@ -83,7 +83,7 @@ stages:
           # print all commands to the terminal (for debugging)
 
           # download the specific version of Kustomize which we have tested
-          #docker pull registry.k8s.io/kustomize/kustomize:v5.7.0
+          # docker pull registry.k8s.io/kustomize/kustomize:v5.7.0
 
           # NOTE: at this point, we should be in the deploy-config-editor-webapp's source directory
 
@@ -91,19 +91,19 @@ stages:
           cat config-editor-webapp-dev-deployment.yaml
 
           # use sed to update our build tag
-          sed -i 's|image: morphic.azurecr.io/config-editor-webapp:*|image: morphic.azurecr.io/config-editor-webapp:$(TAG)|' config-editor-webapp-dev-deployment.yaml
+          sed -i 's|image: morphic.azurecr.io/config-editor-webapp:\S*|image: morphic.azurecr.io/config-editor-webapp:$(TAG)|' config-editor-webapp-dev-deployment.yaml
 
           # DEBUG: print out the dev deployment file
           cat config-editor-webapp-dev-deployment.yaml
 
           # update deployment tag
-          #docker run registry.k8s.io/kustomize/kustomize:v5.7.0 edit set image morphic.azurecr.io/config-editor-webapp=morphic.azurecr.io/config-editor-webapp:${NEWTAG}
+          # docker run registry.k8s.io/kustomize/kustomize:v5.7.0 edit set image morphic.azurecr.io/config-editor-webapp=morphic.azurecr.io/config-editor-webapp:${NEWTAG}
 
           # DEBUG
-          #cat kustomization.yaml
+          # cat kustomization.yaml
 
-          docker run registry.k8s.io/kustomize/kustomize:v5.7.0 build
-          #rm kustomization.yaml
+          # docker run registry.k8s.io/kustomize/kustomize:v5.7.0 build
+          # rm kustomization.yaml
 
           # DEBUG: print out directory
           ls -a
