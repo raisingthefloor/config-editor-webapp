@@ -84,7 +84,7 @@ stages:
           # print all commands to the terminal (for debugging)
           set -x
 
-          git checkout https://deploybot-rtf:$(DeploybotAccessToken)@github.com/raisingthefloor/deploy-config-editor-webapp -b $(BRANCH)
+          git checkout https://deploybot-rtf:$(DeploybotAccessToken)@github.com/raisingthefloor/deploy-config-editor-webapp -b ${BRANCH}
           cd deploy-config-editor-webapp
 
           # NOTE: at this point, we should be in the deploy-config-editor-webapp's source directory
