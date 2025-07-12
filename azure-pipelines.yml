@@ -24,7 +24,7 @@ resources:
     type: github
     name: raisingthefloor/deploy-config-editor-webapp
     endpoint: 'deploybot-rtf (1)'
-    ref: main
+    ref: refs/heads/main
 
 stages:
 - stage: Docker
