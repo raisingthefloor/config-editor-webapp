@@ -88,7 +88,10 @@ stages:
           # if any command returns an error, stop the script
           set -e
 
-          git checkout https://${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN}@github.com/raisingthefloor/deploy-config-editor-webapp -b ${BRANCH}
+          # DEBUG: output all commands to terminal
+          set -x
+
+          git pull https://${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN}@github.com/raisingthefloor/deploy-config-editor-webapp -b ${BRANCH}
           cd deploy-config-editor-webapp
 
           # NOTE: at this point, we should be in the deploy-config-editor-webapp's source directory
