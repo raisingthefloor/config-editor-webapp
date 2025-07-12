@@ -3,104 +3,126 @@
     box-sizing: border-box;
 }
 
+:root {
+    --checkbox-size: 1em;
+    --checkbox-border: 2px;
+    --checkbox-border-color-light: black;
+    --checkbox-border-color-dark: white;
+    --checkbox-fill-color-light: black;
+    --checkbox-fill-color-dark: white;
+    --checkbox-background-light: white;
+    --checkbox-background-dark: #222;
+  }
+
+  
 body {
     font-family: sans-serif;
     background-color: #f5f7fa;
     margin: 0;
-    padding: 30px;
+    padding: 16px;
     font-size: 15px;
-    line-height: 1.7;
-    color: #2c3e50;
+    line-height: 1.2;
 }
 
 .container {
     background-color: #ffffff;
-    padding: 50px;
+    padding: 24px;
     border-radius: 12px;
     max-width: 1000px;
     margin: 0 auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.required {
+    color: #e53e3e;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 4px;
 }
 
 h1 {
-    margin: 0 0 50px 0;
-    color: #1a202c;
+    margin: 0 0 16px 0;
+    color: #000;
     font-size: 32px;
     font-weight: 700;
     letter-spacing: -0.025em;
     text-align: center;
-    border-bottom: 3px solid #e2e8f0;
-    padding-bottom: 20px;
+    border-bottom: 4px solid #d3dae3;
+    padding-bottom: 8px;
+}
+
+h2:first-of-type {
+    border-top: none;
+    padding-top: 0;
 }
 
 h2 {
-    margin: 50px 0 30px 0;
-    color: #2d3748;
+    margin: 16px 0 8px 0;
+    color: #000;
     font-size: 24px;
     font-weight: 600;
     letter-spacing: -0.025em;
-    border-left: 4px solid #3182ce;
-    padding-left: 20px;
+    border-top: 3px solid #d3dae3;
+    padding-top:20px;
 }
 
 h3 {
     font-size: 20px;
-    color: #2d3748;
-    margin: 0 0 30px 0;
+    color: #000;
+    margin: 0 0 8px 0;
     font-weight: 600;
 }
 
 h4 {
     font-size: 18px;
-    color: #2d3748;
-    margin: 40px 0 25px 0;
+    color: #000;
+    margin: 0px 0px 8px 0;
     font-weight: 600;
 }
 
 h5 {
     font-size: 16px;
-    color: #4a5568;
-    margin: 0 0 20px 0;
+    color: #000;
+    margin: 0 0 12px 0;
     font-weight: 600;
 }
 
 h6 {
     font-size: 14px;
-    color: #4a5568;
-    margin: 0 0 15px 0;
+    color: #000;
+    margin: 0 0 8px 0;
     font-weight: 600;
 }
 
 p {
-    margin: 0 0 20px 0;
-    color: #4a5568;
-    line-height: 1.7;
+    margin: 0 0 12px 0;
+    color: #000;
+    line-height: 1.2;
     max-width: 800px;
 }
 
 ol, ul {
-    margin: 0 0 25px 0;
-    padding-left: 30px;
-    color: #4a5568;
+    margin: 0 0 16px 0;
+    padding-left: 24px;
+    color: #000;
 }
 
 li {
-    margin-bottom: 12px;
-    line-height: 1.7;
+    margin-bottom: 8px;
+    line-height: 1.2;
 }
 
 /* Section styling - Much more spacing */
 .section {
-    margin-bottom: 50px;
-    padding: 20px 0;
+    margin-bottom: 16px;
+    padding: 12px 0;
 }
 
 /* Form elements */
 label {
-    display: block;
-    margin-bottom: 35px;
+    margin:0;
+    padding: 0;
     font-size: 15px;
-    color: #2d3748;
+    color: black;
     font-weight: 500;
 }
 
@@ -110,10 +132,10 @@ input[type="number"],
 input[type="date"],
 input[type="url"],
 select {
-    padding: 12px 16px;
+    padding: 10px 16px;
     width: 100%;
     max-width: 350px;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #000;
     border-radius: 8px;
     font-size: 15px;
     font-family: inherit;
@@ -132,11 +154,6 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
 }
 
-input[type="text"]:read-only {
-    background-color: #f7fafc;
-    color: #718096;
-    cursor: not-allowed;
-}
 
 /* Checkbox and radio button styling */
 input[type="checkbox"],
@@ -148,44 +165,76 @@ input[type="radio"] {
     accent-color: #3182ce;
 }
 
+/* Add thicker appearance for two-column checkboxes */
+.two-column-layout input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: 0 0 0 1.5px black;
+    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+}
+
+.two-column-layout input[type="checkbox"]:checked {
+    background-color: #3182ce;
+    border-color: #3182ce;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 8.5l3 3 7-7' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E");
+    background-size: 85%;
+    background-position: center;
+}
+
+/* Style for indeterminate checkbox state (AT on Demand) */
+.two-column-layout input[type="checkbox"]:indeterminate {
+    background-color: #a0aec0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 8h8' stroke='white' stroke-width='2.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+    background-size: 75%;
+    background-position: center;
+}
+
 /* Small text styling */
 small {
     display: block;
     font-size: 13px;
-    color: #718096;
-    margin-top: 12px;
-    line-height: 1.6;
+    color: black;
+    margin-top: 0;
+    line-height: 1.2;
     font-weight: 400;
-    max-width: 600px;
+    max-width: 100%;
 }
+
+/* Small text in two-column layout should use 80% of the full container width */
+.two-column-layout small {
+    width: 100%;
+    max-width: none;
+    position: relative;
+}
+
 
 /* Two-column layout */
 .two-column-layout {
     background-color: #f8fafc;
-    padding: 40px;
+    padding: 20px;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
-    margin-bottom: 50px;
+    margin-bottom: 16px;
 }
 
 .two-column-layout h3 {
-    margin: 0 0 35px 0;
+    margin: 0 0 8px 0;
     font-size: 20px;
     color: #1a202c;
     border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 15px;
+    padding-bottom: 8px;
     font-weight: 600;
 }
 
 .two-column-layout label {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 35px;
-    gap: 30px;
+    margin-bottom: 0px;
+    gap: 24px;
     font-size: 15px;
-    min-height: 50px;
-    padding: 15px 0;
-    border-bottom: 1px solid #f1f5f9;
+    padding: 12px 0;
 }
 
 .two-column-layout label:last-child {
@@ -194,19 +243,20 @@ small {
 
 .two-column-layout label .label-text {
     flex: 1;
-    max-width: 55%;
-    font-size: 15px;
+    font-size: 18px;
     color: #2d3748;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .two-column-layout label .control-container {
     flex: 0 0 auto;
-    min-width: 350px;
+    min-width: 30%;
+    width: 30%;
     display: flex;
-    align-items: center;
+    align-items: right;
     gap: 15px;
     justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 /* Checkbox label styling */
@@ -218,6 +268,7 @@ small {
 .two-column-layout label:has(input[type="checkbox"]) .control-container {
     flex: 0 0 auto;
     min-width: auto;
+    width: auto;
     margin-top: 2px;
     order: -1;
 }
@@ -228,35 +279,39 @@ small {
     order: 1;
 }
 
+/* Small text width for checkbox labels */
+.two-column-layout label:has(input[type="checkbox"]) small {
+    width: 80%;
+    max-width: 80%;
+}
+
 /* Input styling for two-column layout */
 .two-column-layout input[type="text"], 
 .two-column-layout input[type="number"], 
 .two-column-layout input[type="date"],
 .two-column-layout input[type="url"],
 .two-column-layout select {
-    width: 280px;
-    max-width: 280px;
-    min-width: 280px;
+    max-width: 160px;
+    min-width: 160px;
 }
 
 /* Dependent option styling */
 .dependent-option {
-    margin-left: 32px;
-    padding: 20px;
-    border-left: 4px solid #3182ce;
-    background-color: #edf2f7;
+    margin-left: 5%;
+    padding: 16px;
+    margin-top: -20px;
     border-radius: 0 8px 8px 0;
     margin-bottom: 20px;
 }
 
 .dependent-option .label-text {
-    margin-left: 10px;
+    margin-left: 8px;
     max-width: 50%;
     font-size: 14px;
 }
 
 .dependent-option label {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 /* Validation error styling - Red background */
@@ -284,9 +339,10 @@ input:disabled {
 
 /* Button styling */
 button {
-    padding: 12px 20px;
+    padding: 8px 16px;
     font-size: 14px;
     font-weight: 600;
+    margin-top: 5px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
@@ -296,7 +352,7 @@ button {
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    min-height: 44px;
+    min-height: 36px;
 }
 
 button:disabled {
@@ -363,10 +419,10 @@ input[type="file"] {
 
 /* Download button styling */
 #download {
-    padding: 18px 40px;
-    font-size: 18px;
-    min-width: 250px;
-    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 16px;
+    min-width: 200px;
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(49, 130, 206, 0.3);
     transition: all 0.3s ease;
     font-weight: 600;
@@ -390,10 +446,10 @@ input[type="file"] {
 
 
 #checkErrors {
-    padding: 18px 40px;
-    font-size: 18px;
-    min-width: 250px;
-    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 16px;
+    min-width: 200px;
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(49, 130, 206, 0.3);
     transition: all 0.3s ease;
     font-weight: 600;
@@ -412,64 +468,64 @@ input[type="file"] {
     background-color: #fed7d7;
     border: 1px solid #fc8181;
     border-radius: 8px;
-    padding: 20px;
+    padding: 16px;
     color: #742a2a;
     max-width: 100%;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
 .error-messages h4 {
-    margin: 0 0 15px 0;
+    margin: 0 0 12px 0;
     color: #742a2a;
     font-size: 16px;
 }
 
 .error-messages ul {
     margin: 0;
-    padding-left: 20px;
+    padding-left: 16px;
 }
 
 .error-messages li {
-    margin-bottom: 8px;
-    line-height: 1.5;
+    margin-bottom: 6px;
+    line-height: 1.2;
 }
 
 .success-message {
     background-color: #c6f6d5;
     border: 1px solid #68d391;
     border-radius: 8px;
-    padding: 20px;
+    padding: 16px;
     color: #22543d;
     font-weight: 600;
     max-width: 100%;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
 /* Upload section styling - Light blue background */
 .section:first-of-type {
     background-color: #f8fafc;
-    padding: 24px;
+    padding: 16px;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
 }
 
 .section:first-of-type label {
     font-weight: 600;
     color: #2d3748;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 /* Form group styling */
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 /* Predefined button sections */
 .predefined-button {
     background-color: #f8fafc;
-    padding: 30px;
-    margin-bottom: 30px;
+    padding: 0px 10px;
+    margin-bottom: 8px;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -478,12 +534,11 @@ input[type="file"] {
 .button-header {
     display: flex;
     align-items: center;
-    gap: 25px;
-    margin-bottom: 20px;
+    gap: 20px;
 }
 
 .position-selector {
-    flex: 0 0 150px;
+    flex: 0 0 10px;
 }
 
 .position-selector label {
@@ -493,7 +548,8 @@ input[type="file"] {
 
 .position-selector select {
     width: 100%;
-    max-width: 140px;
+    min-width: 70px;
+    max-width: 70px;
 }
 
 .button-info {
@@ -501,20 +557,14 @@ input[type="file"] {
 }
 
 .button-info h5 {
-    margin: 0 0 8px 0;
+    margin: 0 0 2px 0;
     color: #1a202c;
     font-size: 16px;
     font-weight: 600;
 }
 
-.button-description {
-    margin: 0;
-    color: #4a5568;
-    font-size: 13px;
-    line-height: 1.4;
-}
-
 .button-preview-container {
+    position: relative;
     flex: 0 0 auto;
 }
 
@@ -522,45 +572,129 @@ input[type="file"] {
     background-color: #38a169 !important;
 }
 
+.action-button {
+    background-color: rgb(0, 41, 87)  !important;
+}
+
 .url-button {
     background-color: rgb(0, 41, 87)  !important;
 }
 
 .button-config {
-    padding: 15px 0;
-    border-top: 1px solid #e2e8f0;
+    padding: 0px 0;
 }
 
 .config-display {
     background-color: #edf2f7;
-    padding: 12px 16px;
+    padding: 8px 12px;
     border-radius: 6px;
     font-size: 13px;
     color: #2d3748;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .url-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 8px;
+    margin-top: -10px;
+}
+
+.url-inputs label b {
+    max-width: 80px;
+    min-width: 80px;
 }
 
 .url-inputs label {
     margin: 0;
+    margin-bottom: -20px;
+    align-items: center;
+    gap: 8px;
     font-size: 13px;
     font-weight: 500;
+    margin-left: 90px;
 }
-
-.url-inputs input[type="text"],
+.url-inputs input[type="text"]{
+    width: 100%;
+    max-width: none;
+    margin-top: 0px;
+    padding: 4px 8px;
+}
 .url-inputs input[type="url"] {
     width: 100%;
     max-width: none;
-    margin-top: 5px;
+    margin-top: 0px;
+    padding: 4px 8px;
+}
+
+.url-inputs select {
+    width: 36%;
+    max-width: none;
+    margin-top: 0px;
+    padding: 4px 8px;
 }
 
 .url-inputs label:last-child {
-    grid-column: 1 / -1;
+    margin-bottom: -3px;
+}
+
+/* Split layout for url-inputs */
+.url-inputs-container {
+    display: flex;
+    gap: 0px;
+    align-items: flex-start;
+}
+
+.url-inputs-container .url-inputs {
+    flex: 1;
+    min-width: 0;
+}
+
+.tooltip-preview {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+
+.tooltip-preview-box {
+    background-color: black;
+    color: white;
+    padding: 8px 2px;
+    min-width: 270px;
+    max-width: 270px;
+    align-self: flex-end;
+}
+
+.tooltip-header {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #ffffff;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 1;
+    text-align: center;
+}
+
+.tooltip-text {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #ffffff;
+    font-weight: 500;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    max-height: 40px;
+    text-align: center;
 }
 
 /* Dropdown sizing in extra button sections */
@@ -571,11 +705,11 @@ input[type="file"] {
 }
 
 .extra-button h5 {
-    margin: 0 0 20px 0;
+    margin: 0 0 16px 0;
     color: #1a202c;
     font-size: 16px;
     font-weight: 600;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #e2e8f0;
 }
 
@@ -583,20 +717,20 @@ input[type="file"] {
     border: none;
     height: 1px;
     background-color: #e2e8f0;
-    margin: 24px 0;
+    margin: 16px 0;
 }
 
 /* Button fields styling */
 .button-fields {
     background-color: #edf2f7;
-    padding: 25px;
+    padding: 16px;
     border-radius: 10px;
     border: 1px solid #cbd5e0;
-    margin-top: 25px;
+    margin-top: 16px;
 }
 
 .button-fields label {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -615,12 +749,13 @@ input[type="file"] {
     width: 240px;
     max-width: 240px;
     min-width: 240px;
+    padding: 6px 12px;
 }
 
 /* Button Preview Styling */
 .button-preview {
-    margin-top: 24px;
-    padding-top: 20px;
+    margin-top: 16px;
+    padding-top: 12px;
     border-top: 1px solid #e2e8f0;
 }
 
@@ -628,7 +763,7 @@ input[type="file"] {
 .position-content .button-info {
     background-color: rgb(0, 41, 87);
     color: white;
-    padding: 10px 16px;
+    padding: 8px 10px;
     border: none;
     border-radius: 10px;
     font-size: 13px;
@@ -639,38 +774,37 @@ input[type="file"] {
     justify-content: center;
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    min-width: 100px;
-    min-height: 36px;
+    min-width: 50px;
+    max-width: 80px;
+    min-height: 50px;
+    max-height: 50px;
     font-weight: 500;
+    flex-shrink: 0;
 }
 
 .preview-button:hover {
     background-color: #2c5282;
 }
 
-/* Tooltip container for relative positioning */
-.button-preview-container {
-    position: relative;
-}
-
 /* Morphic Bar Preview Styles */
 .morphic-bar-preview {
-    margin: 24px 0;
-    padding: 20px;
-    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    margin: 16px 0;
+    padding: 16px;
+    background: #f7fafc;
     border-radius: 16px;
     border: 2px solid #e2e8f0;
 }
 
 .morphic-bar-container {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     background: white;
     border-radius: 5px;
-    padding: 8px;
+    padding: 6px;
     border: 1.5px solid #2c3e50;
-    min-height: 64px;
-    max-width: 600px;
+    min-height: 56px;
+    min-width: 500px;
+    max-width: 900px;
     margin: 0 auto;
     position: relative;
 }
@@ -678,9 +812,9 @@ input[type="file"] {
 .custom-buttons-container {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex: 1;
-    margin-right: 12px;
+    margin-right: 8px;
 }
 
 
@@ -692,8 +826,8 @@ input[type="file"] {
 
 /* Button source information styling */
 .button-sources {
-    margin-top: 16px;
-    padding: 12px;
+    margin-top: 12px;
+    padding: 8px;
     background-color: #f8fafc;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
@@ -702,7 +836,7 @@ input[type="file"] {
 .button-source-item {
     font-size: 12px;
     color: #718096;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .button-source-item:last-child {
@@ -716,35 +850,68 @@ input[type="file"] {
 
 /* Empty state styling */
 .custom-buttons-container:empty::before {
-    content: "No custom buttons selected";
+    content: "Your custom buttons will appear here";
     color: #a0aec0;
     font-style: italic;
     font-size: 12px;
     padding: 8px 16px;
 }
-
-/* Description text styling */
-.description {
-    color: #718096;
-    font-size: 14px;
-    margin-bottom: 20px;
-    line-height: 1.6;
+/* Tablet and smaller */
+@media (max-width: 1024px) {
+    .url-inputs-container {
+        gap: 16px;
+    }
+    
+    .tooltip-preview {
+        padding: 12px;
+    }
+    
+    .tooltip-preview-box {
+        max-width: 100%;
+    }
+    
+    .tooltip-header {
+        font-size: 16px;
+    }
+    
+    .tooltip-text {
+        font-size: 14px;
+        max-height: 36px;
+    }
 }
 
-/* Responsive adjustments */
+/* Tablet and smaller */
+@media (max-width: 900px) {
+    .url-inputs-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .tooltip-preview {
+        order: -1; /* Move preview to top on smaller screens */
+        padding: 12px;
+    }
+    
+    .tooltip-preview-box {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
+
+/* Responsive adjustments for mobile */
 @media (max-width: 768px) {
     .container {
-        padding: 24px;
-        margin: 10px;
+        padding: 16px;
+        margin: 8px;
     }
     
     .two-column-layout {
-        padding: 20px;
+        padding: 16px;
     }
     
     .two-column-layout label {
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
     }
     
     .two-column-layout label .label-text {
@@ -754,13 +921,7 @@ input[type="file"] {
     .two-column-layout label .control-container {
         min-width: auto;
         align-self: flex-start;
-    }
-    
-    .morphic-bar-container {
-        flex-direction: column;
-        gap: 12px;
-        min-height: auto;
-        padding: 12px;
+        width: 100%;
     }
     
     .custom-buttons-container {
@@ -772,6 +933,191 @@ input[type="file"] {
     .morphic-logo {
         align-self: center;
     }
+    
+    .url-inputs-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .tooltip-preview {
+        padding: 8px;
+        order: -1;
+        width: 100%;
+        align-items: center;
+    }   
+    
+    .tooltip-preview h6 {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    
+    .tooltip-preview-box {
+        max-width: 100%;
+        min-width: auto;
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .tooltip-header {
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+    
+    .tooltip-text {
+        font-size: 14px;
+        max-height: 34px;
+    }
+
+    /* Improve input fields on mobile */
+    .url-inputs {
+        width: 100%;
+    }
+
+    .url-inputs label {
+        margin-left: 0;
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .url-inputs label b {
+        max-width: 100%;
+        min-width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .url-inputs input[type="text"],
+    .url-inputs input[type="url"],
+    .url-inputs select {
+        width: 100%;
+        max-width: none;
+    }
+
+    .url-inputs .url-input-wrapper {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .button-fields .url-input-wrapper input[type="url"],
+    .url-inputs .url-input-wrapper input[type="url"] {
+        width: 100%;
+        max-width: none;
+    }
+
+    .test-url-btn {
+        width: 100%;
+        max-width: none;
+        padding: 8px;
+        min-height: 40px;
+        font-size: 16px;
+    }
+
+    .button-fields label {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .button-fields label > span:first-child {
+        min-width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .button-fields input[type="text"],
+    .button-fields select {
+        width: 100%;
+        max-width: none;
+        min-width: auto;
+    }
+
+    /* Responsive button styles */
+    #download, #checkErrors {
+        min-width: auto;
+        width: 45%;
+        padding: 10px 16px;
+        font-size: 15px;
+    }
+    
+    .download-section > div {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+/*Smallest screen */
+@media (max-width: 480px) {
+    .url-inputs-container {
+        gap: 8px;
+    }
+    
+    .tooltip-preview {
+        padding: 8px;
+    }
+    
+    .tooltip-preview-box {
+        padding: 8px;
+    }
+    
+    .tooltip-header {
+        font-size: 15px;
+    }
+    
+    .tooltip-text {
+        font-size: 13px;
+        max-height: 30px;
+    }
+    
+    .url-inputs input[type="text"],
+    .url-inputs input[type="url"] {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    /* Additional mobile improvements */
+    .predefined-button {
+        padding: 10px;
+    }
+
+    .button-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .button-info {
+        width: 100%;
+    }
+
+    .button-preview-container {
+        align-self: center;
+        margin-top: 8px;
+    }
+
+    .preview-button, 
+    .position-content .button-info {
+        min-width: 60px;
+        min-height: 60px;
+    }
+
+    .test-url-btn {
+        min-height: 44px;
+        font-weight: 600;
+    }
+
+    /* Smaller buttons for smallest screens */
+    #download, #checkErrors {
+        width: 100%;
+        min-width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .download-section > div {
+        flex-direction: column;
+        gap: 8px;
+    }
 }
 
 /* Focus styles for accessibility - Blue outline */
@@ -782,24 +1128,36 @@ select:focus-visible {
     outline-offset: 2px;
 }
 
+/* Conflict indicator styling */
+.conflict-indicator {
+    color: #e53e3e;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+    background-color: #fed7d7;
+    border: 1px solid #e53e3e;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
 /* Date input container styling */
 .date-input-container {
     flex-direction: column !important;
     align-items: flex-start !important;
     justify-content: flex-start !important;
+    text-align: left;
 }
 
 .date-input-container input[type="date"] {
-    width: 280px;
-    max-width: 280px;
-    min-width: 280px;
-    margin-top: 8px;
+    width: 160px;
+    max-width: 160px;
+    min-width: 160px;
 }
 
 /* Date input element styling */
 .date-input-container input[type="date"] {
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.2;
 }
 
 /* Bold text in date container */
@@ -808,16 +1166,16 @@ select:focus-visible {
     font-weight: 600;
     color: #2d3748;
     display: block;
-    margin-top: 8px;
-    line-height: 1.6;
+    margin-top: 6px;
+    line-height: 1.2;
 }
 
 /* Small text in date container */
 .date-input-container small {
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.2;   
     display: block;
-    margin-top: 8px;
+    margin-top: 6px;
     color: #718096;
 }
 
@@ -839,20 +1197,23 @@ select:focus-visible {
 .button-fields .url-input-wrapper input[type="url"],
 .url-inputs .url-input-wrapper input[type="url"] {
     flex: 1;
-    max-width: none;
+    max-width: 100%;
+    padding: 4px 8px;
 }
 
 .test-url-btn {
     background-color: #edf2f7;
     color: black;
     border: 1px solid #a0aec0;
-    padding: 8px 20px;
+    padding: 4px 8px;
+    min-height: 30px;
+    max-height: 30px;
     border-radius: 6px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    flex-shrink: 0;
     font-weight: 500;
+    min-width: 80px;
 }
 
 .test-url-btn:hover {
@@ -890,7 +1251,7 @@ select:focus-visible {
 /* JSON property names */
 .json-name {
     display: block;
-    margin-top: 8px;
+    margin-top: 2px;
     font-size: 11px;
     font-weight: 500;
 }
@@ -918,20 +1279,61 @@ select:focus-visible {
     text-align: center;
 }
 
+/* Override for application buttons - no truncation, expand to fit text */
+#customApp1Preview span,
+#customApp2Preview span,
+#customApp3Preview span {
+    display: block;
+    -webkit-box-orient: initial;
+    -webkit-line-clamp: initial;
+    overflow: visible;
+    text-overflow: initial;
+    max-width: none;
+    white-space: normal;
+    word-break: normal;
+    min-width: fit-content;
+    width: auto;
+}
+
+/* Ensure application button containers can expand */
+#customApp1Preview,
+#customApp2Preview,
+#customApp3Preview,
+.application-button {
+    min-width: fit-content;
+    width: auto;
+    max-width: none;
+    padding: 8px 12px;
+}
+
+/* Override for cloned application buttons in MorphicBar preview */
+.application-button span {
+    display: block;
+    -webkit-box-orient: initial;
+    -webkit-line-clamp: initial;
+    overflow: visible;
+    text-overflow: initial;
+    max-width: none;
+    white-space: normal;
+    word-break: normal;
+    min-width: fit-content;
+    width: auto;
+}
+
 /* Split button styling */
 .preview-button-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .button-label {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: #2d3748;
     text-align: center;
-    margin-bottom: -10px;
+    margin-bottom: -6px;
 }
 
 .split-button-container {
@@ -942,7 +1344,7 @@ select:focus-visible {
 .split-button {
     background-color: #008145;
     color: white;
-    padding: 0px 12px;
+    padding: 0px 10px;
     border: none;
     font-size: 12px;
     cursor: pointer;
@@ -950,21 +1352,52 @@ select:focus-visible {
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    min-width: 40px;
-    min-height: 30px;
-    max-height: 30px;
+    min-width: 30px;
+    min-height: 28px;
+    max-height: 28px;
     font-weight: 600;
-    font-size: 14px;
 }
 
 .split-button.left {
     border-radius: 6px 0 0 6px;
+    margin-left: 5px;
 }
 
 .split-button.right {
     border-radius: 0 6px 6px 0;
 }
 
+.split-button.middle {
+    border-radius: 0;
+}
+
 .split-button:hover {
     background-color: #00B05C;
+}
+
+.button-container {
+    background-color:#3182ce;
+    padding: 10px;
+    padding-bottom: 3px;
+    border-radius: 20px;
+}
+
+.no-buttons-message {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    color: #718096;
+    text-align: center;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+}
+
+/* Add this media query to hide morphic bar preview on small screens */
+@media (max-width: 900px) {
+    .morphic-bar-preview {
+        display: none;
+    }
 }
