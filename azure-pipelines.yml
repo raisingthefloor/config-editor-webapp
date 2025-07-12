@@ -98,4 +98,4 @@ stages:
           git config --global user.email "buildmaster@raisingthefloor.org"
           git config --global user.name "buildmaster"
           git commit config-editor-webapp-dev-deployment.yaml -m "deploybot: updating image tag to ${TAG}"
-          git push origin {BRANCH}
+          git push origin ${BRANCH}
