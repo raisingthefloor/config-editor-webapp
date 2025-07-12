@@ -85,8 +85,11 @@ stages:
           # download the specific version of Kustomize which we have tested
           docker pull registry.k8s.io/kustomize/kustomize:v5.7.0
 
-          # check out the deployment repo
-          git checkout ${BRANCH}
+          # move to the deployment repo directory
+          cd deploy-config-editor-webapp
+
+          # print out the dev deployment file
+          cat config-editor-webapp-dev-deployment.yaml
 
           # test Kustomize
           docker run registry.k8s.io/kustomize/kustomize:v5.7.0 version
