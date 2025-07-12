@@ -79,6 +79,8 @@ stages:
       env:
         TAG: $(tag)
         BRANCH: main
+        GITHUB_USERNAME: deploybot-rtf
+        GITHUB_ACCESS_TOKEN: ${DeploybotAccessToken}
       inputs:
         targetType: 'inline'
         workingDirectory: ./
@@ -86,10 +88,7 @@ stages:
           # if any command returns an error, stop the script
           set -e
 
-          # print all commands to the terminal (for debugging)
-          set -x
-
-          git checkout https://deploybot-rtf:${DeploybotAccessToken}@github.com/raisingthefloor/deploy-config-editor-webapp -b ${BRANCH}
+          git checkout https://${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN}@github.com/raisingthefloor/deploy-config-editor-webapp -b ${BRANCH}
           cd deploy-config-editor-webapp
 
           # NOTE: at this point, we should be in the deploy-config-editor-webapp's source directory
