@@ -15,7 +15,7 @@ pool:
 
 variables:
 # Holds all signing-related variables. Provide them the same was as the var group above.
-- group: 'windows-code-sign'
+- group: 'github-access'
 - name: 'containerRegistry'
   value: 'acr-morphic'
 - name: 'repository'
