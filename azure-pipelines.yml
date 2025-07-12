@@ -72,7 +72,7 @@ stages:
     - task: Bash@3
       env:
         TAG: $(tag)
-        BRANCH: dev
+        BRANCH: main
       inputs:
         targetType: 'inline'
         workingDirectory: ./
