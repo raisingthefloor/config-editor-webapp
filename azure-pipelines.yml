@@ -57,7 +57,6 @@ stages:
   - displayName: Update deployment repository
     steps:
     - checkout: deploy-config-editor-webapp
-      displayName: Pull deployment repo
       persistCredentials: true
       path: deploy-config-editor-webapp
     - task: Bash@3
