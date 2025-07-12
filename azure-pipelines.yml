@@ -14,17 +14,21 @@ pool:
   vmImage: 'ubuntu-24.04' 
 
 variables:
+# Holds all signing-related variables. Provide them the same was as the var group above.
+- group: 'windows-code-sign'
   containerRegistry: acr-morphic
-  repository: 'config-editor-webapp'
-  tag: '$(Build.BuildNumber)'
+- name: 'repository'
+  value: 'config-editor-webapp'
+- name: 'tag'
+  value: '$(Build.BuildNumber)'
 
-resources:
-  repositories:
-  - repository: deploy-repository
-    type: github
-    name: raisingthefloor/deploy-config-editor-webapp
-    endpoint: 'deploybot-rtf (1)'
-    ref: refs/heads/main
+#resources:
+#  repositories:
+#  - repository: deploy-repository
+#    type: github
+#    name: raisingthefloor/deploy-config-editor-webapp
+#    endpoint: 'deploybot-rtf (1)'
+#    ref: refs/heads/main
 
 stages:
 - stage: Docker
