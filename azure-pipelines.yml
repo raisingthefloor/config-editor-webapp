@@ -20,10 +20,10 @@ variables:
 
 resources:
   repositories:
-  - repository: deploy-config-editor-webapp
+  - repository: deploy-repository
     type: github
-    endpoint: deployboy-rtf
     name: raisingthefloor/deploy-config-editor-webapp
+    endpoint: deploybot-rtf
     ref: main
 
 stages:
@@ -65,7 +65,7 @@ stages:
   - job: UpdateDeploymentRepo
     displayName: Update deployment repository
     steps:
-    - checkout: deploy-config-editor-webapp
+    - checkout: deploy-repository
       displayName: Pull deployment repo
       persistCredentials: true
       path: deploy-config-editor-webapp
