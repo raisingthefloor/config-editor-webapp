@@ -14,7 +14,6 @@ pool:
   vmImage: 'ubuntu-24.04' 
 
 variables:
-# Holds all signing-related variables. Provide them the same was as the var group above.
 - group: 'github-access'
 - name: 'containerRegistry'
   value: 'acr-morphic'
@@ -22,14 +21,6 @@ variables:
   value: 'config-editor-webapp'
 - name: 'tag'
   value: '$(Build.BuildNumber)'
-
-#resources:
-#  repositories:
-#  - repository: deploy-repository
-#    type: github
-#    name: raisingthefloor/deploy-config-editor-webapp
-#    endpoint: 'deploybot-rtf (1)'
-#    ref: refs/heads/main
 
 stages:
 - stage: Docker
@@ -70,11 +61,6 @@ stages:
   - job: UpdateDeploymentRepo
     displayName: Update deployment repository
     steps:
-#    - checkout: deploy-repository
-#      displayName: Pull deployment repo
-#      persistCredentials: true
-#      path: deploy-config-editor-webapp
-#      workspaceRepo: true
     - task: Bash@3
       env:
         TAG: $(tag)
@@ -89,31 +75,22 @@ stages:
           set -e
 
           # DEBUG: output all commands to terminal
-          set -x
+          #set -x
 
           git clone https://${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN}@github.com/raisingthefloor/deploy-config-editor-webapp -b ${BRANCH}
           cd deploy-config-editor-webapp
 
-          # NOTE: at this point, we should be in the deploy-config-editor-webapp's source directory
-
-          ls -a
-
-          git branch
-
-          # check out the branch (so we can push it back in after modification)
-          git checkout ${BRANCH}
-
           # DEBUG: print out the dev deployment file
           # cat config-editor-webapp-dev-deployment.yaml
 
-          # use sed to update our build tag
+          # update our build tag
           sed -i 's|image: morphic.azurecr.io/config-editor-webapp:\S*|image: morphic.azurecr.io/config-editor-webapp:$(TAG)|' config-editor-webapp-dev-deployment.yaml
 
           # DEBUG: print out the dev deployment file
           # cat config-editor-webapp-dev-deployment.yaml
 
-          # NOTE: we could create a "deploybot" email, but we use "buildmaster" instead
+          # NOTE: we could create a "deploybot" email, but we use a "buildmaster" email instead
           git config --global user.email "buildmaster@raisingthefloor.org"
-          git config --global user.name "buildmaster"
+          git config --global user.name "deploybot-rtf"
           git commit config-editor-webapp-dev-deployment.yaml -m "deploybot: updating image tag to ${TAG}"
           git push
