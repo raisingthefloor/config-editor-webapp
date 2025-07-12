@@ -94,8 +94,6 @@ stages:
           # DEBUG: print out the dev deployment file
           # cat config-editor-webapp-dev-deployment.yaml
 
-          git config --global user.email "deploybot"
-
           # NOTE: we could create a "deploybot" email, but we use "buildmaster" instead
           git config --global user.email "buildmaster@raisingthefloor.org"
           git config --global user.name "buildmaster"
