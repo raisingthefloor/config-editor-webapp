@@ -32,12 +32,12 @@
 
         <h2>1. Upload Current config.json File (Optional)</h2>
         <div class="section">
-            <label for="upload" style="font-weight: 400; color: #000;">If you upload your current config.json file, we will read the uploaded file and update
+            <label id="uploadLabel" for="upload">If you upload your current config.json file, we will read the uploaded file and update
                 the settings below to
                 match your current settings. (Or you just proceed and work from the default settings below)</label>
             <div class="file-input-wrapper">
                 <input type="file" id="upload" accept=".json">
-                <button type="button" class="file-input-btn" onclick="document.getElementById('upload').click()">Choose
+                <button type="button" class="file-input-btn" id="fileInputBtn">Choose
                     File (Optional)</button>
                 <span id="fileName" class="file-name-display">No file chosen</span>
             </div>
@@ -53,7 +53,7 @@
                 <div class="bullet-point">•</div>
                 <div class="label-text">
                     Organization Name
-                    <font class="required">Required</font>
+                    <span class="required">Required</span>
                     <small>This can be any name you would like to identify your organization. If you will be using
                         different config files for different groups of computers – you might want to put the location
                         that this config.file will be used in here so you can identify which config file this is. You
@@ -62,7 +62,7 @@
                 </div>
                 <div class="control-container">
                     <input type="text" id="organizationName" placeholder="organization name">
-                    <div id="organizationNameError" style="display: none; color: #e53e3e;">
+                    <div id="organizationNameError">
                         Organization Name cannot contain double quotes (") or backslash (\)
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                 <div class="bullet-point">•</div>
                 <div class="label-text">
                     Site ID
-                    <font class="required">Required</font>
+                    <span class="required">Required</span>
                     <small>For Site ID use letters or numbers only. No symbols or spaces.
                         If organization wants separate cumulative counts for different areas (e.g. wants to track usage
                         in classrooms, library, and other places separately ) – then provide different site ids in the
@@ -82,7 +82,7 @@
                 </div>
                 <div class="control-container">
                     <input type="text" id="telemetry.siteId" pattern="[A-Za-z0-9]*" placeholder="e.g. umd">
-                    <div id="siteIdError" style="display: none; color: #e53e3e;">
+                    <div id="siteIdError">
                         Site ID cannot include symbols or spaces
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                                 class="property">autorunAfterLogin.scope</span></span>
                     </small>
                 </div>
-                <div class="control-container" style="margin-right: 10px;">
+                <div class="control-container">
                     <select name="features.autorunAfterLogin.scope" id="features.autorunAfterLogin.scope">
                         <option value="allLocalUsers">All Local Users</option>
                         <option value="currentUser">Currently Logged In User</option>
@@ -162,7 +162,7 @@
             <label>
                 <div class="label-text">
                     Enable AT-on-Demand (Windows Only)
-                    <small><b style="color: #e53e3e;">This option is in beta testing and is not generally available
+                    <small><b id="atOnDemandWarning">This option is in beta testing and is not generally available
                             yet.</b>
                         <br>
                         This option allows Users to be able to use their own AT they (or the enterprise) has a licence
@@ -230,7 +230,7 @@
                             login.
                             <b>Restore</b> – causes the MorphicBar to assume the same state as when a user signed
                             out.</span>
-                        <span class="description-full" id="visibility-full" style="display: none;">There are three
+                        <span class="description-full" id="visibility-full">There are three
                             settings for this. <b>Show</b> causes the MorphicBar to show up on login. <b>Hide</b> causes
                             the
                             MorphicBar to be hidden on login. <b>Restore</b> – causes the MorphicBar to assume the same
@@ -244,8 +244,7 @@
                             very little if any use of Morphic and consequently the same very low level of awareness and
                             use of the accessibility features built into the computer. (And very little benefit from
                             installing Morphic.)</span>
-                        <a href="#" class="see-more-link" onclick="toggleDescription('visibility'); return false;"
-                            id="visibility-toggle">See more</a>
+                        <a href="#" class="see-more-link" id="visibility-toggle">See more</a>
                         <span class="json-name"><span class="label">jsonName:</span> <span
                                 class="property">visibilityAfterLogin</span></span>
                     </small>
@@ -269,7 +268,7 @@
                             the bottom-right-hand corner for a left-to-right language. However, some libraries use that
                             corner for their sign in or timed use controls. So this setting is provided to allow the
                             MorphicBar to start in another corner of the main screen on startup.</span>
-                        <span class="description-full" id="location-full" style="display: none;">Users can move the
+                        <span class="description-full" id="location-full">Users can move the
                             MorphicBar themselves to any corner of any screen they want to. This setting however
                             determines where the MorphicBar will show up when Morphic is started. The default location
                             is bottomTrailing which would be the bottom-right-hand corner for a left-to-right language.
@@ -279,8 +278,7 @@
                             topTrailing, bottomLeading, bottomTrailing. The leading and trailing options are useful in
                             sites that may support multiple languages where things may shift left and right. The default
                             is Bottom Trailing.</span>
-                        <a href="#" class="see-more-link" onclick="toggleDescription('location'); return false;"
-                            id="location-toggle">See more</a>
+                        <a href="#" class="see-more-link" id="location-toggle">See more</a>
                         <span class="json-name"><span class="label">jsonName:</span> <span
                                 class="property">defaultLocation</span></span>
                     </small>
@@ -319,36 +317,38 @@
 
         <div class="section two-column-layout">
             <h3>Group 3: Custom MorphicBar Buttons</h3>
-            <p style="margin-left: 30px;">Enterprises can add up to three extra buttons on the MorphicBar using the
+            <div  id="customButtonsSection">
+            <p>Enterprises can add up to three extra buttons on the MorphicBar using the
                 config file.</p>
 
-            <p style="margin-left: 30px;">The three buttons can be the same for all computers at the organization, or
+            <p>The three buttons can be the same for all computers at the organization, or
                 different for different
                 locations. For example, a school may want a different set of 3 buttons for computers in the classrooms
                 than they do for the computers in the library, or labs or tutor center or in general areas.</p>
 
-            <p style="margin-left: 30px;">This can be easily done but just creating different config files for the
+            <p>This can be easily done but just creating different config files for the
                 computers in the different
                 locations.</p>
 
-            <h6 style="margin-left: 30px;">Available Options</h6>
-            <p style="margin-left: 30px;">Below is a list of the standard 'extra' buttons from Morphic. In addition, at
+            <h6>Available Options</h6>
+            <p>Below is a list of the standard 'extra' buttons from Morphic. In addition, at
                 the bottom, are places
                 where 3 custom buttons can be defined by the organization.
                 You can choose any combination of 3 buttons from the custom and standard buttons.</p>
 
-            <h6 style="margin-left: 30px;">Instructions</h6>
-            <ul style="margin-left: 40px;">
+            <h6>Instructions</h6>
+            <ul>
                 <li>Use the pull down on the left to choose the numbers 1 2 or 3 next to the buttons you want. You will see them appear in that location in the MorphicBar at the bottom of the page.</li>
                 <li>For custom buttons, just fill in the blanks for that button. The appearance of the button and the
                     help text for it will be shown for you as you create the buttons.</li>
                 <li>You do not have to add 3 buttons – but that is the max you can add at this time.</li>
             </ul>
 
-            <h6 style="margin-left: 30px;">Available Extra Buttons</h6>
-            <p style="margin-left: 30px;">Choose up to 3 buttons from the 10 options below. Select the position (1-3)
+            <h6>Available Extra Buttons</h6>
+            <p>Choose up to 3 buttons from the 10 options below. Select the position (1-3)
                 for each
                 button you want to include.</p>
+            </div>
 
             <div class="morphic-bar-preview">
                 <h4>MorphicBar Preview</h4>
@@ -358,7 +358,7 @@
                     <div class="custom-buttons-container" id="topCustomButtonsContainer">
                         <!-- Buttons will be dynamically added here -->
                     </div>
-                    <div style="margin-right: 10px;"></div>
+                    <div class="spacer"></div>
                     <div class="button-preview-container">
                         <div class="preview-button-group">
                             <div class="button-label">Text Size</div>
@@ -382,7 +382,7 @@
                         <div class="preview-button-group">
                             <div class="button-label">Snip</div>
                             <div class="split-button-container">
-                                <button class="split-button" style="margin-left: 5px;">Copy</button>
+                                <button class="normal-button">Copy</button>
                             </div>
                         </div>
                     </div>
@@ -391,8 +391,8 @@
                         <div class="preview-button-group">
                             <div class="button-label">Read Selected</div>
                             <div class="split-button-container">
-                                <button class="split-button left">P</button>
-                                <button class="split-button right">P</button>
+                                <button class="split-button left">&#9654;</button>
+                                <button class="split-button right">&#x23f8;</button>
                             </div>
                         </div>
                     </div>
@@ -423,7 +423,7 @@
                     <div class="button-header">
                         <div class="position-selector">
                             <label>
-                                <select name="usb.position" id="usb.position" onchange="validateUniquePositions()">
+                                <select name="usb.position" id="usb.position">
                                     <option value="">-</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -455,8 +455,7 @@
                     <div class="button-header">
                         <div class="position-selector">
                             <label>
-                                <select name="volume.position" id="volume.position"
-                                    onchange="validateUniquePositions()">
+                                <select name="volume.position" id="volume.position">
                                     <option value="">-</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -489,7 +488,7 @@
                     <div class="button-header">
                         <div class="position-selector">
                             <label>
-                                <select name="voice.position" id="voice.position" onchange="validateUniquePositions()">
+                                <select name="voice.position" id="voice.position">
                                     <option value="">-</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -522,8 +521,7 @@
                     <div class="button-header">
                         <div class="position-selector">
                             <label>
-                                <select name="signOut.position" id="signOut.position"
-                                    onchange="validateUniquePositions()">
+                                <select name="signOut.position" id="signOut.position">
                                     <option value="">-</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -552,8 +550,7 @@
                                 <div class="button-header">
                                     <div class="position-selector">
                                         <label>
-                                            <select name="customApp1.position" id="customApp1.position"
-                                                onchange="validateUniquePositions()">
+                                            <select name="customApp1.position" id="customApp1.position">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -573,7 +570,7 @@
                                 </div>
                                         <div class="url-inputs">
                                             <label><b>Application:</b>
-                                                <select id="customApp1.appId" onchange="updateAppButtonPreview('customApp1')">
+                                                <select id="customApp1.appId">
                                                     <option value="">Select Application</option>
                                                     <option value="calculator">Calculator</option>
                                                     <option value="firefox">Firefox</option>
@@ -601,8 +598,7 @@
                                 <div class="button-header">
                                     <div class="position-selector">
                                         <label>
-                                            <select name="customApp2.position" id="customApp2.position"
-                                                onchange="validateUniquePositions()">
+                                            <select name="customApp2.position" id="customApp2.position">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -623,7 +619,7 @@
                              
                                         <div class="url-inputs">
                                             <label><b>Application:</b>
-                                                <select id="customApp2.appId" onchange="updateAppButtonPreview('customApp2')">
+                                                <select id="customApp2.appId">
                                                     <option value="">Select Application</option>
                                                     <option value="calculator">Calculator</option>
                                                     <option value="firefox">Firefox</option>
@@ -649,8 +645,7 @@
                                 <div class="button-header">
                                     <div class="position-selector">
                                         <label>
-                                            <select name="customApp3.position" id="customApp3.position"
-                                                onchange="validateUniquePositions()">
+                                            <select name="customApp3.position" id="customApp3.position">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -670,7 +665,7 @@
                                 </div>
                                         <div class="url-inputs">
                                             <label><b>Application:</b>
-                                                <select id="customApp3.appId" onchange="updateAppButtonPreview('customApp3')">
+                                                <select id="customApp3.appId">
                                                     <option value="">Select Application</option>
                                                     <option value="calculator">Calculator</option>
                                                     <option value="firefox">Firefox</option>
@@ -696,8 +691,7 @@
                     <div class="button-header">
                         <div class="position-selector">
                             <label>
-                                <select name="customUrl1.position" id="customUrl1.position"
-                                    onchange="validateUniquePositions()">
+                                                            <select name="customUrl1.position" id="customUrl1.position">
                                     <option value="">-</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -717,27 +711,24 @@
                             <div class="url-inputs">
                                 <label><b>Button Text:</b>
                                     <input type="text" id="customUrl1.label"
-                                        placeholder="Button Text (use \n for line breaks)"
-                                        oninput="updateUrlButtonPreview('customUrl1')">
+                                        placeholder="Button Text (use \n for line breaks)">
                                 </label>
                                 <label><b>Tooltip Header:</b>
-                                    <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text"
-                                        oninput="updateUrlButtonPreview('customUrl1')">
+                                    <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text">
                                 </label>
                                 <label><b>Tooltip Text:</b>
-                                    <input type="text" id="customUrl1.tooltipText" placeholder="Description text"
-                                        oninput="updateUrlButtonPreview('customUrl1')">
+                                    <input type="text" id="customUrl1.tooltipText" placeholder="Description text">
                                 </label>
                                 <label><b>URL:</b>
                                     <div class="url-input-wrapper">
                                         <input type="url" id="customUrl1.url" placeholder="https://example.com">
-                                        <button type="button" class="test-url-btn" onclick="testURL('customUrl1.url')"
+                                        <button type="button" class="test-url-btn" id="testUrl1Btn"
                                             title="Test URL in new tab">Test URL</button>
                                     </div>
                                 </label>
                             </div>
                             <div class="tooltip-preview">
-                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                <div class="button-preview-container">
                                     <div class="preview-button url-button" id="customUrl1Preview">
                                         <span id="customUrl1Label">Button<br>Text</span>
                                     </div>
@@ -756,8 +747,7 @@
                     <div class="button-header">
                         <div class="position-selector">
                             <label>
-                                <select name="customUrl2.position" id="customUrl2.position"
-                                    onchange="validateUniquePositions()">
+                                                            <select name="customUrl2.position" id="customUrl2.position">
                                     <option value="">-</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -776,27 +766,24 @@
                         <div class="url-inputs-container">
                             <div class="url-inputs">
                                 <label><b>Button Text:</b>
-                                    <input type="text" id="customUrl2.label" placeholder="Button Text"
-                                        oninput="updateUrlButtonPreview('customUrl2')">
+                                    <input type="text" id="customUrl2.label" placeholder="Button Text">
                                 </label>
                                 <label><b>Tooltip Header:</b>
-                                    <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text"
-                                        oninput="updateUrlButtonPreview('customUrl2')">
+                                    <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text">
                                 </label>
                                 <label><b>Tooltip Text:</b>
-                                    <input type="text" id="customUrl2.tooltipText" placeholder="Description text"
-                                        oninput="updateUrlButtonPreview('customUrl2')">
+                                    <input type="text" id="customUrl2.tooltipText" placeholder="Description text">
                                 </label>
                                 <label><b>URL:</b>
                                     <div class="url-input-wrapper">
                                         <input type="url" id="customUrl2.url" placeholder="https://example.com">
-                                        <button type="button" class="test-url-btn" onclick="testURL('customUrl2.url')"
+                                        <button type="button" class="test-url-btn" id="testUrl2Btn"
                                             title="Test URL in new tab">Test URL</button>
                                     </div>
                                 </label>
                             </div>
                             <div class="tooltip-preview">
-                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                <div class="button-preview-container">
                                     <div class="preview-button url-button" id="customUrl2Preview">
                                         <span id="customUrl2Label">Button<br>Text</span>
                                     </div>
@@ -816,8 +803,7 @@
                     <div class="button-header">
                         <div class="position-selector">
                             <label>
-                                <select name="customUrl3.position" id="customUrl3.position"
-                                    onchange="validateUniquePositions()">
+                                                            <select name="customUrl3.position" id="customUrl3.position">
                                     <option value="">-</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -836,27 +822,24 @@
                         <div class="url-inputs-container">
                             <div class="url-inputs">
                                 <label><b>Button Text:</b>
-                                    <input type="text" id="customUrl3.label" placeholder="Button Text"
-                                        oninput="updateUrlButtonPreview('customUrl3')">
+                                    <input type="text" id="customUrl3.label" placeholder="Button Text">
                                 </label>
                                 <label><b>Tooltip Header:</b>
-                                    <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text"
-                                        oninput="updateUrlButtonPreview('customUrl3')">
+                                    <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text">
                                 </label>
                                 <label><b>Tooltip Text:</b>
-                                    <input type="text" id="customUrl3.tooltipText" placeholder="Description text"
-                                        oninput="updateUrlButtonPreview('customUrl3')">
+                                    <input type="text" id="customUrl3.tooltipText" placeholder="Description text">
                                 </label>
                                 <label><b>URL:</b>
                                     <div class="url-input-wrapper">
                                         <input type="url" id="customUrl3.url" placeholder="https://example.com">
-                                        <button type="button" class="test-url-btn" onclick="testURL('customUrl3.url')"
+                                        <button type="button" class="test-url-btn" id="testUrl3Btn"
                                             title="Test URL in new tab">Test URL</button>
                                     </div>
                                 </label>
                             </div>
                             <div class="tooltip-preview">
-                                <div class="button-preview-container" style="margin-bottom: 10px;">
+                                <div class="button-preview-container">
                                     <div class="preview-button url-button" id="customUrl3Preview">
                                         <span id="customUrl3Label">Button<br>Text</span>
                                     </div>
@@ -884,7 +867,7 @@
                 <div class="custom-buttons-container" id="customButtonsContainer">
                     <!-- Buttons will be dynamically added here -->
                 </div>
-                <div style="margin-right: 10px;"></div>
+                <div class="spacer"></div>
                 <div class="button-preview-container">
                     <div class="preview-button-group">
                         <div class="button-label">Text Size</div>
@@ -908,7 +891,7 @@
                     <div class="preview-button-group">
                         <div class="button-label">Snip</div>
                         <div class="split-button-container">
-                            <button class="split-button" style="margin-left: 5px;">Copy</button>
+                            <button class="normal-button">Copy</button>
                         </div>
                     </div>
                 </div>
@@ -917,8 +900,8 @@
                     <div class="preview-button-group">
                         <div class="button-label">Read Selected</div>
                         <div class="split-button-container">
-                            <button class="split-button left">P</button>
-                            <button class="split-button right">P</button>
+                            <button class="split-button left">&#9654;</button>
+                            <button class="split-button right">&#x23f8;</button>
                         </div>
                     </div>
                 </div>
@@ -944,12 +927,12 @@
         <h2>3. Download the new config.json file</h2>
         <div class="section">
             <div class="download-section">
-                <div style="display: flex; justify-content: center; gap: 15px;">
+                <div class="download-section-buttons">
                     <button id="checkErrors" class="check-errors-btn">Check for Errors</button>
                     <button id="download" class="download-btn" disabled>Download config.json</button>
                 </div>
-                <div id="errorMessages" class="error-messages" style="display: none;"></div>
-                <div id="successMessage" class="success-message" style="display: none;">
+                <div id="errorMessages" class="error-messages"></div>
+                <div id="successMessage" class="success-message">
                     No errors found! You can now download the config.json file.
                 </div>
             </div>

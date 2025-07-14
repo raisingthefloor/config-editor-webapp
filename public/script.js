@@ -2,6 +2,35 @@ document.getElementById('upload').addEventListener('change', handleFileUpload);
 document.getElementById('download').addEventListener('click', handleDownloadClick);
 document.getElementById('checkErrors').addEventListener('click', checkForErrors);
 
+// File input button click handler
+document.getElementById('fileInputBtn').addEventListener('click', function() {
+    document.getElementById('upload').click();
+});
+
+// See more/less toggle handlers
+document.getElementById('visibility-toggle').addEventListener('click', function(e) {
+    e.preventDefault();
+    toggleDescription('visibility');
+});
+
+document.getElementById('location-toggle').addEventListener('click', function(e) {
+    e.preventDefault();
+    toggleDescription('location');
+});
+
+// Test URL button handlers
+document.getElementById('testUrl1Btn').addEventListener('click', function() {
+    testURL('customUrl1.url');
+});
+
+document.getElementById('testUrl2Btn').addEventListener('click', function() {
+    testURL('customUrl2.url');
+});
+
+document.getElementById('testUrl3Btn').addEventListener('click', function() {
+    testURL('customUrl3.url');
+});
+
 const checkbox = document.getElementById('features.atOnDemand.enabled');
 checkbox.indeterminate = true;
 
@@ -170,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const select = document.getElementById(selectId);
         if (select) {
             select.addEventListener('change', updatePositionPreview);
+            select.addEventListener('change', validateUniquePositions);
         }
     });
 

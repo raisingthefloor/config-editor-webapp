@@ -19,35 +19,35 @@ body {
     font-family: sans-serif;
     background-color: #f5f7fa;
     margin: 0;
-    padding: 16px;
+    padding: 1rem;
     font-size: 15px;
     line-height: 1.2;
 }
 
 .container {
     background-color: #ffffff;
-    padding: 24px;
-    border-radius: 12px;
-    max-width: 1000px;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    max-width: 62.5rem;
     margin: 0 auto;
 }
 
 .required {
     color: #e53e3e;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
-    margin-left: 4px;
+    margin-left: 0.25rem;
 }
 
 h1 {
-    margin: 0 0 16px 0;
+    margin: 0 0 1rem 0;
     color: #000;
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.025em;
     text-align: center;
     border-bottom: 4px solid #d3dae3;
-    padding-bottom: 8px;
+    padding-bottom: 0.5rem;
 }
 
 h2:first-of-type {
@@ -56,72 +56,72 @@ h2:first-of-type {
 }
 
 h2 {
-    margin: 16px 0 8px 0;
+    margin: 1rem 0 0.5rem 0;
     color: #000;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: -0.025em;
     border-top: 3px solid #d3dae3;
-    padding-top:20px;
+    padding-top: 1.25rem;
 }
 
 h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #000;
-    margin: 0 0 8px 0;
+    margin: 0 0 0.5rem 0;
     font-weight: 600;
 }
 
 h4 {
-    font-size: 18px;
+    font-size: 1.125rem;
     color: #000;
-    margin: 0px 0px 8px 0;
+    margin: 0 0 0.5rem 0;
     font-weight: 600;
 }
 
 h5 {
-    font-size: 16px;
+    font-size: 1rem;
     color: #000;
-    margin: 0 0 12px 0;
+    margin: 0 0 0.75rem 0;
     font-weight: 600;
 }
 
 h6 {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: #000;
-    margin: 0 0 8px 0;
+    margin: 0 0 0.5rem 0;
     font-weight: 600;
 }
 
 p {
-    margin: 0 0 12px 0;
+    margin: 0 0 0.75rem 0;
     color: #000;
     line-height: 1.2;
-    max-width: 800px;
+    max-width: 50rem;
 }
 
 ol, ul {
-    margin: 0 0 16px 0;
-    padding-left: 24px;
+    margin: 0 0 1rem 0;
+    padding-left: 1.5rem;
     color: #000;
 }
 
 li {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
     line-height: 1.2;
 }
 
 /* Section styling - Much more spacing */
 .section {
-    margin-bottom: 16px;
-    padding: 12px 0;
+    margin-bottom: 1rem;
+    padding: 0.75rem 0;
 }
 
 /* Form elements */
 label {
     margin:0;
     padding: 0;
-    font-size: 15px;
+    font-size: 0.9375rem;
     color: black;
     font-weight: 500;
 }
@@ -132,12 +132,12 @@ input[type="number"],
 input[type="date"],
 input[type="url"],
 select {
-    padding: 10px 16px;
+    padding: 0.625rem 1rem;
     width: 100%;
-    max-width: 350px;
+    max-width: 21.875rem;
     border: 2px solid #000;
-    border-radius: 8px;
-    font-size: 15px;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
     font-family: inherit;
     background-color: #ffffff;
     transition: all 0.2s ease;
@@ -151,15 +151,15 @@ input[type="date"]:focus,
 select:focus {
     outline: none;
     border-color: #3182ce;
-    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+    box-shadow: 0 0 0 0.1875rem rgba(49, 130, 206, 0.1);
 }
 
 
 /* Checkbox and radio button styling */
 input[type="checkbox"],
 input[type="radio"] {
-    width: 18px;
-    height: 18px;
+    width: 1.125rem;
+    height: 1.125rem;
     margin: 0;
     cursor: pointer;
     accent-color: #3182ce;
@@ -170,9 +170,9 @@ input[type="radio"] {
     -webkit-appearance: none;
     appearance: none;
     box-shadow: 0 0 0 1.5px black;
-    border-radius: 4px;
-    width: 20px;
-    height: 20px;
+    border-radius: 0.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 .two-column-layout input[type="checkbox"]:checked {
@@ -194,7 +194,7 @@ input[type="radio"] {
 /* Small text styling */
 small {
     display: block;
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: black;
     margin-top: 0;
     line-height: 1.2;
@@ -213,28 +213,28 @@ small {
 /* Two-column layout */
 .two-column-layout {
     background-color: #f8fafc;
-    padding: 20px;
-    border-radius: 12px;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
     border: 1px solid #e2e8f0;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
 }
 
 .two-column-layout h3 {
-    margin: 0 0 8px 0;
-    font-size: 20px;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
     color: #1a202c;
     border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 8px;
+    padding-bottom: 0.5rem;
     font-weight: 600;
 }
 
 .two-column-layout label {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 0px;
-    gap: 24px;
-    font-size: 15px;
-    padding: 12px 0;
+    margin-bottom: 0;
+    gap: 1.5rem;
+    font-size: 0.9375rem;
+    padding: 0.75rem 0;
 }
 
 .two-column-layout label:last-child {
@@ -243,7 +243,7 @@ small {
 
 .two-column-layout label .label-text {
     flex: 1;
-    font-size: 18px;
+    font-size: 1.125rem;
     color: #2d3748;
     font-weight: 600;
 }
@@ -254,7 +254,8 @@ small {
     width: 30%;
     display: flex;
     align-items: right;
-    gap: 15px;
+    gap: 0.9375rem;
+    
     justify-content: flex-start;
     flex-wrap: wrap;
 }
@@ -262,14 +263,14 @@ small {
 /* Checkbox label styling */
 .two-column-layout label:has(input[type="checkbox"]) {
     align-items: flex-start;
-    gap: 16px;
+    gap: 1rem;
 }
 
 .two-column-layout label:has(input[type="checkbox"]) .control-container {
     flex: 0 0 auto;
     min-width: auto;
     width: auto;
-    margin-top: 2px;
+    margin-top: 0.125rem;
     order: -1;
 }
 
@@ -291,27 +292,43 @@ small {
 .two-column-layout input[type="date"],
 .two-column-layout input[type="url"],
 .two-column-layout select {
-    max-width: 160px;
-    min-width: 160px;
+    max-width: 10rem;
+    min-width: 10rem;
+}
+
+
+#customButtonsSection {
+    padding-left: 1.875rem;
+}
+
+#errorMessages,
+#successMessage {
+    display: none;
+}
+
+.download-section-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.9375rem;
 }
 
 /* Dependent option styling */
 .dependent-option {
     margin-left: 5%;
-    padding: 16px;
-    margin-top: -20px;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 20px;
+    padding: 1rem;
+    margin-top: -1.25rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    margin-bottom: 1.25rem;
 }
 
 .dependent-option .label-text {
-    margin-left: 8px;
+    margin-left: 0.5rem;
     max-width: 50%;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .dependent-option label {
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
 }
 
 /* Validation error styling - Red background */
@@ -319,7 +336,7 @@ input.error,
 select.error {
     border-color: #e53e3e !important;
     background-color: #fed7d7 !important;
-    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1) !important;
+    box-shadow: 0 0 0 0.1875rem rgba(229, 62, 62, 0.1) !important;
 }
 
 /* Disabled options styling - Grayed out */
@@ -339,11 +356,11 @@ input:disabled {
 
 /* Button styling */
 button {
-    padding: 8px 16px;
-    font-size: 14px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    margin-top: 5px;
-    border-radius: 6px;
+    margin-top: 0.3125rem;
+    border-radius: 0.375rem;
     border: none;
     cursor: pointer;
     font-family: inherit;
@@ -352,7 +369,7 @@ button {
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    min-height: 36px;
+    min-height: 2.25rem;
 }
 
 button:disabled {
@@ -366,28 +383,28 @@ button:disabled {
 .file-input-btn {
     background-color: #3182ce;
     color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover,
 #download:hover,
 .file-input-btn:hover {
     background-color: #2c5282;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-0.0625rem);
+    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:active,
 #download:active,
 .file-input-btn:active {
     transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
 }
 
 /* Secondary button styling - Gray */
 .btn-secondary,
 .test-url-btn {
-    margin-top: 5px;
+    margin-top: 0.3125rem;
     background-color: #e2e8f0;
     color: #4a5568;
     border: 1px solid #cbd5e0;
@@ -407,23 +424,44 @@ input[type="file"] {
 .file-input-wrapper {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
 .file-name-display {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: #718096;
     font-style: italic;
 }
 
+#organizationNameError,
+#siteIdError {
+    display: none;
+    color: #e53e3e;
+}
+
+#uploadLabel {
+    font-weight: 400;
+    color: #000;
+}
+
+#atOnDemandWarning {
+    color: #e53e3e;
+}
+
+#visibility-full,
+#location-full
+{
+    display: none;
+}
+
 /* Download button styling */
 #download {
-    padding: 12px 24px;
-    font-size: 16px;
-    min-width: 200px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(49, 130, 206, 0.3);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    min-width: 12.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(49, 130, 206, 0.3);
     transition: all 0.3s ease;
     font-weight: 600;
     color: white;
@@ -432,8 +470,8 @@ input[type="file"] {
 }
 
 #download:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(49, 130, 206, 0.4);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.375rem 0.75rem rgba(49, 130, 206, 0.4);
 }
 
 #download:disabled {
@@ -446,11 +484,11 @@ input[type="file"] {
 
 
 #checkErrors {
-    padding: 12px 24px;
-    font-size: 16px;
-    min-width: 200px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(49, 130, 206, 0.3);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    min-width: 12.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(49, 130, 206, 0.3);
     transition: all 0.3s ease;
     font-weight: 600;
     background-color: #008145;
@@ -460,85 +498,85 @@ input[type="file"] {
 }
 
 #checkErrors:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.6);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.5rem 1.5625rem rgba(72, 187, 120, 0.6);
 }
 
 .error-messages {
     background-color: #fed7d7;
     border: 1px solid #fc8181;
-    border-radius: 8px;
-    padding: 16px;
+    border-radius: 0.5rem;
+    padding: 1rem;
     color: #742a2a;
     max-width: 100%;
-    margin-top: 12px;
+    margin-top: 0.75rem;
 }
 
 .error-messages h4 {
-    margin: 0 0 12px 0;
+    margin: 0 0 0.75rem 0;
     color: #742a2a;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .error-messages ul {
     margin: 0;
-    padding-left: 16px;
+    padding-left: 1rem;
 }
 
 .error-messages li {
-    margin-bottom: 6px;
+    margin-bottom: 0.375rem;
     line-height: 1.2;
 }
 
 .success-message {
     background-color: #c6f6d5;
     border: 1px solid #68d391;
-    border-radius: 8px;
-    padding: 16px;
+    border-radius: 0.5rem;
+    padding: 1rem;
     color: #22543d;
     font-weight: 600;
     max-width: 100%;
-    margin-top: 12px;
+    margin-top: 0.75rem;
 }
 
 /* Upload section styling - Light blue background */
 .section:first-of-type {
     background-color: #f8fafc;
-    padding: 16px;
-    border-radius: 8px;
+    padding: 1rem;
+    border-radius: 0.5rem;
     border: 1px solid #e2e8f0;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 }
 
 .section:first-of-type label {
     font-weight: 600;
     color: #2d3748;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
 }
 
 /* Form group styling */
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
 }
 
 /* Predefined button sections */
 .predefined-button {
     background-color: #f8fafc;
-    padding: 0px 10px;
-    margin-bottom: 8px;
-    border-radius: 12px;
+    padding: 0 0.625rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.75rem;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .button-header {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 1.25rem;
 }
 
 .position-selector {
-    flex: 0 0 10px;
+    flex: 0 0 0.625rem;
 }
 
 .position-selector label {
@@ -548,8 +586,8 @@ input[type="file"] {
 
 .position-selector select {
     width: 100%;
-    min-width: 70px;
-    max-width: 70px;
+    min-width: 4.375rem;
+    max-width: 4.375rem;
 }
 
 .button-info {
@@ -557,9 +595,9 @@ input[type="file"] {
 }
 
 .button-info h5 {
-    margin: 0 0 2px 0;
+    margin: 0 0 0.125rem 0;
     color: #1a202c;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -581,65 +619,65 @@ input[type="file"] {
 }
 
 .button-config {
-    padding: 0px 0;
+    padding: 0;
 }
 
 .config-display {
     background-color: #edf2f7;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 13px;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
     color: #2d3748;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
 }
 
 .url-inputs {
-    gap: 8px;
-    margin-top: -10px;
+    gap: 0.5rem;
+    margin-top: -0.625rem;
 }
 
 .url-inputs label b {
-    max-width: 80px;
-    min-width: 80px;
+    max-width: 5rem;
+    min-width: 5rem;
 }
 
 .url-inputs label {
     margin: 0;
-    margin-bottom: -20px;
+    margin-bottom: -1.25rem;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    margin-left: 90px;
+    margin-left: 5.625rem;
 }
 .url-inputs input[type="text"]{
     width: 100%;
     max-width: none;
-    margin-top: 0px;
-    padding: 4px 8px;
+    margin-top: 0;
+    padding: 0.25rem 0.5rem;
 }
 .url-inputs input[type="url"] {
     width: 100%;
     max-width: none;
-    margin-top: 0px;
-    padding: 4px 8px;
+    margin-top: 0;
+    padding: 0.25rem 0.5rem;
 }
 
 .url-inputs select {
     width: 36%;
     max-width: none;
-    margin-top: 0px;
-    padding: 4px 8px;
+    margin-top: 0;
+    padding: 0.25rem 0.5rem;
 }
 
 .url-inputs label:last-child {
-    margin-bottom: -3px;
+    margin-bottom: -0.1875rem;
 }
 
 /* Split layout for url-inputs */
 .url-inputs-container {
     display: flex;
-    gap: 0px;
+    gap: 0;
     align-items: flex-start;
 }
 
@@ -654,23 +692,24 @@ input[type="file"] {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 }
 
 
 .tooltip-preview-box {
     background-color: black;
     color: white;
-    padding: 8px 2px;
-    min-width: 270px;
-    max-width: 270px;
+    padding: 0.5rem 0.125rem;
+    min-width: 16.875rem;
+    max-width: 16.875rem;
     align-self: flex-end;
+    margin-top: 0.5rem;
 }
 
 .tooltip-header {
     font-weight: 600;
-    font-size: 18px;
-    margin-bottom: 6px;
+    font-size: 1.125rem;
+    margin-bottom: 0.375rem;
     color: #ffffff;
     -webkit-line-clamp: 1;
     overflow: hidden;
@@ -682,7 +721,7 @@ input[type="file"] {
 }
 
 .tooltip-text {
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.4;
     color: #ffffff;
     font-weight: 500;
@@ -693,23 +732,23 @@ input[type="file"] {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    max-height: 40px;
+    max-height: 2.5rem;
     text-align: center;
 }
 
 /* Dropdown sizing in extra button sections */
 .extra-button select {
-    width: 240px;
-    max-width: 240px;
-    min-width: 240px;
+    width: 15rem;
+    max-width: 15rem;
+    min-width: 15rem;
 }
 
 .extra-button h5 {
-    margin: 0 0 16px 0;
+    margin: 0 0 1rem 0;
     color: #1a202c;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
-    padding-bottom: 8px;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid #e2e8f0;
 }
 
@@ -717,28 +756,28 @@ input[type="file"] {
     border: none;
     height: 1px;
     background-color: #e2e8f0;
-    margin: 16px 0;
+    margin: 1rem 0;
 }
 
 /* Button fields styling */
 .button-fields {
     background-color: #edf2f7;
-    padding: 16px;
-    border-radius: 10px;
+    padding: 1rem;
+    border-radius: 0.625rem;
     border: 1px solid #cbd5e0;
-    margin-top: 16px;
+    margin-top: 1rem;
 }
 
 .button-fields label {
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
     flex-wrap: wrap;
 }
 
 .button-fields label > span:first-child {
-    min-width: 120px;
+    min-width: 7.5rem;
     font-weight: 600;
     color: #2d3748;
 }
@@ -746,16 +785,16 @@ input[type="file"] {
 /* Input sizing in button fields */
 .button-fields input[type="text"],
 .button-fields select {
-    width: 240px;
-    max-width: 240px;
-    min-width: 240px;
-    padding: 6px 12px;
+    width: 15rem;
+    max-width: 15rem;
+    min-width: 15rem;
+    padding: 0.375rem 0.75rem;
 }
 
 /* Button Preview Styling */
 .button-preview {
-    margin-top: 16px;
-    padding-top: 12px;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
     border-top: 1px solid #e2e8f0;
 }
 
@@ -763,21 +802,21 @@ input[type="file"] {
 .position-content .button-info {
     background-color: rgb(0, 41, 87);
     color: white;
-    padding: 8px 10px;
+    padding: 0.5rem 0.625rem;
     border: none;
-    border-radius: 10px;
-    font-size: 13px;
+    border-radius: 0.625rem;
+    font-size: 0.8125rem;
     font-family: inherit;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    min-width: 50px;
-    max-width: 80px;
-    min-height: 50px;
-    max-height: 50px;
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
+    min-width: 3.125rem;
+    max-width: 5rem;
+    min-height: 3.125rem;
+    max-height: 3.125rem;
     font-weight: 500;
     flex-shrink: 0;
 }
@@ -788,10 +827,10 @@ input[type="file"] {
 
 /* Morphic Bar Preview Styles */
 .morphic-bar-preview {
-    margin: 16px 0;
-    padding: 16px;
+    margin: 1rem 0;
+    padding: 1rem;
     background: #f7fafc;
-    border-radius: 16px;
+    border-radius: 1rem;
     border: 2px solid #e2e8f0;
 }
 
@@ -799,12 +838,12 @@ input[type="file"] {
     display: inline-flex;
     align-items: center;
     background: white;
-    border-radius: 5px;
-    padding: 6px;
+    border-radius: 0.3125rem;
+    padding: 0.375rem;
     border: 1.5px solid #2c3e50;
-    min-height: 56px;
-    min-width: 500px;
-    max-width: 900px;
+    min-height: 3.5rem;
+    min-width: 31.25rem;
+    max-width: 56.25rem;
     margin: 0 auto;
     position: relative;
 }
@@ -812,9 +851,9 @@ input[type="file"] {
 .custom-buttons-container {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 0.375rem;
     flex: 1;
-    margin-right: 8px;
+    margin-right: 0.5rem;
 }
 
 
@@ -826,17 +865,17 @@ input[type="file"] {
 
 /* Button source information styling */
 .button-sources {
-    margin-top: 12px;
-    padding: 8px;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
     background-color: #f8fafc;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     border: 1px solid #e2e8f0;
 }
 
 .button-source-item {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #718096;
-    margin-bottom: 3px;
+    margin-bottom: 0.1875rem;
 }
 
 .button-source-item:last-child {
@@ -853,17 +892,21 @@ input[type="file"] {
     content: "Your custom buttons will appear here";
     color: #a0aec0;
     font-style: italic;
-    font-size: 12px;
-    padding: 8px 16px;
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
 }
+
+
+
+
 /* Tablet and smaller */
 @media (max-width: 1024px) {
     .url-inputs-container {
-        gap: 16px;
+        gap: 1rem;
     }
     
     .tooltip-preview {
-        padding: 12px;
+        padding: 0.75rem;
     }
     
     .tooltip-preview-box {
@@ -871,12 +914,12 @@ input[type="file"] {
     }
     
     .tooltip-header {
-        font-size: 16px;
+        font-size: 1rem;
     }
     
     .tooltip-text {
-        font-size: 14px;
-        max-height: 36px;
+        font-size: 0.875rem;
+        max-height: 2.25rem;
     }
 }
 
@@ -884,12 +927,12 @@ input[type="file"] {
 @media (max-width: 900px) {
     .url-inputs-container {
         flex-direction: column;
-        gap: 12px;
+        gap: 0.75rem;
     }
     
     .tooltip-preview {
         order: -1; /* Move preview to top on smaller screens */
-        padding: 12px;
+        padding: 0.75rem;
     }
     
     .tooltip-preview-box {
@@ -901,17 +944,17 @@ input[type="file"] {
 /* Responsive adjustments for mobile */
 @media (max-width: 768px) {
     .container {
-        padding: 16px;
-        margin: 8px;
+        padding: 1rem;
+        margin: 0.5rem;
     }
     
     .two-column-layout {
-        padding: 16px;
+        padding: 1rem;
     }
     
     .two-column-layout label {
         flex-direction: column;
-        gap: 8px;
+        gap: 0.5rem;
     }
     
     .two-column-layout label .label-text {
@@ -936,36 +979,36 @@ input[type="file"] {
     
     .url-inputs-container {
         flex-direction: column;
-        gap: 12px;
+        gap: 0.75rem;
     }
     
     .tooltip-preview {
-        padding: 8px;
+        padding: 0.5rem;
         order: -1;
         width: 100%;
         align-items: center;
     }   
     
     .tooltip-preview h6 {
-        font-size: 13px;
-        margin-bottom: 8px;
+        font-size: 0.8125rem;
+        margin-bottom: 0.5rem;
     }
     
     .tooltip-preview-box {
         max-width: 100%;
         min-width: auto;
         width: 100%;
-        padding: 12px;
+        padding: 0.75rem;
     }
     
     .tooltip-header {
-        font-size: 16px;
-        margin-bottom: 4px;
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
     }
     
     .tooltip-text {
-        font-size: 14px;
-        max-height: 34px;
+        font-size: 0.875rem;
+        max-height: 2.125rem;
     }
 
     /* Improve input fields on mobile */
@@ -975,7 +1018,7 @@ input[type="file"] {
 
     .url-inputs label {
         margin-left: 0;
-        margin-bottom: 12px;
+        margin-bottom: 0.75rem;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -984,7 +1027,7 @@ input[type="file"] {
     .url-inputs label b {
         max-width: 100%;
         min-width: 100%;
-        margin-bottom: 4px;
+        margin-bottom: 0.25rem;
     }
 
     .url-inputs input[type="text"],
@@ -997,7 +1040,7 @@ input[type="file"] {
     .url-inputs .url-input-wrapper {
         width: 100%;
         flex-direction: column;
-        gap: 8px;
+        gap: 0.5rem;
         align-items: flex-start;
     }
 
@@ -1010,9 +1053,9 @@ input[type="file"] {
     .test-url-btn {
         width: 100%;
         max-width: none;
-        padding: 8px;
-        min-height: 40px;
-        font-size: 16px;
+        padding: 0.5rem;
+        min-height: 2.5rem;
+        font-size: 1rem;
     }
 
     .button-fields label {
@@ -1022,7 +1065,7 @@ input[type="file"] {
 
     .button-fields label > span:first-child {
         min-width: 100%;
-        margin-bottom: 4px;
+        margin-bottom: 0.25rem;
     }
 
     .button-fields input[type="text"],
@@ -1036,53 +1079,53 @@ input[type="file"] {
     #download, #checkErrors {
         min-width: auto;
         width: 45%;
-        padding: 10px 16px;
-        font-size: 15px;
+        padding: 0.625rem 1rem;
+        font-size: 0.9375rem;
     }
     
     .download-section > div {
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 0.625rem;
     }
 }
 
 /*Smallest screen */
 @media (max-width: 480px) {
     .url-inputs-container {
-        gap: 8px;
+        gap: 0.5rem;
     }
     
     .tooltip-preview {
-        padding: 8px;
+        padding: 0.5rem;
     }
     
     .tooltip-preview-box {
-        padding: 8px;
+        padding: 0.5rem;
     }
     
     .tooltip-header {
-        font-size: 15px;
+        font-size: 0.9375rem;
     }
     
     .tooltip-text {
-        font-size: 13px;
-        max-height: 30px;
+        font-size: 0.8125rem;
+        max-height: 1.875rem;
     }
     
     .url-inputs input[type="text"],
     .url-inputs input[type="url"] {
-        font-size: 16px; /* Prevent zoom on iOS */
+        font-size: 1rem; /* Prevent zoom on iOS */
     }
 
     /* Additional mobile improvements */
     .predefined-button {
-        padding: 10px;
+        padding: 0.625rem;
     }
 
     .button-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 0.75rem;
     }
 
     .button-info {
@@ -1091,17 +1134,17 @@ input[type="file"] {
 
     .button-preview-container {
         align-self: center;
-        margin-top: 8px;
+        margin-top: 0.5rem;
     }
 
     .preview-button, 
     .position-content .button-info {
-        min-width: 60px;
-        min-height: 60px;
+        min-width: 3.75rem;
+        min-height: 3.75rem;
     }
 
     .test-url-btn {
-        min-height: 44px;
+        min-height: 2.75rem;
         font-weight: 600;
     }
 
@@ -1109,14 +1152,14 @@ input[type="file"] {
     #download, #checkErrors {
         width: 100%;
         min-width: 100%;
-        padding: 12px 16px;
-        font-size: 16px;
-        margin-bottom: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
     }
     
     .download-section > div {
         flex-direction: column;
-        gap: 8px;
+        gap: 0.5rem;
     }
 }
 
@@ -1131,14 +1174,14 @@ select:focus-visible {
 /* Conflict indicator styling */
 .conflict-indicator {
     color: #e53e3e;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
     text-align: center;
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
     background-color: #fed7d7;
     border: 1px solid #e53e3e;
-    border-radius: 4px;
-    padding: 2px 6px;
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.375rem;
 }
 /* Date input container styling */
 .date-input-container {
@@ -1149,33 +1192,33 @@ select:focus-visible {
 }
 
 .date-input-container input[type="date"] {
-    width: 160px;
-    max-width: 160px;
-    min-width: 160px;
+    width: 10rem;
+    max-width: 10rem;
+    min-width: 10rem;
 }
 
 /* Date input element styling */
 .date-input-container input[type="date"] {
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.2;
 }
 
 /* Bold text in date container */
 .date-input-container b {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #2d3748;
     display: block;
-    margin-top: 6px;
+    margin-top: 0.375rem;
     line-height: 1.2;
 }
 
 /* Small text in date container */
 .date-input-container small {
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 1.2;   
     display: block;
-    margin-top: 6px;
+    margin-top: 0.375rem;
     color: #718096;
 }
 
@@ -1189,7 +1232,7 @@ select:focus-visible {
 .button-fields .url-input-wrapper,
 .url-inputs .url-input-wrapper {
     display: flex;
-    gap: 12px;
+    gap: 0.75rem;
     align-items: center;
     width: 100%;
 }
@@ -1198,22 +1241,22 @@ select:focus-visible {
 .url-inputs .url-input-wrapper input[type="url"] {
     flex: 1;
     max-width: 100%;
-    padding: 4px 8px;
+    padding: 0.25rem 0.5rem;
 }
 
 .test-url-btn {
     background-color: #edf2f7;
     color: black;
     border: 1px solid #a0aec0;
-    padding: 4px 8px;
-    min-height: 30px;
-    max-height: 30px;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 0.25rem 0.5rem;
+    min-height: 1.875rem;
+    max-height: 1.875rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
     font-weight: 500;
-    min-width: 80px;
+    min-width: 5rem;
 }
 
 .test-url-btn:hover {
@@ -1225,9 +1268,9 @@ select:focus-visible {
     color: #3182ce;
     text-decoration: none;
     font-weight: 600;
-    margin-left: 8px;
+    margin-left: 0.5rem;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75rem;
     transition: color 0.2s ease;
 }
 
@@ -1239,7 +1282,7 @@ select:focus-visible {
 .see-more-link:focus {
     outline: 2px solid #3182ce;
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 0.125rem;
 }
 
 /* Truncated descriptions */
@@ -1251,8 +1294,8 @@ select:focus-visible {
 /* JSON property names */
 .json-name {
     display: block;
-    margin-top: 2px;
-    font-size: 11px;
+    margin-top: 0.125rem;
+    font-size: 0.6875rem;
     font-weight: 500;
 }
 
@@ -1303,7 +1346,7 @@ select:focus-visible {
     min-width: fit-content;
     width: auto;
     max-width: none;
-    padding: 8px 12px;
+    padding: 0.5rem 0.75rem;
 }
 
 /* Override for cloned application buttons in MorphicBar preview */
@@ -1320,20 +1363,24 @@ select:focus-visible {
     width: auto;
 }
 
+#spacer {
+    margin-right: 0.625rem;
+}
+
 /* Split button styling */
 .preview-button-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 0.375rem;
 }
 
 .button-label {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
     color: #2d3748;
     text-align: center;
-    margin-bottom: -6px;
+    margin-bottom: -0.375rem;
 }
 
 .split-button-container {
@@ -1344,27 +1391,45 @@ select:focus-visible {
 .split-button {
     background-color: #008145;
     color: white;
-    padding: 0px 10px;
+    padding: 0 0.625rem;
     border: none;
-    font-size: 12px;
+    font-size: 0.75rem;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    min-width: 30px;
-    min-height: 28px;
-    max-height: 28px;
+    min-width: 1.875rem;
+    min-height: 1.75rem;
+    max-height: 1.75rem;
     font-weight: 600;
 }
 
+.normal-button {
+    background-color: #008145;
+    color: white;
+    padding: 0 0.625rem;
+    border: none;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    min-width: 1.875rem;
+    min-height: 1.75rem;
+    max-height: 1.75rem;
+    font-weight: 600;
+    margin-left: 0.3125rem;
+}
+
 .split-button.left {
-    border-radius: 6px 0 0 6px;
-    margin-left: 5px;
+    border-radius: 0.375rem 0 0 0.375rem;
+    margin-left: 0.3125rem;
 }
 
 .split-button.right {
-    border-radius: 0 6px 6px 0;
+    border-radius: 0 0.375rem 0.375rem 0;
 }
 
 .split-button.middle {
@@ -1377,22 +1442,22 @@ select:focus-visible {
 
 .button-container {
     background-color:#3182ce;
-    padding: 10px;
-    padding-bottom: 3px;
-    border-radius: 20px;
+    padding: 0.625rem;
+    padding-bottom: 0.1875rem;
+    border-radius: 1.25rem;
 }
 
 .no-buttons-message {
     width: 100%;
-    padding: 10px;
-    font-size: 14px;
+    padding: 0.625rem;
+    font-size: 0.875rem;
     color: #718096;
     text-align: center;
     font-style: italic;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 50px;
+    min-height: 3.125rem;
 }
 
 /* Add this media query to hide morphic bar preview on small screens */
