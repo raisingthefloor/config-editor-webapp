@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Builder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="back-button-container">
+            <a class="back-button" href="index.html">← Back to <b>Home</b></a>
+            <hr>
+        </div>
+
+        <!-- Step Progress Indicator -->
+        <div class="step-progress">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Configure</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Customize</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Download</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Configure -->
+        <div class="step-content" id="step1" style="display: block;">
+
+
+            <div class="section two-column-layout">
+                <h1>Configure config.json Settings</h1>
+                <span>Configuration file controls the behaviour of the computer on which it is installed. Computers in
+                    different areas (e.g. main floor, lab, classroom) can have different have config files to provide
+                    different setting or different “three extra buttons”. See instructions for the location for the
+                    config.json file or PCs or Macs.</span>
+                <br><br>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        Organization Name
+                        <span class="required">Required</span>
+                        <small>This can be any name you would like to identify your organization. If you will be using
+                            different config files for different groups of computers – you might want to put the
+                            location
+                            that this config.file will be used in here so you can identify which config file this is.
+                            You
+                            can use any characters except these three characters " or \
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="text" id="organizationName" placeholder="organization name">
+                        <div id="organizationNameError">
+                            Organization Name cannot contain double quotes (") or backslash (\)
+                        </div>
+                    </div>
+                </label>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        Site ID
+                        <span class="required">Required</span>
+                        <small>For Site ID use letters or numbers only. No symbols or spaces.
+                            If organization wants separate cumulative counts for different areas (e.g. wants to track
+                            usage
+                            in classrooms, library, and other places separately ) – then provide different site ids in
+                            the
+                            config files in those different areas.
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="text" id="telemetry.siteId" pattern="[A-Za-z0-9]*" placeholder="e.g. umd">
+                        <div id="siteIdError">
+                            Site ID cannot include symbols or spaces
+                        </div>
+                    </div>
+                </label>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        Automatically Run Mophic on System Log In.
+                        <small>Causes Morphic to start up automatically when the OS is booted.
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="checkbox" id="features.autorunAfterLogin.enabled" checked>
+                    </div>
+                </label>
+                <label id="features.autorunAfterLogin.scope.label" class="dependent-option">
+                    <div class="label-text">
+                        Scope of AutoStart
+                        <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sed.
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <select name="features.autorunAfterLogin.scope" id="features.autorunAfterLogin.scope">
+                            <option value="allLocalUsers">All Local Users</option>
+                            <option value="currentUser">Currently Logged In User</option>
+                        </select>
+                    </div>
+                </label>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        Enable AT Use Counter
+                        <small>Allows collection of anonymous use of accessibility features to better understand which
+                            features are of use at institution. NO user information is gathered. In fact, no information
+                            on
+                            even which computer was used. Only gathers cumulative counts for the entire enterprise site.
+                            Strongly recommend keeping this enabled.
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="checkbox" id="features.atUseCounter.enabled">
+                    </div>
+                </label>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        Delay Morphic Appearance to gather Baseline Date
+                        <small>It is useful to be able to say how much Morphic has improved user access to accessibility
+                            features. To do this you can delay the appearance of the MorphicBar by 3 weeks or so. Then
+                            when
+                            you install Morphic, it will begin measuring the use of the built in accessibility features
+                            right away – but delay the appearance of Morphic until the date you set below. On that date
+                            (at
+                            midnight + 1 minute) the MorphicBar will show up on all computers at the same time. You can
+                            then
+                            see from the telemetry how much Morphic has helped. To date it has yielded increases of
+                            700%,
+                            10,000% and more. <strong>This feature automatically turns on "Enable AT Use Counter"
+                                (telemetry) above since that is how it
+                                works.</strong>
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="checkbox" id="enableDelayMorphic">
+                    </div>
+                </label>
+                <label id="delayMorphicDateLabel" class="dependent-option">
+                    <div class="label-text">
+                        Date to show MorphicBar
+                        <small>Select a date to show the MorphicBar.</small>
+                    </div>
+
+                    <div class="control-container date-input-container">
+                        <input type="date" id="hideMorphicAfterLoginUntil">
+                    </div>
+                </label>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        Enable AT-on-Demand (Windows Only)
+                        <small><b id="atOnDemandWarning">This option is in beta testing and is not generally available
+                                yet.</b>
+                            <br>
+                            This option allows Users to be able to use their own AT they (or the enterprise) has a
+                            licence
+                            for safely on any enterprise computers. When a user signs in and AT-on-Demand is enabled,
+                            the
+                            computer will automatically pull a clean, sterile copy of the users software from the
+                            location
+                            below on the IT DEPT controlled server and install it on the computer, then set it up for
+                            the
+                            user. When they are done it disappears. For more see <a href="https://morphic.org/atod"
+                                target="_blank">https://morphic.org/atod</a>
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="checkbox" id="features.atOnDemand.enabled" disabled>
+                    </div>
+                </label>
+            </div>
+
+            <div class="section two-column-layout">
+                <h1>Default Settings</h1>
+                <span>These settings are not usually changed but are included here for completeness.</span>
+                <br><br>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        Enable Custom MorphicBars
+                        <small>It is possible for users to have their own custom MorphicBars that they have saved to the
+                            cloud. The setting enables them to use a custom MorphicBar on the enterprise computers.
+                            These
+                            custom MorphicBars contain only standard MorphicBar functions and custom URLs for the user.
+                            These MorphicBars automatically disappear and the standard enterprise MorphicBar appears
+                            when
+                            the user signs out or the computer is rebooted. Setting this feature automatically turn on
+                            the
+                            next feature "allowing users to sign in" because that is required for this feature to work.
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="checkbox" id="features.customMorphicBars.enabled" checked>
+                    </div>
+                </label>
+                <hr>
+
+                <label>
+                    <div class="label-text">
+                        Enable Check for Updates with each Launch
+                        <small>This should be left OFF for most enterprise installations. It would cause an alert to pop
+                            up
+                            when the computer is booted and there is an update available. Unless users are able to
+                            install
+                            their own software this would have no function. IT depts will be alerted when updates are
+                            available and they can make them when they deem it appropriate in the same manner they
+                            update
+                            everything else on the computers they control.
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="checkbox" id="features.checkForUpdates.enabled">
+                    </div>
+                </label>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        MorphicBar Visibility after Login
+                        <small>
+                            <span class="description-short" id="visibility-short">There are three settings for this.
+                                <b>Show</b>
+                                causes the MorphicBar to show up on login. <b>Hide</b> causes the MorphicBar to be
+                                hidden on
+                                login.
+                                <b>Restore</b> – causes the MorphicBar to assume the same state as when a user signed
+                                out.</span>
+                            <span class="description-full" id="visibility-full">There are three
+                                settings for this. <b>Show</b> causes the MorphicBar to show up on login. <b>Hide</b>
+                                causes
+                                the
+                                MorphicBar to be hidden on login. <b>Restore</b> – causes the MorphicBar to assume the
+                                same
+                                state
+                                as when a user signed out. The Restore feature is only useful on personally assigned
+                                computers that do not reset after users and not generally of use on shared-use
+                                enterprise
+                                computers. We very highly recommend this be set to <b>Show</b>. For those who do not
+                                want
+                                the
+                                MorphicBar, it can be easily dismissed by clicking on the x in the upper right-hand
+                                corner
+                                of the MorphicBar. We have found that not having the MorphicBar show on startup results
+                                in
+                                very little if any use of Morphic and consequently the same very low level of awareness
+                                and
+                                use of the accessibility features built into the computer. (And very little benefit from
+                                installing Morphic.)</span>
+                            <a href="#" class="see-more-link" id="visibility-toggle">See more</a>
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <select name="morphicBar.visibilityAfterLogin" id="morphicBar.visibilityAfterLogin">
+                            <option value="show" selected>Show</option>
+                            <option value="restore">Restore</option>
+                            <option value="hide">Hide</option>
+                        </select>
+                    </div>
+                </label>
+                <hr>
+                <label>
+                    <div class="label-text">
+                        MorphicBar Default Location
+                        <small>
+                            <span class="description-short" id="location-short">Users can move the MorphicBar themselves
+                                to
+                                any corner of any screen they want to. This setting however determines where the
+                                MorphicBar
+                                will show up when Morphic is started. The default location is bottomTrailing which would
+                                be
+                                the bottom-right-hand corner for a left-to-right language. However, some libraries use
+                                that
+                                corner for their sign in or timed use controls. So this setting is provided to allow the
+                                MorphicBar to start in another corner of the main screen on startup.</span>
+                            <span class="description-full" id="location-full">Users can move the
+                                MorphicBar themselves to any corner of any screen they want to. This setting however
+                                determines where the MorphicBar will show up when Morphic is started. The default
+                                location
+                                is bottomTrailing which would be the bottom-right-hand corner for a left-to-right
+                                language.
+                                However, some libraries use that corner for their sign in or timed use controls. So this
+                                setting is provided to allow the MorphicBar to start in another corner of the main
+                                screen on
+                                startup. The choices are topLeft, topRight, bottomLeft, bottomRight, topLeading,
+                                topTrailing, bottomLeading, bottomTrailing. The leading and trailing options are useful
+                                in
+                                sites that may support multiple languages where things may shift left and right. The
+                                default
+                                is Bottom Trailing.</span>
+                            <a href="#" class="see-more-link" id="location-toggle">See more</a>
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <select name="morphicBar.defaultLocation" id="morphicBar.defaultLocation">
+                            <option value="bottomTrailing" selected>Bottom Trailing</option>
+                            <option value="topLeft">Top Left</option>
+                            <option value="topRight">Top Right</option>
+                            <option value="bottomLeft">Bottom Left</option>
+                            <option value="bottomRight">Bottom Right</option>
+                            <option value="topLeading">Top Leading</option>
+                            <option value="topTrailing">Top Trailing</option>
+                            <option value="bottomLeading">Bottom Leading</option>
+                        </select>
+                    </div>
+                </label>
+                <hr>
+                <label id="features.resetSettings.label">
+                    <div class="label-text">
+                        Reset 5 Windows Settings to Default
+                        <small>This was a special setting created for a location that wanted to automatically reset the
+                            following Windows settings when the user signs out of Windows: TEXT SIZE(screen scale),
+                            CONTRAST, COLOR, DARKMODE & NIGHTMODE.
+                            This is not needed in most locations because they automatically set things back on reboot
+                            but
+                            can be used if it is needed.
+                        </small>
+                    </div>
+                    <div class="control-container">
+                        <input type="checkbox" id="features.resetSettings.enabled">
+                    </div>
+                </label>
+                <!-- Step Navigation -->
+                <div class="step-navigation">
+                    <button type="button" class="nav-btn prev-btn" onclick="prevStep()" disabled>Previous</button>
+                    <div class="right-buttons">
+                        <button type="button" class="nav-btn clear-btn" onclick="clearStep()">Clear</button>
+                        <button type="button" class="nav-btn next-btn" onclick="nextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Customize -->
+        <div class="step-content" id="step2" style="display: none;">
+
+            <div class="section two-column-layout">
+                <h1>Customize Your MorphicBar</h1>
+                <span>Enterprises can customize the MorphicBar with up to three additional buttons via the config file.
+                    You can use the same set across all computers or create location-specific sets (e.g., classrooms, library, labs) by using different config files.</span>
+                <br><br>
+
+                <!-- Predefined Buttons Section -->
+                <div class="application-buttons-section">
+                <h5>Predefined Button Options</h5>
+                <small>Choose to display one tool only once</small>
+
+                    <div class="button-container">
+                        <!-- Predefined Buttons Grid (2x2) -->
+                        <div class="predefined-buttons-grid">
+                            <!-- USB Control Button -->
+                            <div class="predefined-button" id="usbButton">
+                                <div class="button-header">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="usb.enabled" name="usb.enabled">
+                                    </div>
+                                    <div class="button-info">
+                                        <h5>USB Open/Eject</h5>
+                                        <small>Allows a user to easily open or eject all USB drives plugged into
+                                            a computer</small>
+                                        <div class="position-selector-container" id="usb.positionContainer"
+                                            style="display: none;">
+                                            <label for="usb.position">Position:</label>
+                                            <select name="usb.position" id="usb.position">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="button-preview-container">
+                                        <div class="preview-button-group">
+                                            <div class="button-label">USB Drives (All)</div>
+                                            <div class="split-button-container">
+                                                <button class="split-button left">Open</button>
+                                                <button class="split-button right">Eject</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Volume Control Button -->
+                            <div class="predefined-button" id="volumeButton">
+                                <div class="button-header">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="volume.enabled" name="volume.enabled">
+                                    </div>
+                                    <div class="button-info">
+                                        <h5>Volume</h5>
+                                        <small>Allows a user to easily change the volume and mute (but not the
+                                            microphone
+                                            volume)</small>
+                                        <div class="position-selector-container" id="volume.positionContainer"
+                                            style="display: none;">
+                                            <label for="volume.position">Position:</label>
+                                            <select name="volume.position" id="volume.position">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="button-preview-container">
+                                        <div class="preview-button-group">
+                                            <div class="button-label">Volume</div>
+                                            <div class="split-button-container">
+                                                <button class="split-button left">+</button>
+                                                <button class="split-button middle">-</button>
+                                                <button class="split-button right">Mute</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Voice Control Button -->
+                            <div class="predefined-button" id="voiceButton">
+                                <div class="button-header">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="voice.enabled" name="voice.enabled">
+                                    </div>
+                                    <div class="button-info">
+                                        <h5>Voice Control (Windows Only)</h5>
+                                        <small>Turns on Voice Access in Windows</small>
+                                        <div class="position-selector-container" id="voice.positionContainer"
+                                            style="display: none;">
+                                            <label for="voice.position">Position:</label>
+                                            <select name="voice.position" id="voice.position">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="button-preview-container">
+                                        <div class="preview-button-group">
+                                            <div class="button-label">Voice Control</div>
+                                            <div class="split-button-container">
+                                                <button class="split-button left">On</button>
+                                                <button class="split-button right">Off</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Sign Out Button-->
+                            <div class="predefined-button" id="signOutButton">
+                                <div class="button-header">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="signOut.enabled" name="signOut.enabled">
+                                    </div>
+                                    <div class="button-info">
+                                        <h5>Sign Out (Windows Only)</h5>
+                                        <small>Signs out the current user out of Windows in one click</small>
+                                        <div class="position-selector-container" id="signOut.positionContainer"
+                                            style="display: none;">
+                                            <label for="signOut.position">Position:</label>
+                                            <select name="signOut.position" id="signOut.position">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="button-preview-container">
+                                        <div class="preview-button-group">
+                                            <div class="preview-button action-button">
+                                                <span id="signOutLabel">Sign <br> Out</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Application Button 1 (Always visible) -->
+                        <div class="predefined-button" id="customApp1">
+                            <div class="button-header">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="customApp1.enabled" name="customApp1.enabled">
+                                </div>
+                                <div class="button-info">
+                                    <h5>Custom Application Button 1</h5>
+                                    <small>Create a custom button that launches a specific application</small>
+
+                                </div>
+                                <div class="button-preview-container">
+                                    <div class="preview-button url-button" id="customApp1Preview">
+                                        <span id="customApp1Label">Custom<br>App</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="url-inputs" id="customApp1.inputs" style="display: none;">
+                                <label><b>Position:</b>
+                                    <select name="customApp1.position" id="customApp1.position">
+                                        <option value="">-</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                </label>
+                                <label><b>Application:</b>
+                                    <select id="customApp1.appId">
+                                        <option value="">Select Application</option>
+                                        <option value="calculator">Calculator</option>
+                                        <option value="firefox">Firefox</option>
+                                        <option value="googleChrome">Google Chrome</option>
+                                        <option value="microsoftAccess">Microsoft Access</option>
+                                        <option value="microsoftEdge">Microsoft Edge</option>
+                                        <option value="microsoftExcel">Microsoft Excel</option>
+                                        <option value="microsoftOneNote">Microsoft OneNote</option>
+                                        <option value="microsoftOutlook">Microsoft Outlook</option>
+                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
+                                        <option value="microsoftQuickAssist">Microsoft Quick Assist (Windows Only)
+                                        </option>
+                                        <option value="microsoftTeams">Microsoft Teams</option>
+                                        <option value="microsoftWord">Microsoft Word</option>
+                                        <option value="opera">Opera</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Application Button 2 (Hidden initially) -->
+                        <div class="predefined-button" id="customApp2" style="display: none;">
+                            <div class="button-header">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="customApp2.enabled" name="customApp2.enabled">
+                                </div>
+                                <div class="button-info">
+                                    <h5>Custom Application Button 2</h5>
+                                    <small>Create a custom button that launches a specific application</small>
+
+                                </div>
+                                <div class="button-preview-container">
+                                    <div class="preview-button url-button" id="customApp2Preview">
+                                        <span id="customApp2Label">Custom<br>App</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="url-inputs" id="customApp2.inputs" style="display: none;">
+                                <label><b>Position:</b>
+                                    <select name="customApp2.position" id="customApp2.position">
+                                        <option value="">-</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                </label>
+                                <label><b>Application:</b>
+                                    <select id="customApp2.appId">
+                                        <option value="">Select Application</option>
+                                        <option value="calculator">Calculator</option>
+                                        <option value="firefox">Firefox</option>
+                                        <option value="googleChrome">Google Chrome</option>
+                                        <option value="microsoftAccess">Microsoft Access</option>
+                                        <option value="microsoftEdge">Microsoft Edge</option>
+                                        <option value="microsoftExcel">Microsoft Excel</option>
+                                        <option value="microsoftOneNote">Microsoft OneNote</option>
+                                        <option value="microsoftOutlook">Microsoft Outlook</option>
+                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
+                                        <option value="microsoftQuickAssist">Microsoft Quick Assist (Windows Only)
+                                        </option>
+                                        <option value="microsoftTeams">Microsoft Teams</option>
+                                        <option value="microsoftWord">Microsoft Word</option>
+                                        <option value="opera">Opera</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Application Button 3 (Hidden initially) -->
+                        <div class="predefined-button" id="customApp3" style="display: none;">
+                            <div class="button-header">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="customApp3.enabled" name="customApp3.enabled">
+                                </div>
+                                <div class="button-info">
+                                    <h5>Custom Application Button 3</h5>
+                                    <small>Create a custom button that launches a specific application</small>
+
+                                </div>
+                                <div class="button-preview-container">
+                                    <div class="preview-button url-button" id="customApp3Preview">
+                                        <span id="customApp3Label">Custom<br>App</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="url-inputs" id="customApp3.inputs" style="display: none;">
+                                <label><b>Position:</b>
+                                    <select name="customApp3.position" id="customApp3.position">
+                                        <option value="">-</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                </label>
+                                <label><b>Application:</b>
+                                    <select id="customApp3.appId">
+                                        <option value="">Select Application</option>
+                                        <option value="calculator">Calculator</option>
+                                        <option value="firefox">Firefox</option>
+                                        <option value="googleChrome">Google Chrome</option>
+                                        <option value="microsoftAccess">Microsoft Access</option>
+                                        <option value="microsoftEdge">Microsoft Edge</option>
+                                        <option value="microsoftExcel">Microsoft Excel</option>
+                                        <option value="microsoftOneNote">Microsoft OneNote</option>
+                                        <option value="microsoftOutlook">Microsoft Outlook</option>
+                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
+                                        <option value="microsoftQuickAssist">Microsoft Quick Assist (Windows Only)
+                                        </option>
+                                        <option value="microsoftTeams">Microsoft Teams</option>
+                                        <option value="microsoftWord">Microsoft Word</option>
+                                        <option value="opera">Opera</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Add Button (Hidden initially) -->
+                        <div class="add-button-container" id="addAppButtonContainer" style="display: none;">
+                            <button type="button" id="addAppButton" class="add-app-btn">+ Add Application
+                                Button</button>
+                        </div>
+                    </div>
+                    <br>
+
+                    <!-- Custom URL Buttons Section -->
+                    <div class="url-buttons-section">
+                        <h5>Predefined Button Options</h5>
+                        <small>Choose to display any one tool upto 3 times</small>
+
+                        <!-- Custom URL Button 1 -->
+                        <div class="predefined-button" id="customUrl1">
+                            <div class="button-header">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="customUrl1.enabled" name="customUrl1.enabled">
+                                </div>
+                                <div class="button-info">
+                                    <h5>Custom URL Button</h5>
+                                    <small>Create a custom button that opens a specific website or web
+                                        application</small>
+                                </div>
+                                <div class="button-preview-container">
+                                    <div class="preview-button url-button" id="customUrl1Preview">
+                                        <span id="customUrl1Label">Button<br>Text</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-config">
+                                <div class="url-inputs-container">
+                                    <div class="url-inputs">
+                                        <label><b>Position:</b>
+                                            <select name="customUrl1.position" id="customUrl1.position">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </label>
+                                        <label><b>Button Text:</b>
+                                            <input type="text" id="customUrl1.label"
+                                                placeholder="Button Text (use \n for line breaks)">
+                                        </label>
+                                        <label><b>Tooltip Header:</b>
+                                            <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text">
+                                        </label>
+                                        <label><b>Tooltip Text:</b>
+                                            <input type="text" id="customUrl1.tooltipText"
+                                                placeholder="Description text">
+                                        </label>
+                                        <label><b>URL:</b>
+                                            <div class="url-input-wrapper">
+                                                <input type="url" id="customUrl1.url" placeholder="https://example.com">
+                                                <span class="url-status-indicator" id="customUrl1Status" aria-hidden="true"></span>
+                                                <button type="button" class="test-url-btn" id="testUrl1Btn"
+                                                    title="Test URL in new tab">Test URL</button>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="tooltip-preview">
+                                        <h6>Preview</h6>
+                                        <div class="preview-button url-button" id="customUrl1ConfigPreview">
+                                            <span id="customUrl1ConfigLabel">Button<br>Text</span>
+                                        </div>
+                                        <div class="tooltip-preview-box" id="customUrl1TooltipPreview">
+                                            <div class="tooltip-header" id="customUrl1TooltipHeaderPreview">Header text
+                                            </div>
+                                            <div class="tooltip-text" id="customUrl1TooltipTextPreview">Description text
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom URL Button 2 -->
+                        <div class="predefined-button" id="customUrl2" style="display: none;">
+                            <div class="button-header">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="customUrl2.enabled" name="customUrl2.enabled">
+                                </div>
+                                <div class="button-info">
+                                    <h5>Custom URL Button</h5>
+                                    <small>Create a second custom button that opens a specific website or web
+                                        application</small>
+                                </div>
+                                <div class="button-preview-container">
+                                    <div class="preview-button url-button" id="customUrl2Preview">
+                                        <span id="customUrl2Label">Button<br>Text</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-config">
+                                <div class="url-inputs-container">
+                                    <div class="url-inputs">
+                                        <label><b>Position:</b>
+                                            <select name="customUrl2.position" id="customUrl2.position">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </label>
+                                        <label><b>Button Text:</b>
+                                            <input type="text" id="customUrl2.label" placeholder="Button Text">
+                                        </label>
+                                        <label><b>Tooltip Header:</b>
+                                            <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text">
+                                        </label>
+                                        <label><b>Tooltip Text:</b>
+                                            <input type="text" id="customUrl2.tooltipText"
+                                                placeholder="Description text">
+                                        </label>
+                                        <label><b>URL:</b>
+                                            <div class="url-input-wrapper">
+                                                <input type="url" id="customUrl2.url" placeholder="https://example.com">
+                                                <span class="url-status-indicator" id="customUrl2Status" aria-hidden="true"></span>
+                                                <button type="button" class="test-url-btn" id="testUrl2Btn"
+                                                    title="Test URL in new tab">Test URL</button>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="tooltip-preview">
+                                        <h6>Preview</h6>
+                                        <div class="preview-button url-button" id="customUrl2ConfigPreview">
+                                            <span id="customUrl2ConfigLabel">Button<br>Text</span>
+                                        </div>
+                                        <div class="tooltip-preview-box" id="customUrl2TooltipPreview">
+                                            <div class="tooltip-header" id="customUrl2TooltipHeaderPreview">Header text
+                                            </div>
+                                            <div class="tooltip-text" id="customUrl2TooltipTextPreview">Description text
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom URL Button 3 -->
+                        <div class="predefined-button" id="customUrl3" style="display: none;">
+                            <div class="button-header">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="customUrl3.enabled" name="customUrl3.enabled">
+                                </div>
+                                <div class="button-info">
+                                    <h5>Custom URL Button</h5>
+                                    <small>Create a third custom button that opens a specific website or web
+                                        application</small>
+                                </div>
+                                <div class="button-preview-container">
+                                    <div class="preview-button url-button" id="customUrl3Preview">
+                                        <span id="customUrl3Label">Button<br>Text</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-config">
+                                <div class="url-inputs-container">
+                                    <div class="url-inputs">
+                                        <label><b>Position:</b>
+                                            <select name="customUrl3.position" id="customUrl3.position">
+                                                <option value="">-</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </label>
+                                        <label><b>Button Text:</b>
+                                            <input type="text" id="customUrl3.label" placeholder="Button Text">
+                                        </label>
+                                        <label><b>Tooltip Header:</b>
+                                            <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text">
+                                        </label>
+                                        <label><b>Tooltip Text:</b>
+                                            <input type="text" id="customUrl3.tooltipText"
+                                                placeholder="Description text">
+                                        </label>
+                                        <label><b>URL:</b>
+                                            <div class="url-input-wrapper">
+                                                <input type="url" id="customUrl3.url" placeholder="https://example.com">
+                                                <span class="url-status-indicator" id="customUrl3Status" aria-hidden="true"></span>
+                                                <button type="button" class="test-url-btn" id="testUrl3Btn"
+                                                    title="Test URL in new tab">Test URL</button>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="tooltip-preview">
+                                        <h6>Preview</h6>
+                                        <div class="preview-button url-button" id="customUrl3ConfigPreview">
+                                            <span id="customUrl3ConfigLabel">Button<br>Text</span>
+                                        </div>
+                                        <div class="tooltip-preview-box" id="customUrl3TooltipPreview">
+                                            <div class="tooltip-header" id="customUrl3TooltipHeaderPreview">Header text
+                                            </div>
+                                            <div class="tooltip-text" id="customUrl3TooltipTextPreview">Description text
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add URL Button (Hidden initially until first is present) -->
+                        <div class="add-button-container" id="addUrlButtonContainer">
+                            <button type="button" id="addUrlButton" class="add-url-btn">+ Add URL Button</button>
+                        </div>
+
+                    </div><!-- /.url-buttons-section -->
+
+
+                </div>
+
+                <h4>MorphicBar Preview</h4>
+                <p class="description">Preview of how your custom buttons will appear on the actual MorphicBar:</p>
+
+                <div class="morphic-bar-preview">
+                    <div class="morphic-bar-container">
+                        <!-- Custom buttons will be inserted here -->
+                        <div class="custom-buttons-container" id="customButtonsContainer">
+                            <!-- Buttons will be dynamically added here -->
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Text Size</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">+</button>
+                                    <button class="split-button right">-</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Magnifier</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">Show</button>
+                                    <button class="split-button right">Hide</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Snip</div>
+                                <div class="split-button-container">
+                                    <button class="normal-button">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Read Selected</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">&#9654;</button>
+                                    <button class="split-button right">&#x23f8;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Contrast & color</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">Contrast</button>
+                                    <button class="split-button middle">Color</button>
+                                    <button class="split-button middle">Dark</button>
+                                    <button class="split-button right">Night</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Button source information and conflicts-->
+                    <div class="button-sources" id="buttonSources">
+                        <!-- Button source info and conflicts will be shown here -->
+                    </div>
+                </div>
+
+                <!-- Step Navigation -->
+                <div class="step-navigation">
+                    <button type="button" class="nav-btn prev-btn" onclick="prevStep()">Previous</button>
+                    <div class="right-buttons">
+                        <button type="button" class="nav-btn clear-btn" onclick="clearStep()">Clear</button>
+                        <button type="button" class="nav-btn next-btn" onclick="nextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Download -->
+        <div class="step-content" id="step3" style="display: none;">
+
+
+            <div class="section">
+                <!-- Settings Summary Section -->
+                <div class="settings-summary">
+                    <h4>Settings Summary</h4>
+                    <div class="summary-content" id="settingsSummary">
+                        <!-- Settings will be populated here via JavaScript -->
+                    </div>
+                </div>
+
+                <div class="morphic-bar-preview">
+                    <h4>MorphicBar Preview</h4>
+                    <p class="description">Preview of how your custom buttons will appear on the actual MorphicBar:</p>
+                    <div class="morphic-bar-container">
+                        <!-- Custom buttons will be inserted here -->
+                        <div class="custom-buttons-container" id="topCustomButtonsContainer">
+                            <!-- Buttons will be dynamically added here -->
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Text Size</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">+</button>
+                                    <button class="split-button right">-</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Magnifier</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">Show</button>
+                                    <button class="split-button right">Hide</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Snip</div>
+                                <div class="split-button-container">
+                                    <button class="normal-button">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Read Selected</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">&#9654;</button>
+                                    <button class="split-button right">&#x23f8;</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-preview-container">
+                            <div class="preview-button-group">
+                                <div class="button-label">Contrast & color</div>
+                                <div class="split-button-container">
+                                    <button class="split-button left">Contrast</button>
+                                    <button class="split-button middle">Color</button>
+                                    <button class="split-button middle">Dark</button>
+                                    <button class="split-button right">Night</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Button source information and conflicts-->
+                    <div class="button-sources" id="topButtonSources">
+                        <!-- Button source info and conflicts will be shown here -->
+
+                    </div>
+                </div>
+                <div class="download-section">
+                    <div class="download-section-buttons">
+                        <button id="checkErrors" class="check-errors-btn">Check for Errors</button>
+                        <button id="download" class="download-btn" disabled>Download config.json</button>
+                    </div>
+                    <div id="errorMessages" class="error-messages"></div>
+                    <div id="successMessage" class="success-message">
+                        No errors found! You can now download the config.json file.
+                    </div>
+                </div>
+
+                <!-- Step Navigation -->
+                <div class="step-navigation">
+                    <button type="button" class="nav-btn prev-btn" onclick="prevStep()">Previous</button>
+                    <div class="right-buttons">
+                        <button type="button" class="nav-btn clear-btn" onclick="clearStep()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Print.js and html2canvas libraries -->
+        <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
+        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="script.js"></script>
+    </div>
+</body>
+
+</html>

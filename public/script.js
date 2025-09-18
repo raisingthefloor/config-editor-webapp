@@ -1,10 +1,324 @@
-document.getElementById('upload').addEventListener('change', handleFileUpload);
-document.getElementById('download').addEventListener('click', handleDownloadClick);
-document.getElementById('checkErrors').addEventListener('click', checkForErrors);
+// Step navigation variables
+let currentStep = 1;
+const totalSteps = 3;
 
-// File input button click handler
-document.getElementById('fileInputBtn').addEventListener('click', function() {
-    document.getElementById('upload').click();
+// Application button management
+let appButtonCount = 1; // Start with 1 (the first button is always there)
+
+// Helper: show add button only if any application is enabled
+function updateAddAppVisibility() {
+    const anyChecked = ['customApp1', 'customApp2', 'customApp3'].some(id => {
+        const cb = document.getElementById(`${id}.enabled`);
+        return cb && cb.checked;
+    });
+    const addButtonContainer = document.getElementById('addAppButtonContainer');
+    if (addButtonContainer) {
+        addButtonContainer.style.display = anyChecked ? 'block' : 'none';
+    }
+}
+
+// Helper: show add URL button only if any URL button is enabled
+function updateAddUrlVisibility() {
+    const anyChecked = ['customUrl1', 'customUrl2', 'customUrl3'].some(id => {
+        const cb = document.getElementById(`${id}.enabled`);
+        return cb && cb.checked;
+    });
+    const addUrlButtonContainer = document.getElementById('addUrlButtonContainer');
+    if (addUrlButtonContainer) {
+        addUrlButtonContainer.style.display = anyChecked ? 'block' : 'none';
+    }
+}
+
+function addApplicationButton() {
+    if (appButtonCount >= 3) {
+        alert('You cannot add more than 3 application buttons');
+        return;
+    }
+    
+    appButtonCount++;
+    const buttonNumber = appButtonCount;
+    const button = document.getElementById(`customApp${buttonNumber}`);
+    
+    if (button) {
+        button.style.display = 'block';
+        updateAddButtonState();
+        updateAddAppVisibility();
+    }
+}
+
+function removeApplicationButton(buttonNumber) {
+    const button = document.getElementById(`customApp${buttonNumber}`);
+    if (button) {
+        // Reset the button state
+        const checkbox = document.getElementById(`customApp${buttonNumber}.enabled`);
+        const positionContainer = document.getElementById(`customApp${buttonNumber}.positionContainer`);
+        const inputs = document.getElementById(`customApp${buttonNumber}.inputs`);
+        const positionSelect = document.getElementById(`customApp${buttonNumber}.position`);
+        const appSelect = document.getElementById(`customApp${buttonNumber}.appId`);
+        
+        if (checkbox) checkbox.checked = false;
+        if (positionContainer) positionContainer.style.display = 'none';
+        if (inputs) inputs.style.display = 'none';
+        if (positionSelect) positionSelect.value = '';
+        if (appSelect) appSelect.value = '';
+        
+        // Hide the button
+        button.style.display = 'none';
+        appButtonCount--;
+        updateAddButtonState();
+        updateAddAppVisibility();
+        updatePositionPreview();
+        validateUniquePositions();
+    }
+}
+
+function clearDynamicAppButtons() {
+    // Hide buttons 2 and 3
+    for (let i = 2; i <= 3; i++) {
+        const button = document.getElementById(`customApp${i}`);
+        if (button) {
+            // Reset the button state
+            const checkbox = document.getElementById(`customApp${i}.enabled`);
+            const positionContainer = document.getElementById(`customApp${i}.positionContainer`);
+            const inputs = document.getElementById(`customApp${i}.inputs`);
+            const positionSelect = document.getElementById(`customApp${i}.position`);
+            const appSelect = document.getElementById(`customApp${i}.appId`);
+            
+            if (checkbox) checkbox.checked = false;
+            if (positionContainer) positionContainer.style.display = 'none';
+            if (inputs) inputs.style.display = 'none';
+            if (positionSelect) positionSelect.value = '';
+            if (appSelect) appSelect.value = '';
+            
+            // Hide the button
+            button.style.display = 'none';
+        }
+    }
+    appButtonCount = 1;
+    updateAddButtonState();
+    updateAddAppVisibility();
+}
+
+function updateAddButtonState() {
+    const addButton = document.getElementById('addAppButton');
+    if (addButton) {
+        if (appButtonCount >= 3) {
+            addButton.disabled = true;
+            addButton.textContent = 'Maximum 3 buttons reached';
+        } else {
+            addButton.disabled = false;
+            addButton.textContent = '+ Add Application Button';
+        }
+    }
+
+    // URL buttons add state
+    const addUrlBtn = document.getElementById('addUrlButton');
+    if (addUrlBtn) {
+        const url2 = document.getElementById('customUrl2');
+        const url3 = document.getElementById('customUrl3');
+        const visibleCount = 1 + (url2 && url2.style.display !== 'none' ? 1 : 0) + (url3 && url3.style.display !== 'none' ? 1 : 0);
+        addUrlBtn.disabled = visibleCount >= 3;
+        addUrlBtn.textContent = visibleCount >= 3 ? 'Maximum 3 buttons reached' : '+ Add URL Button';
+    }
+}
+
+// Function to update settings summary
+function updateSettingsSummary() {
+    const summaryContent = document.getElementById('settingsSummary');
+    if (!summaryContent) return;
+
+    // Clear existing content
+    summaryContent.replaceChildren();
+
+    // Helper function to create a setting row
+    function createSettingRow(label, value) {
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'label';
+        labelDiv.textContent = label;
+
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'value';
+        valueDiv.textContent = value;
+
+        summaryContent.appendChild(labelDiv);
+        summaryContent.appendChild(valueDiv);
+    }
+
+    // Basic settings
+    createSettingRow('Organization Name', document.getElementById('organizationName').value || 'Not set');
+    createSettingRow('Site ID', document.getElementById('telemetry.siteId').value || 'Not set');
+
+    // Features
+    createSettingRow('Open Morphic Automatically at Login', 
+        document.getElementById('features.autorunAfterLogin.enabled').checked ? 'True' : 'False');
+    createSettingRow('See Which Accessibility Features are Helpful', 
+        document.getElementById('features.atUseCounter.enabled').checked ? 'True' : 'False');
+    createSettingRow('Delay Showing Morphic to Compare Before & After', 
+        document.getElementById('enableDelayMorphic').checked ? 'True' : 'False');
+    if (document.getElementById('enableDelayMorphic').checked) {
+        createSettingRow('Show Morphic Bar On', 
+            document.getElementById('hideMorphicAfterLoginUntil').value || 'Not set');
+    }
+    createSettingRow('Enable AT-on-Demand (Available for Windows Only)', 
+        document.getElementById('features.atOnDemand.enabled').checked ? 'True' : 'False');
+    createSettingRow('Enable Custom MorphicBars', 
+        document.getElementById('features.customMorphicBars.enabled').checked ? 'True' : 'False');
+    createSettingRow('Enable Check for Updates with each Launch', 
+        document.getElementById('features.checkForUpdates.enabled').checked ? 'True' : 'False');
+    createSettingRow('MorphicBar Visibility after Login', 
+        document.getElementById('morphicBar.visibilityAfterLogin').value);
+    createSettingRow('MorphicBar Default Location', 
+        document.getElementById('morphicBar.defaultLocation').value);
+    createSettingRow('Reset 5 Windows Settings to Default', 
+        document.getElementById('features.resetSettings.enabled').checked ? 'True' : 'False');
+
+    // Custom buttons
+    const customButtons = collectPredefinedButtons();
+    customButtons.forEach((button, index) => {
+        if (button.type === 'link') {
+            createSettingRow(`Custom URL Button ${index + 1} Text`, button.label || 'Not set');
+            createSettingRow(`Custom URL Button ${index + 1} Tooltip Header`, button.tooltipHeader || 'Not set');
+            createSettingRow(`Custom URL Button ${index + 1} Tooltip Text`, button.tooltipText || 'Not set');
+            createSettingRow(`Custom URL Button ${index + 1} URL`, button.url || 'Not set');
+        } else if (button.type === 'application') {
+            createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set');
+        }
+    });
+}
+
+// Step navigation functions
+function showStep(stepNumber) {
+    // Hide all step contents
+    document.querySelectorAll('.step-content').forEach(content => {
+        content.style.display = 'none';
+        content.classList.remove('active');
+    });
+    
+    // Show current step
+    const currentStepContent = document.getElementById(`step${stepNumber}`);
+    if (currentStepContent) {
+        currentStepContent.style.display = 'block';
+        currentStepContent.classList.add('active');
+    }
+    
+    // Update step indicators
+    document.querySelectorAll('.step').forEach((step, index) => {
+        const stepNum = index + 1;
+        step.classList.remove('active', 'completed');
+        
+        if (stepNum === stepNumber) {
+            step.classList.add('active');
+        } else if (stepNum < stepNumber) {
+            step.classList.add('completed');
+        }
+    });
+    
+    // Update settings summary when showing step 3
+    if (stepNumber === 3) {
+        updateSettingsSummary();
+    }
+    
+    currentStep = stepNumber;
+}
+
+function nextStep() {
+    if (currentStep < totalSteps) {
+        showStep(currentStep + 1);
+    }
+}
+
+function prevStep() {
+    if (currentStep > 1) {
+        showStep(currentStep - 1);
+    }
+}
+
+function clearStep() {
+    // TODO: Implement clear functionality for each step
+    // This will be implemented later as requested
+    console.log('Clear button clicked for step:', currentStep);
+}
+
+// Allow clicking on step indicators to navigate
+function initStepNavigation() {
+    document.querySelectorAll('.step').forEach((step, index) => {
+        step.addEventListener('click', () => {
+            showStep(index + 1);
+        });
+    });
+}
+
+// Initialize event listeners based on current page
+document.addEventListener('DOMContentLoaded', function() {
+    // Common file handling setup
+    const isConfigBuilder = window.location.pathname.includes('config-builder.html');
+    
+    if (isConfigBuilder) {
+        // Initialize step navigation
+        initStepNavigation();
+        showStep(1); // Start with step 1
+        // Config Builder page setup
+        document.getElementById('upload')?.addEventListener('change', handleFileUpload);
+        document.getElementById('download')?.addEventListener('click', handleDownloadClick);
+        document.getElementById('checkErrors')?.addEventListener('click', checkForErrors);
+        document.getElementById('fileInputBtn')?.addEventListener('click', function() {
+            document.getElementById('upload').click();
+        });
+
+        // Check for stored config data
+        const storedConfig = localStorage.getItem('pendingConfig');
+        if (storedConfig) {
+            try {
+                const config = JSON.parse(storedConfig);
+                populateUI(config);
+                // Clear stored config after loading
+                localStorage.removeItem('pendingConfig');
+            } catch (error) {
+                console.error('Error loading stored config:', error);
+            }
+        }
+    } else {
+        // Index page setup
+        document.getElementById('createNewBtn')?.addEventListener('click', function() {
+            window.location.href = 'config-builder.html';
+        });
+        
+        document.getElementById('importSettingsBtn')?.addEventListener('click', function() {
+            document.getElementById('configFileInput').click();
+        });
+        
+        document.getElementById('configFileInput')?.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    // Parse the config file
+                    const config = JSON.parse(e.target.result);
+                    // Store the config in localStorage
+                    localStorage.setItem('pendingConfig', JSON.stringify(config));
+                    // Navigate to config builder page
+                    window.location.href = 'config-builder.html';
+                } catch (error) {
+                    console.error('JSON Parse Error:', error);
+                    alert(`Invalid JSON file: ${error.message}\n\nPlease check that your file contains valid JSON format.`);
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    // Only add these event listeners if the elements exist
+    ['visibility-toggle', 'location-toggle'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleDescription(id.split('-')[0]);
+            });
+        }
+    });
 });
 
 // See more/less toggle handlers
@@ -177,11 +491,21 @@ window.addEventListener('load', function () {
     toggleDelayMorphicAccess();
     updatePositionPreview();
 
-    // Add change listeners to reset validation when inputs change
+    // Add change listeners to reset validation and update summary when inputs change
     const formInputs = document.querySelectorAll('input, select, textarea');
     formInputs.forEach(input => {
-        input.addEventListener('change', resetValidationState);
-        input.addEventListener('input', resetValidationState);
+        input.addEventListener('change', () => {
+            resetValidationState();
+            if (currentStep === 3) {
+                updateSettingsSummary();
+            }
+        });
+        input.addEventListener('input', () => {
+            resetValidationState();
+            if (currentStep === 3) {
+                updateSettingsSummary();
+            }
+        });
     });
 });
 
@@ -191,17 +515,180 @@ document.getElementById('telemetry.siteId').addEventListener('input', validateSi
 // Dynamically validate Organization Name as user types
 document.getElementById('organizationName').addEventListener('input', validateOrganizationName);
 
-// Add event listeners for position dropdowns to update preview
-document.addEventListener('DOMContentLoaded', function () {
-    const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position', 'customApp1.position', 'customApp2.position', 'customApp3.position', 'signOut.position'];
+    // Add event listeners for position dropdowns to update preview
+    document.addEventListener('DOMContentLoaded', function () {
+        const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position', 'customApp1.position', 'customApp2.position', 'customApp3.position', 'signOut.position'];
 
-    positionSelects.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        if (select) {
-            select.addEventListener('change', updatePositionPreview);
-            select.addEventListener('change', validateUniquePositions);
+        positionSelects.forEach(selectId => {
+            const select = document.getElementById(selectId);
+            if (select) {
+                select.addEventListener('change', updatePositionPreview);
+                select.addEventListener('change', validateUniquePositions);
+            }
+        });
+
+        // Add event listeners for predefined button checkboxes
+        const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
+        predefinedButtons.forEach(buttonId => {
+            const checkbox = document.getElementById(`${buttonId}.enabled`);
+            const positionContainer = document.getElementById(`${buttonId}.positionContainer`);
+            
+            if (checkbox && positionContainer) {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        positionContainer.style.display = 'flex';
+                    } else {
+                        positionContainer.style.display = 'none';
+                        // Reset position selection when unchecked
+                        const positionSelect = document.getElementById(`${buttonId}.position`);
+                        if (positionSelect) {
+                            positionSelect.value = '';
+                            updatePositionPreview();
+                            validateUniquePositions();
+                        }
+                    }
+                });
+            }
+        });
+
+        // Add event listeners for application button checkboxes
+        const appButtonIds = ['customApp1', 'customApp2', 'customApp3'];
+        const addButtonContainer = document.getElementById('addAppButtonContainer');
+        const addButton = document.getElementById('addAppButton');
+
+        
+        appButtonIds.forEach(buttonId => {
+            const checkbox = document.getElementById(`${buttonId}.enabled`);
+            const positionContainer = document.getElementById(`${buttonId}.positionContainer`);
+            const inputs = document.getElementById(`${buttonId}.inputs`);
+            const positionSelect = document.getElementById(`${buttonId}.position`);
+            const appSelect = document.getElementById(`${buttonId}.appId`);
+            
+            if (checkbox) {
+                // Set initial visibility based on current state
+                (function initAppButtonVisibility() {
+                    if (checkbox.checked) {
+                        if (positionContainer) positionContainer.style.display = 'flex';
+                        if (inputs) inputs.style.display = 'flex';
+                        updateAddAppVisibility();
+                    } else {
+                        if (positionContainer) positionContainer.style.display = 'none';
+                        if (inputs) inputs.style.display = 'none';
+                        updateAddAppVisibility();
+                    }
+                })();
+
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (positionContainer) positionContainer.style.display = 'flex';
+                        if (inputs) inputs.style.display = 'flex';
+                        updateAddAppVisibility();
+                    } else {
+                        if (positionContainer) positionContainer.style.display = 'none';
+                        if (inputs) inputs.style.display = 'none';
+                        // Reset position selection when unchecked
+                        if (positionSelect) {
+                            positionSelect.value = '';
+                            updatePositionPreview();
+                            validateUniquePositions();
+                        }
+                        // If the first app is unchecked, clear dynamic apps; then update visibility
+                        if (buttonId === 'customApp1') {
+                            clearDynamicAppButtons();
+                        }
+                        updateAddAppVisibility();
+                    }
+                });
+            }
+            
+            if (positionSelect) {
+                positionSelect.addEventListener('change', updatePositionPreview);
+                positionSelect.addEventListener('change', validateUniquePositions);
+            }
+            
+            if (appSelect) {
+                appSelect.addEventListener('change', function() {
+                    updateAppButtonPreview(buttonId);
+                });
+            }
+        });
+
+        // Ensure initial visibility reflects current state
+        // First, hide all app buttons 2 and 3 initially
+        const app2 = document.getElementById('customApp2');
+        const app3 = document.getElementById('customApp3');
+        if (app2) app2.style.display = 'none';
+        if (app3) app3.style.display = 'none';
+        
+        // Force hide the add button containers initially
+        const addAppContainer = document.getElementById('addAppButtonContainer');
+        const addUrlContainer = document.getElementById('addUrlButtonContainer');
+        if (addAppContainer) {
+            addAppContainer.style.display = 'none';
         }
-    });
+        if (addUrlContainer) {
+            addUrlContainer.style.display = 'none';
+        }
+        
+        // Then update add button visibility based on current checkbox states
+        updateAddAppVisibility();
+        updateAddUrlVisibility();
+
+        // Add button functionality
+        if (addButton) {
+            addButton.addEventListener('click', addApplicationButton);
+        }
+
+        // URL buttons add functionality
+        const addUrlButton = document.getElementById('addUrlButton');
+        if (addUrlButton) {
+            addUrlButton.addEventListener('click', function() {
+                const url2 = document.getElementById('customUrl2');
+                const url3 = document.getElementById('customUrl3');
+                if (url2 && url2.style.display === 'none') {
+                    url2.style.display = 'block';
+                } else if (url3 && url3.style.display === 'none') {
+                    url3.style.display = 'block';
+                }
+                updateAddButtonState();
+                updateAddUrlVisibility();
+                updatePositionPreview();
+            });
+        }
+
+        // Add event listeners for URL button enable checkboxes (toggle inputs/preview only)
+        const urlButtonIds = ['customUrl1', 'customUrl2', 'customUrl3'];
+        const addUrlButtonContainer = document.getElementById('addUrlButtonContainer');
+        urlButtonIds.forEach(buttonId => {
+            const checkbox = document.getElementById(`${buttonId}.enabled`);
+            const inputsContainer = document.querySelector(`#${buttonId} .button-config`);
+            const previewContainer = document.querySelector(`#${buttonId} .tooltip-preview`);
+            const positionSelector = document.getElementById(`${buttonId}.position`);
+
+            if (checkbox && inputsContainer) {
+                // Initial state: unchecked => hide inputs, keep heading/description visible
+                const applyState = () => {
+                    const isChecked = checkbox.checked;
+                    inputsContainer.style.display = isChecked ? 'block' : 'none';
+                    updateUrlButtonVisibility(buttonId);
+                    updateAddUrlVisibility();
+                };
+
+                // Set initial
+                applyState();
+
+                checkbox.addEventListener('change', function() {
+                    applyState();
+                    if (!this.checked && positionSelector) {
+                        positionSelector.value = '';
+                        updatePositionPreview();
+                        validateUniquePositions();
+                    } else {
+                        updatePositionPreview();
+                    }
+                });
+            }
+        });
 
     // Add event listeners for custom URL inputs to update preview
     const customUrlIds = ['customUrl1', 'customUrl2', 'customUrl3'];
@@ -313,7 +800,7 @@ function validateOrganizationName() {
 }
 
 //Tests a URL by opening it in a new tab
-function testURL(inputId) {
+async function testURL(inputId) {
     const urlInput = document.getElementById(inputId);
     if (!urlInput) {
         console.error('URL input field not found:', inputId);
@@ -321,34 +808,93 @@ function testURL(inputId) {
     }
 
     const url = urlInput.value.trim();
-
-    // Its valid if empty (but later when checking for errors, we'll make sure it's filled in)
     if (!url) {
         alert('Please enter a URL first');
         urlInput.focus();
         return;
     }
 
-    // Basic URL validation - check if it starts with http:// or https://
+    // Resolve status indicator element next to this input
+    const baseId = inputId.split('.')[0];
+    const statusEl = document.getElementById(`${baseId}Status`);
+    const testBtn = document.getElementById(`testUrl${baseId.replace('customUrl','')}Btn`);
+
+    // Helper to set classes
+    const setStatus = (state) => {
+        if (!statusEl) return;
+        statusEl.classList.remove('loading', 'success', 'error');
+        if (state) statusEl.classList.add(state);
+    };
+
+    // Basic URL normalization
     let finalUrl = url;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        // If no protocol specified, assume https://
         finalUrl = 'https://' + url;
-
-        // Update the input field to show the corrected URL
         urlInput.value = finalUrl;
     }
 
-    // Try to open the URL in a new tab
+    // Basic syntax validation using URL constructor
+    try {
+        // Will throw if invalid
+        // eslint-disable-next-line no-new
+        new URL(finalUrl);
+    } catch (_) {
+        setStatus('error');
+        alert('Invalid URL format. Please check and try again.');
+        urlInput.focus();
+        return;
+    }
+
+    // Begin loading state
+    setStatus('loading');
+    if (testBtn) testBtn.disabled = true;
+
+    // Best-effort reachability check
+    let reachable = false;
+    try {
+        // Try CORS-aware fetch first
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        const response = await fetch(finalUrl, { method: 'HEAD', mode: 'cors', redirect: 'follow', signal: controller.signal });
+        clearTimeout(timeout);
+        // If we can read a response and it's ok or redirected, consider reachable
+        reachable = response && (response.ok || (response.status >= 200 && response.status < 400));
+    } catch (e1) {
+        // Fallback to no-cors (opaque) GET; success of the promise means at least network didn't immediately fail
+        try {
+            const controller2 = new AbortController();
+            const timeout2 = setTimeout(() => controller2.abort(), 5000);
+            await fetch(finalUrl, { method: 'GET', mode: 'no-cors', redirect: 'follow', cache: 'no-store', signal: controller2.signal });
+            clearTimeout(timeout2);
+            reachable = true; // opaque but resolved
+        } catch (e2) {
+            reachable = false;
+        }
+    }
+
+    // Update indicator
+    if (reachable) {
+        setStatus('success');
+    } else {
+        setStatus('error');
+    }
+
+    // Re-enable button
+    if (testBtn) testBtn.disabled = false;
+
+    // Open in new tab regardless, but warn if popup blocked
     try {
         const newWindow = window.open(finalUrl, '_blank');
         if (!newWindow) {
-            // If popup was blocked, show an alert
             alert('Popup blocked. Please allow popups for this site to test URLs, or manually copy and test the URL: ' + finalUrl);
         }
     } catch (error) {
         console.error('Error opening URL:', error);
-        alert('Error opening URL. Please check if the URL is valid: ' + finalUrl);
+        if (reachable) {
+            alert('The URL appears reachable, but the browser blocked opening a new tab.');
+        } else {
+            alert('Unable to open URL. It may be unreachable.');
+        }
     }
 }
 
@@ -493,8 +1039,17 @@ function collectPredefinedButtons() {
     const positionedButtons = [];
 
     buttonConfigs.forEach(config => {
+        // For predefined buttons, check if they're enabled first
+        const isPredefinedButton = ['usb', 'volume', 'voice', 'signOut'].includes(config.id);
+        let isEnabled = true;
+        
+        if (isPredefinedButton) {
+            const enabledCheckbox = document.getElementById(`${config.id}.enabled`);
+            isEnabled = enabledCheckbox && enabledCheckbox.checked;
+        }
+        
         const positionSelect = document.getElementById(`${config.id}.position`);
-        if (positionSelect && positionSelect.value && positionSelect.value !== '') {
+        if (isEnabled && positionSelect && positionSelect.value && positionSelect.value !== '') {
             const position = parseInt(positionSelect.value);
             const buttonData = {
                 type: config.type,
@@ -600,14 +1155,106 @@ function populateUI(config) {
 
 //Generates and downloads the final config.json file
 
+// Function to generate and download PDF using Print.js and html2canvas
+async function generatePDF() {
+    const step3Element = document.getElementById('step3');
+    const morphicBarPreview = step3Element.querySelector('.morphic-bar-preview');
+    const downloadSection = step3Element.querySelector('.download-section');
+    const navSection = step3Element.querySelector('.step-navigation');
+    let tempImage = null;
+
+    // A single cleanup function to restore the original state
+    const cleanup = () => {
+        if (morphicBarPreview) morphicBarPreview.style.display = '';
+        if (downloadSection) downloadSection.style.display = '';
+        if (navSection) navSection.style.display = '';
+        if (tempImage) tempImage.remove();
+    };
+
+    try {
+        if (!step3Element || !morphicBarPreview || !downloadSection || !navSection) {
+            console.error('Required elements for PDF generation not found');
+            return false;
+        }
+
+        // 1. Generate a high-quality canvas from the MorphicBar preview
+        const canvas = await html2canvas(morphicBarPreview, {
+            scale: 2, // Use a higher scale for a sharper image
+            useCORS: true,
+            logging: false
+        });
+        const imageDataUrl = canvas.toDataURL('image/png');
+
+        // 2. Prepare the document for printing
+        tempImage = document.createElement('img');
+        tempImage.src = imageDataUrl;
+        tempImage.style.width = '100%';
+        tempImage.id = 'temp-morphic-bar-image';
+        
+        morphicBarPreview.style.display = 'none'; // Hide the original HTML preview
+        downloadSection.style.display = 'none';
+        navSection.style.display = 'none';
+        
+        // Insert the new image in place of the original preview
+        morphicBarPreview.parentNode.insertBefore(tempImage, morphicBarPreview);
+
+        // 3. Use Print.js to generate the PDF from the modified HTML
+        printJS({
+            printable: 'step3',
+            type: 'html',
+            header: `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h1 style="color: #486284; font-size: 24px;">Morphic Configuration Summary</h1>
+                    <p style="color: #333;">Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
+                </div>
+            `,
+            targetStyles: ['*'],
+            documentTitle: 'Morphic Configuration Summary',
+            onPrintDialogClose: cleanup, // Cleanup when the print dialog is closed
+            onError: (error) => {
+                console.error('Error with Print.js:', error);
+                alert('An error occurred during printing.');
+                cleanup(); // Ensure cleanup happens on error too
+            }
+        });
+
+        return true;
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('There was an error preparing the PDF. Please try again.');
+        cleanup(); // Call cleanup if any part of the process fails
+        return false;
+    }
+}
+
 // Handle download button click - check if validation has been done
-function handleDownloadClick() {
+async function handleDownloadClick() {
     const downloadBtn = document.getElementById('download');
     if (downloadBtn.disabled) {
         alert('Please check for errors first by clicking the "Check for Errors" button.');
         return;
     }
-    downloadConfig();
+
+    // Disable the download button while processing
+    downloadBtn.disabled = true;
+    downloadBtn.textContent = 'Generating Files...';
+
+    try {
+        // Download config.json
+        downloadConfig();
+        
+        // Generate and download PDF
+        await generatePDF();
+        
+        alert('Configuration files have been downloaded successfully!');
+    } catch (error) {
+        console.error('Error during file generation:', error);
+        alert('There was an error generating the files. Please try again.');
+    } finally {
+        // Re-enable the download button
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = 'Download config.json';
+    }
 }
 
 // Check for errors and validate the form
@@ -829,10 +1476,31 @@ function updateUrlButtonPreview(buttonId) {
         });
     }
 
+    // Update config preview button label (the one in the tooltip preview area)
+    const configLabelElement = document.getElementById(`${buttonId}ConfigLabel`);
+    if (configLabelElement) {
+        configLabelElement.replaceChildren();
+        const parts = label.split('\\n');
+        parts.forEach((part, index) => {
+            if (index > 0) {
+                configLabelElement.appendChild(document.createElement('br'));
+            }
+            if (part) {
+                configLabelElement.appendChild(document.createTextNode(part));
+            }
+        });
+    }
+
     // Update button title attribute for browser tooltip
     const previewButton = document.getElementById(`${buttonId}Preview`);
     if (previewButton) {
         previewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
+    }
+
+    // Update config preview button title
+    const configPreviewButton = document.getElementById(`${buttonId}ConfigPreview`);
+    if (configPreviewButton) {
+        configPreviewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
     }
 
     // Update tooltip preview area - keep this for URL buttons
@@ -849,6 +1517,25 @@ function updateUrlButtonPreview(buttonId) {
 
     // Update position preview when button details change
     updatePositionPreview();
+}
+
+// Function to update URL button visibility based on checkbox state
+function updateUrlButtonVisibility(buttonId) {
+    const checkbox = document.getElementById(`${buttonId}.enabled`);
+    const originalButton = document.getElementById(`${buttonId}Preview`);
+    const tooltipPreview = document.querySelector(`#${buttonId} .tooltip-preview`);
+    
+    if (checkbox && originalButton && tooltipPreview) {
+        if (checkbox.checked) {
+            // When checked: hide original button, show preview section
+            originalButton.style.display = 'none';
+            tooltipPreview.style.display = 'flex';
+        } else {
+            // When unchecked: show original button, hide preview section
+            originalButton.style.display = 'flex';
+            tooltipPreview.style.display = 'none';
+        }
+    }
 }
 
 // Application ID to display name mapping
@@ -929,12 +1616,24 @@ function validateUniquePositions() {
     positionSelects.forEach(selectId => {
         const select = document.getElementById(selectId);
         if (select && select.value && select.value !== '') {
-            const position = select.value;
-            if (usedPositions.has(position)) {
-                // Conflict detected
-                conflicts.add(position);
-            } else {
-                usedPositions.set(position, selectId);
+            // For predefined buttons, check if they're enabled
+            const isPredefinedButton = ['usb.position', 'volume.position', 'voice.position', 'signOut.position'].includes(selectId);
+            let isEnabled = true;
+            
+            if (isPredefinedButton) {
+                const buttonId = selectId.replace('.position', '');
+                const enabledCheckbox = document.getElementById(`${buttonId}.enabled`);
+                isEnabled = enabledCheckbox && enabledCheckbox.checked;
+            }
+            
+            if (isEnabled) {
+                const position = select.value;
+                if (usedPositions.has(position)) {
+                    // Conflict detected
+                    conflicts.add(position);
+                } else {
+                    usedPositions.set(position, selectId);
+                }
             }
         }
     });
@@ -943,24 +1642,35 @@ function validateUniquePositions() {
     positionSelects.forEach(selectId => {
         const select = document.getElementById(selectId);
         if (select) {
+            // For predefined buttons, check if they're enabled
+            const isPredefinedButton = ['usb.position', 'volume.position', 'voice.position', 'signOut.position'].includes(selectId);
+            let isEnabled = true;
+            
+            if (isPredefinedButton) {
+                const buttonId = selectId.replace('.position', '');
+                const enabledCheckbox = document.getElementById(`${buttonId}.enabled`);
+                isEnabled = enabledCheckbox && enabledCheckbox.checked;
+            }
+            
             const position = select.value;
-            const positionSelector = select.closest('.position-selector');
+            const positionSelector = select.closest('.position-selector') || select.closest('.position-selector-container');
 
-            if (position && conflicts.has(position)) {
-
+            if (isEnabled && position && conflicts.has(position)) {
                 // Add conflict indicator if it doesn't exist
                 let conflictIndicator = positionSelector.querySelector('.conflict-indicator');
                 if (!conflictIndicator) {
                     conflictIndicator = document.createElement('div');
                     conflictIndicator.className = 'conflict-indicator';
                     conflictIndicator.textContent = 'Conflict';
-                    positionSelector.insertBefore(conflictIndicator, select.parentElement);
+                    positionSelector.appendChild(conflictIndicator);
                 }
             } else {
                 // Remove conflict indicator if it exists
-                const conflictIndicator = positionSelector.querySelector('.conflict-indicator');
-                if (conflictIndicator) {
-                    conflictIndicator.remove();
+                if (positionSelector) {
+                    const conflictIndicator = positionSelector.querySelector('.conflict-indicator');
+                    if (conflictIndicator) {
+                        conflictIndicator.remove();
+                    }
                 }
             }
         }
@@ -1096,81 +1806,73 @@ function updatePositionPreview() {
     const updateContainer = (container) => {
         if (!container) return;
 
-        // If no buttons are assigned, show a message
-        if (orderedButtons.length === 0) {
-            const placeholderMsg = document.createElement('div');
-            placeholderMsg.className = 'no-buttons-message';
-            placeholderMsg.textContent = 'Your custom buttons will appear here';
-            container.appendChild(placeholderMsg);
-            return;
-        }
+        const createPlaceholder = (positionNumber) => {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'placeholder-button';
+            placeholder.textContent = positionNumber.toString();
+            return placeholder;
+        };
 
-        // Add selected buttons
-        orderedButtons.forEach(button => {
+        const renderButton = (button) => {
             if (button.type === 'control' || button.type === 'action') {
-                // Find the existing preview button group for control and action buttons
                 const buttonSection = document.getElementById(`${button.id}Button`);
                 if (buttonSection) {
                     const sourceElement = buttonSection.querySelector('.preview-button-group');
                     if (sourceElement) {
-                        const clonedElement = sourceElement.cloneNode(true);
-                        container.appendChild(clonedElement);
+                        return sourceElement.cloneNode(true);
                     }
                 }
-            } else if (button.type === 'url') {
-                // For URL buttons, create a new element with the current label value
+                return null;
+            }
+            if (button.type === 'url') {
                 const labelInput = document.getElementById(`${button.id}.label`);
                 const labelValue = labelInput ? labelInput.value : 'Custom Button';
-
-                // Create new button element instead of cloning
                 const newButton = document.createElement('div');
                 newButton.className = 'preview-button url-button';
-
-                // Create span with label text
                 const span = document.createElement('span');
-        
                 span.replaceChildren();
-                if(labelValue){
-                const parts = labelValue.split('\\n');
-                parts.forEach((part, index) => {
-                    if (index > 0) {
-                        span.appendChild(document.createElement('br'));
-                    }
-                    if (part) {
-                        span.appendChild(document.createTextNode(part));
-                    }
-                });
-            }
-            else{
-                span.appendChild(document.createTextNode('Button\nText'));
-            }
-
+                if (labelValue) {
+                    const parts = labelValue.split('\\n');
+                    parts.forEach((part, index) => {
+                        if (index > 0) span.appendChild(document.createElement('br'));
+                        if (part) span.appendChild(document.createTextNode(part));
+                    });
+                } else {
+                    span.appendChild(document.createTextNode('Button\nText'));
+                }
                 newButton.appendChild(span);
-                container.appendChild(newButton);
-            } else if (button.type === 'application') {
-                // For application buttons, create new element with current app name
+                return newButton;
+            }
+            if (button.type === 'application') {
                 const appId = document.getElementById(`${button.id}.appId`).value;
                 const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-
-                // Create a new button element
                 const newButton = document.createElement('div');
                 newButton.className = 'preview-button url-button application-button';
-
-                // Create span with app name
                 const span = document.createElement('span');
                 span.replaceChildren();
                 const parts = appName.split(' ');
                 parts.forEach((part, index) => {
-                    if (index > 0) {
-                        span.appendChild(document.createElement('br'));
-                    }
+                    if (index > 0) span.appendChild(document.createElement('br'));
                     span.appendChild(document.createTextNode(part));
                 });
-
                 newButton.appendChild(span);
-                container.appendChild(newButton);
+                return newButton;
             }
-        });
+            return null;
+        };
+
+        const row = document.createElement('div');
+        row.className = 'placeholder-buttons-container';
+        for (let pos = 1; pos <= 3; pos++) {
+            const assigned = positionAssignments.get(pos) || [];
+            if (assigned.length === 1) {
+                const node = renderButton(assigned[0]);
+                row.appendChild(node || createPlaceholder(pos));
+            } else {
+                row.appendChild(createPlaceholder(pos));
+            }
+        }
+        container.appendChild(row);
     };
 
     // Update both containers
