@@ -2,123 +2,448 @@
 let currentStep = 1;
 const totalSteps = 3;
 
-// Application button management
-let appButtonCount = 1; // Start with 1 (the first button is always there)
+// Application button management - now handled dynamically
 
-// Helper: show add button only if any application is enabled
+// Helper: show add button always (no longer dependent on checked count)
 function updateAddAppVisibility() {
-    const anyChecked = ['customApp1', 'customApp2', 'customApp3'].some(id => {
-        const cb = document.getElementById(`${id}.enabled`);
-        return cb && cb.checked;
-    });
     const addButtonContainer = document.getElementById('addAppButtonContainer');
     if (addButtonContainer) {
-        addButtonContainer.style.display = anyChecked ? 'block' : 'none';
+        addButtonContainer.style.display = 'block';
     }
 }
 
-// Helper: show add URL button only if any URL button is enabled
+// Helper: show add URL button always (no longer dependent on checked count)
 function updateAddUrlVisibility() {
-    const anyChecked = ['customUrl1', 'customUrl2', 'customUrl3'].some(id => {
-        const cb = document.getElementById(`${id}.enabled`);
-        return cb && cb.checked;
-    });
     const addUrlButtonContainer = document.getElementById('addUrlButtonContainer');
     if (addUrlButtonContainer) {
-        addUrlButtonContainer.style.display = anyChecked ? 'block' : 'none';
+        addUrlButtonContainer.style.display = 'block';
     }
 }
 
-function addApplicationButton() {
-    if (appButtonCount >= 3) {
-        alert('You cannot add more than 3 application buttons');
+// Helper: enforce maximum of 3 checked buttons across ALL buttons
+function enforceMaxCheckedButtons() {
+    const checkedButtons = getAllCheckedButtons();
+    return checkedButtons.length <= 3;
+}
+
+// Helper: check if a button can be checked without exceeding the limit
+function canCheckButton(excludeId = null) {
+    const checkedButtons = getAllCheckedButtons(excludeId);
+    return checkedButtons.length < 3;
+}
+
+// Helper: get all checked buttons (including dynamic ones)
+function getAllCheckedButtons(excludeId = null) {
+    const checkedButtons = [];
+    
+    // Check predefined buttons
+    const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
+    predefinedButtons.forEach(id => {
+        if (id !== excludeId) {
+            const cb = document.getElementById(`${id}.enabled`);
+            if (cb && cb.checked) {
+                checkedButtons.push(id);
+            }
+        }
+    });
+    
+    // Check all custom application buttons (including dynamic ones)
+    for (let i = 1; i <= dynamicAppButtonCount; i++) {
+        const buttonId = `customApp${i}`;
+        if (buttonId !== excludeId) {
+            const cb = document.getElementById(`${buttonId}.enabled`);
+            if (cb && cb.checked) {
+                checkedButtons.push(buttonId);
+            }
+        }
+    }
+    
+    // Check all custom URL buttons (including dynamic ones)
+    for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+        const buttonId = `customUrl${i}`;
+        if (buttonId !== excludeId) {
+            const cb = document.getElementById(`${buttonId}.enabled`);
+            if (cb && cb.checked) {
+                checkedButtons.push(buttonId);
+            }
+        }
+    }
+    
+    return checkedButtons;
+}
+
+// Helper: check if an application button is empty (no fields filled and not checked)
+function isAppButtonEmpty(buttonId) {
+    const checkbox = document.getElementById(`${buttonId}.enabled`);
+    const position = document.getElementById(`${buttonId}.position`);
+    const appId = document.getElementById(`${buttonId}.appId`);
+    const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
+    const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+    
+    // If checked, not empty
+    if (checkbox && checkbox.checked) return false;
+    
+    // If any field has content, not empty
+    if (position && position.value && position.value.trim()) return false;
+    if (appId && appId.value && appId.value.trim()) return false;
+    if (tooltipHeader && tooltipHeader.value && tooltipHeader.value.trim()) return false;
+    if (tooltipText && tooltipText.value && tooltipText.value.trim()) return false;
+    
+    return true;
+}
+
+// Helper: check if a URL button is empty (no fields filled and not checked)
+function isUrlButtonEmpty(buttonId) {
+    const checkbox = document.getElementById(`${buttonId}.enabled`);
+    const position = document.getElementById(`${buttonId}.position`);
+    const label = document.getElementById(`${buttonId}.label`);
+    const url = document.getElementById(`${buttonId}.url`);
+    const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
+    const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+    
+    // If checked, not empty
+    if (checkbox && checkbox.checked) return false;
+    
+    // If any field has content, not empty
+    if (position && position.value && position.value.trim()) return false;
+    if (label && label.value && label.value.trim()) return false;
+    if (url && url.value && url.value.trim()) return false;
+    if (tooltipHeader && tooltipHeader.value && tooltipHeader.value.trim()) return false;
+    if (tooltipText && tooltipText.value && tooltipText.value.trim()) return false;
+    
+    return true;
+}
+
+// Counter for dynamic buttons
+let dynamicAppButtonCount = 1; // Start after the built-in 1
+let dynamicUrlButtonCount = 1; // Start after the built-in 1
+
+// Function to create a new dynamic application button
+function createDynamicApplicationButton() {
+    dynamicAppButtonCount++;
+    const buttonId = `customApp${dynamicAppButtonCount}`;
+    
+    // Clone the first application button to use as a template
+    const template = document.getElementById('customApp1');
+    if (!template) {
+        console.error('Could not find application button template');
         return;
     }
     
-    appButtonCount++;
-    const buttonNumber = appButtonCount;
-    const button = document.getElementById(`customApp${buttonNumber}`);
+    const newButton = template.cloneNode(true);
     
-    if (button) {
-        button.style.display = 'block';
-        updateAddButtonState();
-        updateAddAppVisibility();
+    // Update all IDs in the cloned element
+    updateElementIds(newButton, 'customApp1', buttonId);
+    
+    // Insert the new button after the last application button
+    const lastAppButton = document.getElementById(`customApp${dynamicAppButtonCount - 1}`);
+    if (lastAppButton) {
+        lastAppButton.insertAdjacentElement('afterend', newButton);
+    } else {
+        // Fallback: insert after the template
+        template.insertAdjacentElement('afterend', newButton);
     }
-}
-
-function removeApplicationButton(buttonNumber) {
-    const button = document.getElementById(`customApp${buttonNumber}`);
-    if (button) {
-        // Reset the button state
-        const checkbox = document.getElementById(`customApp${buttonNumber}.enabled`);
-        const positionContainer = document.getElementById(`customApp${buttonNumber}.positionContainer`);
-        const inputs = document.getElementById(`customApp${buttonNumber}.inputs`);
-        const positionSelect = document.getElementById(`customApp${buttonNumber}.position`);
-        const appSelect = document.getElementById(`customApp${buttonNumber}.appId`);
-        
-        if (checkbox) checkbox.checked = false;
-        if (positionContainer) positionContainer.style.display = 'none';
-        if (inputs) inputs.style.display = 'none';
-        if (positionSelect) positionSelect.value = '';
-        if (appSelect) appSelect.value = '';
-        
-        // Hide the button
-        button.style.display = 'none';
-        appButtonCount--;
-        updateAddButtonState();
-        updateAddAppVisibility();
-        updatePositionPreview();
-        validateUniquePositions();
-    }
-}
-
-function clearDynamicAppButtons() {
-    // Hide buttons 2 and 3
-    for (let i = 2; i <= 3; i++) {
-        const button = document.getElementById(`customApp${i}`);
-        if (button) {
-            // Reset the button state
-            const checkbox = document.getElementById(`customApp${i}.enabled`);
-            const positionContainer = document.getElementById(`customApp${i}.positionContainer`);
-            const inputs = document.getElementById(`customApp${i}.inputs`);
-            const positionSelect = document.getElementById(`customApp${i}.position`);
-            const appSelect = document.getElementById(`customApp${i}.appId`);
-            
-            if (checkbox) checkbox.checked = false;
-            if (positionContainer) positionContainer.style.display = 'none';
-            if (inputs) inputs.style.display = 'none';
-            if (positionSelect) positionSelect.value = '';
-            if (appSelect) appSelect.value = '';
-            
-            // Hide the button
-            button.style.display = 'none';
-        }
-    }
-    appButtonCount = 1;
+    
+    // Set up event listeners for the new button
+    setupApplicationButtonListeners(buttonId);
+    
     updateAddButtonState();
     updateAddAppVisibility();
 }
 
-function updateAddButtonState() {
-    const addButton = document.getElementById('addAppButton');
-    if (addButton) {
-        if (appButtonCount >= 3) {
-            addButton.disabled = true;
-            addButton.textContent = 'Maximum 3 buttons reached';
-        } else {
-            addButton.disabled = false;
-            addButton.textContent = '+ Add Application Button';
+// Function to create a new dynamic URL button
+function createDynamicUrlButton() {
+    dynamicUrlButtonCount++;
+    const buttonId = `customUrl${dynamicUrlButtonCount}`;
+    
+    // Clone the first URL button to use as a template
+    const template = document.getElementById('customUrl1');
+    if (!template) {
+        console.error('Could not find URL button template');
+        return;
+    }
+    
+    const newButton = template.cloneNode(true);
+    
+    // Update all IDs in the cloned element
+    updateElementIds(newButton, 'customUrl1', buttonId);
+    
+    // Insert the new button after the last URL button
+    const lastUrlButton = document.getElementById(`customUrl${dynamicUrlButtonCount - 1}`);
+    if (lastUrlButton) {
+        lastUrlButton.insertAdjacentElement('afterend', newButton);
+    } else {
+        // Fallback: insert after the template
+        template.insertAdjacentElement('afterend', newButton);
+    }
+    
+    // Set up event listeners for the new button (with a small delay to ensure DOM is updated)
+    setTimeout(() => {
+        setupUrlButtonListeners(buttonId);
+    }, 0);
+    
+    updateAddButtonState();
+    updateAddUrlVisibility();
+    updatePositionPreview();
+}
+
+// Helper function to update all element IDs within a container and reset state
+function updateElementIds(container, oldId, newId) {
+    // Update the main container ID
+    container.id = newId;
+
+    // Extract the number from the old and new IDs (e.g., "1" from "customUrl1", "2" from "customUrl2")
+    const oldNumber = oldId.replace(/\D/g, '');
+    const newNumber = newId.replace(/\D/g, '');
+
+    // Find all elements with IDs that start with the old ID
+    const elementsToUpdate = container.querySelectorAll(`[id^="${oldId}"]`);
+    elementsToUpdate.forEach(element => {
+        element.id = element.id.replace(oldId, newId);
+    });
+
+    // Also update elements that contain the old number (like testUrl1Btn, viewUrl1Btn)
+    const elementsWithNumber = container.querySelectorAll(`[id*="${oldNumber}"]`);
+    elementsWithNumber.forEach(element => {
+        if (element.id.includes(oldNumber) && !element.id.startsWith(oldId)) {
+            element.id = element.id.replace(oldNumber, newNumber);
+        }
+    });
+    
+    // Update any labels that reference the old ID
+    const labels = container.querySelectorAll(`[for^="${oldId}"]`);
+    labels.forEach(label => {
+        label.setAttribute('for', label.getAttribute('for').replace(oldId, newId));
+    });
+    
+    // Reset the state of the new button to unchecked/empty
+    const checkbox = container.querySelector(`[id$=".enabled"]`);
+    if (checkbox) {
+        checkbox.checked = false;
+    }
+    
+    // Hide position container and inputs initially
+    const positionContainer = container.querySelector(`[id$=".positionContainer"]`);
+    if (positionContainer) {
+        positionContainer.style.display = 'none';
+    }
+    
+    const inputs = container.querySelector(`[id$=".inputs"]`);
+    if (inputs) {
+        inputs.style.display = 'none';
+    }
+    
+    // Clear all input values
+    const textInputs = container.querySelectorAll('input[type="text"], input[type="url"], textarea');
+    textInputs.forEach(input => {
+        input.value = '';
+    });
+    
+    const selects = container.querySelectorAll('select');
+    selects.forEach(select => {
+        select.value = '';
+    });
+    
+    // Reset status indicator for URL buttons
+    const statusIndicator = container.querySelector('.url-status-indicator');
+    if (statusIndicator) {
+        statusIndicator.classList.remove('loading', 'success', 'error');
+    }
+}
+
+// Function to set up event listeners for a dynamically created application button
+function setupApplicationButtonListeners(buttonId) {
+    const checkbox = document.getElementById(`${buttonId}.enabled`);
+    const positionContainer = document.getElementById(`${buttonId}.positionContainer`);
+    const inputs = document.getElementById(`${buttonId}.inputs`);
+    const positionSelect = document.getElementById(`${buttonId}.position`);
+    const appSelect = document.getElementById(`${buttonId}.appId`);
+    
+    if (checkbox) {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Check if we can add another checked button
+                if (!canCheckButton(buttonId)) {
+                    // Prevent checking if we already have 3 checked buttons
+                    this.checked = false;
+                    alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                    return;
+                }
+                if (positionContainer) positionContainer.style.display = 'flex';
+                if (inputs) inputs.style.display = 'flex';
+                updateAddAppVisibility();
+                updateAddUrlVisibility();
+            } else {
+                if (positionContainer) positionContainer.style.display = 'none';
+                if (inputs) inputs.style.display = 'none';
+                // Reset position selection when unchecked
+                if (positionSelect) {
+                    positionSelect.value = '';
+                    updatePositionPreview();
+                    validateUniquePositions();
+                }
+                updateAddAppVisibility();
+                updateAddUrlVisibility();
+            }
+        });
+    }
+    
+    if (positionSelect) {
+        positionSelect.addEventListener('change', updatePositionPreview);
+        positionSelect.addEventListener('change', validateUniquePositions);
+    }
+    
+    if (appSelect) {
+        appSelect.addEventListener('change', function() {
+            updateAppButtonPreview(buttonId);
+        });
+    }
+}
+
+// Function to set up event listeners for a dynamically created URL button
+function setupUrlButtonListeners(buttonId) {
+    const checkbox = document.getElementById(`${buttonId}.enabled`);
+    const inputsContainer = document.querySelector(`#${buttonId} .button-config`);
+    const previewContainer = document.querySelector(`#${buttonId} .tooltip-preview`);
+    const positionSelector = document.getElementById(`${buttonId}.position`);
+
+    if (checkbox && inputsContainer) {
+        const applyState = () => {
+            const isChecked = checkbox.checked;
+            inputsContainer.style.display = isChecked ? 'block' : 'none';
+            updateUrlButtonVisibility(buttonId);
+            updateAddUrlVisibility();
+            updateAddAppVisibility();
+        };
+
+        // Set initial state
+        applyState();
+
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Check if we can add another checked button
+                if (!canCheckButton(buttonId)) {
+                    // Prevent checking if we already have 3 checked buttons
+                    this.checked = false;
+                    alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                    return;
+                }
+            }
+            applyState();
+            if (!this.checked && positionSelector) {
+                positionSelector.value = '';
+                updatePositionPreview();
+                validateUniquePositions();
+            } else {
+                updatePositionPreview();
+            }
+            updateAddAppVisibility();
+            updateAddUrlVisibility();
+        });
+    }
+    
+    // Add event listeners for URL inputs
+    const labelInput = document.getElementById(`${buttonId}.label`);
+    const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
+    const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
+
+    if (labelInput) {
+        labelInput.addEventListener('input', () => {
+            updateUrlButtonPreview(buttonId);
+        });
+    }
+    if (tooltipHeaderInput) {
+        tooltipHeaderInput.addEventListener('input', () => {
+            updateUrlButtonPreview(buttonId);
+        });
+    }
+    if (tooltipTextInput) {
+        tooltipTextInput.addEventListener('input', () => {
+            updateUrlButtonPreview(buttonId);
+        });
+    }
+    
+    if (positionSelector) {
+        positionSelector.addEventListener('change', updatePositionPreview);
+        positionSelector.addEventListener('change', validateUniquePositions);
+    }
+    
+    // Add event listeners for test and view URL buttons
+    const testUrlBtnId = `testUrl${buttonId.replace('customUrl','')}Btn`;
+    const viewUrlBtnId = `viewUrl${buttonId.replace('customUrl','')}Btn`;
+    const testUrlBtn = document.getElementById(testUrlBtnId);
+    const viewUrlBtn = document.getElementById(viewUrlBtnId);
+    
+    console.log(`Setting up buttons for ${buttonId}:`, {
+        testUrlBtnId,
+        viewUrlBtnId,
+        testUrlBtn,
+        viewUrlBtn
+    });
+    
+    if (testUrlBtn) {
+        testUrlBtn.addEventListener('click', function() {
+            console.log(`Test URL clicked for ${buttonId}`);
+            testURLStatus(`${buttonId}.url`);
+        });
+    } else {
+        console.warn(`Test URL button not found: ${testUrlBtnId}`);
+    }
+    
+    if (viewUrlBtn) {
+        viewUrlBtn.addEventListener('click', function() {
+            console.log(`View URL clicked for ${buttonId}`);
+            viewURL(`${buttonId}.url`);
+        });
+    } else {
+        console.warn(`View URL button not found: ${viewUrlBtnId}`);
+    }
+}
+
+function addApplicationButton() {
+    // First, check if any visible application buttons are empty
+    for (let i = 1; i <= dynamicAppButtonCount; i++) {
+        const buttonId = `customApp${i}`;
+        const button = document.getElementById(buttonId);
+        if (button && isAppButtonEmpty(buttonId)) {
+            alert(`Please fill in the empty Application Button ${i} before adding a new one.`);
+            return;
         }
     }
+    
+    // All existing buttons have content, create a new dynamic button
+    createDynamicApplicationButton();
+}
 
-    // URL buttons add state
+function addUrlButton() {
+    // First, check if any visible URL buttons are empty
+    for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+        const buttonId = `customUrl${i}`;
+        const button = document.getElementById(buttonId);
+        if (button && isUrlButtonEmpty(buttonId)) {
+            alert(`Please fill in the empty URL Button ${i} before adding a new one.`);
+            return;
+        }
+    }
+    
+    // All existing buttons have content, create a new dynamic button
+    createDynamicUrlButton();
+}
+
+
+function updateAddButtonState() {
+    // Add buttons are always enabled with the new logic
+    const addButton = document.getElementById('addAppButton');
+    if (addButton) {
+        addButton.disabled = false;
+        addButton.textContent = '+ Add Application Button';
+    }
+
+    // URL add button is always enabled
     const addUrlBtn = document.getElementById('addUrlButton');
     if (addUrlBtn) {
-        const url2 = document.getElementById('customUrl2');
-        const url3 = document.getElementById('customUrl3');
-        const visibleCount = 1 + (url2 && url2.style.display !== 'none' ? 1 : 0) + (url3 && url3.style.display !== 'none' ? 1 : 0);
-        addUrlBtn.disabled = visibleCount >= 3;
-        addUrlBtn.textContent = visibleCount >= 3 ? 'Maximum 3 buttons reached' : '+ Add URL Button';
+        addUrlBtn.disabled = false;
+        addUrlBtn.textContent = '+ Add URL Button';
     }
 }
 
@@ -174,15 +499,29 @@ function updateSettingsSummary() {
 
     // Custom buttons
     const customButtons = collectPredefinedButtons();
-    customButtons.forEach((button, index) => {
-        if (button.type === 'link') {
-            createSettingRow(`Custom URL Button ${index + 1} Text`, button.label || 'Not set');
-            createSettingRow(`Custom URL Button ${index + 1} Tooltip Header`, button.tooltipHeader || 'Not set');
-            createSettingRow(`Custom URL Button ${index + 1} Tooltip Text`, button.tooltipText || 'Not set');
-            createSettingRow(`Custom URL Button ${index + 1} URL`, button.url || 'Not set');
-        } else if (button.type === 'application') {
-            createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set');
-        }
+
+    // Separate application buttons and URL buttons
+    const applicationButtons = customButtons.filter(button => button.type === 'application');
+    const urlButtons = customButtons.filter(button => button.type === 'link');
+
+    // Display application buttons first
+    applicationButtons.forEach((button, index) => {
+        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set');
+    });
+
+    // Add horizontal line if both application and URL buttons exist
+    if (applicationButtons.length > 0 && urlButtons.length > 0) {
+        const hr = document.createElement('hr');
+        hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
+        summaryContent.appendChild(hr);
+    }
+
+    // Display URL buttons
+    urlButtons.forEach((button, index) => {
+        createSettingRow(`Custom URL Button ${index + 1} Text`, button.label || 'Not set');
+        createSettingRow(`Custom URL Button ${index + 1} Tooltip Header`, button.tooltipHeader || 'Not set');
+        createSettingRow(`Custom URL Button ${index + 1} Tooltip Text`, button.tooltipText || 'Not set');
+        createSettingRow(`Custom URL Button ${index + 1} URL`, button.url || 'Not set');
     });
 }
 
@@ -193,37 +532,74 @@ function showStep(stepNumber) {
         content.style.display = 'none';
         content.classList.remove('active');
     });
-    
+
     // Show current step
     const currentStepContent = document.getElementById(`step${stepNumber}`);
     if (currentStepContent) {
         currentStepContent.style.display = 'block';
         currentStepContent.classList.add('active');
     }
-    
+
     // Update step indicators
     document.querySelectorAll('.step').forEach((step, index) => {
         const stepNum = index + 1;
         step.classList.remove('active', 'completed');
-        
+
         if (stepNum === stepNumber) {
             step.classList.add('active');
         } else if (stepNum < stepNumber) {
             step.classList.add('completed');
         }
     });
+
+    // Update URL hash
+    const hashMap = {
+        1: '#configure',
+        2: '#customize-buttons',
+        3: '#summary'
+    };
     
+    if (hashMap[stepNumber] && window.location.hash !== hashMap[stepNumber]) {
+        window.history.pushState(null, null, hashMap[stepNumber]);
+    }
+
+    // Clear any existing step errors when switching steps
+    clearStepErrors(stepNumber);
+
     // Update settings summary when showing step 3
     if (stepNumber === 3) {
         updateSettingsSummary();
     }
-    
+
+    // Update navigation button states
+    updateNavigationButtons(stepNumber);
+
     currentStep = stepNumber;
+}
+
+// Update navigation button states based on current step
+function updateNavigationButtons(stepNumber) {
+    // Update Previous buttons
+    document.querySelectorAll('.prev-btn').forEach(btn => {
+        btn.disabled = (stepNumber === 1);
+    });
+
+    // Update Next buttons - hide them on the last step
+    document.querySelectorAll('.next-btn').forEach(btn => {
+        if (stepNumber === totalSteps) {
+            btn.style.display = 'none';
+        } else {
+            btn.style.display = '';
+        }
+    });
 }
 
 function nextStep() {
     if (currentStep < totalSteps) {
-        showStep(currentStep + 1);
+        // Check for errors in the current step before proceeding
+        if (checkStepErrors(currentStep)) {
+            showStep(currentStep + 1);
+        }
     }
 }
 
@@ -242,10 +618,29 @@ function clearStep() {
 // Allow clicking on step indicators to navigate
 function initStepNavigation() {
     document.querySelectorAll('.step').forEach((step, index) => {
-        step.addEventListener('click', () => {
+        step.addEventListener('click', (e) => {
+            e.preventDefault();
             showStep(index + 1);
         });
     });
+}
+
+// Handle hash changes for direct URL navigation
+function handleHashChange() {
+    const hash = window.location.hash;
+    const hashToStepMap = {
+        '#configure': 1,
+        '#customize-buttons': 2,
+        '#summary': 3
+    };
+    
+    const stepNumber = hashToStepMap[hash];
+    if (stepNumber && stepNumber !== currentStep) {
+        showStep(stepNumber);
+    } else if (!hash || !hashToStepMap[hash]) {
+        // Default to step 1 if no valid hash
+        showStep(1);
+    }
 }
 
 // Initialize event listeners based on current page
@@ -256,11 +651,27 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isConfigBuilder) {
         // Initialize step navigation
         initStepNavigation();
-        showStep(1); // Start with step 1
+        
+        // Add hash change event listener
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Handle initial hash or default to step 1
+        handleHashChange();
+
+        // Add navigation button event listeners
+        document.querySelectorAll('.prev-btn').forEach(btn => {
+            btn.addEventListener('click', prevStep);
+        });
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', nextStep);
+        });
+        document.querySelectorAll('.clear-btn').forEach(btn => {
+            btn.addEventListener('click', clearStep);
+        });
+
         // Config Builder page setup
         document.getElementById('upload')?.addEventListener('change', handleFileUpload);
         document.getElementById('download')?.addEventListener('click', handleDownloadClick);
-        document.getElementById('checkErrors')?.addEventListener('click', checkForErrors);
         document.getElementById('fileInputBtn')?.addEventListener('click', function() {
             document.getElementById('upload').click();
         });
@@ -332,17 +743,14 @@ document.getElementById('location-toggle').addEventListener('click', function(e)
     toggleDescription('location');
 });
 
-// Test URL button handlers
-document.getElementById('testUrl1Btn').addEventListener('click', function() {
-    testURL('customUrl1.url');
+// Test URL button handlers (only for customUrl1, others are dynamic)
+document.getElementById('testUrl1Btn')?.addEventListener('click', function() {
+    testURLStatus('customUrl1.url');
 });
 
-document.getElementById('testUrl2Btn').addEventListener('click', function() {
-    testURL('customUrl2.url');
-});
-
-document.getElementById('testUrl3Btn').addEventListener('click', function() {
-    testURL('customUrl3.url');
+// View URL button handlers (only for customUrl1, others are dynamic)
+document.getElementById('viewUrl1Btn')?.addEventListener('click', function() {
+    viewURL('customUrl1.url');
 });
 
 const checkbox = document.getElementById('features.atOnDemand.enabled');
@@ -473,16 +881,7 @@ function toggleDescription(descriptionId) {
 
 // Function to reset validation state when form inputs change
 function resetValidationState() {
-    const errorMessages = document.getElementById('errorMessages');
-    const successMessage = document.getElementById('successMessage');
-    const downloadBtn = document.getElementById('download');
-
-    if (errorMessages) errorMessages.style.display = 'none';
-    if (successMessage) successMessage.style.display = 'none';
-    if (downloadBtn) {
-        downloadBtn.disabled = true;
-        downloadBtn.classList.add('disabled');
-    }
+    // No longer need to manage download button state since it's always enabled
 }
 
 // Set initial state when page loads
@@ -517,7 +916,7 @@ document.getElementById('organizationName').addEventListener('input', validateOr
 
     // Add event listeners for position dropdowns to update preview
     document.addEventListener('DOMContentLoaded', function () {
-        const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customUrl2.position', 'customUrl3.position', 'customApp1.position', 'customApp2.position', 'customApp3.position', 'signOut.position'];
+        const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customApp1.position', 'signOut.position'];
 
         positionSelects.forEach(selectId => {
             const select = document.getElementById(selectId);
@@ -536,7 +935,16 @@ document.getElementById('organizationName').addEventListener('input', validateOr
             if (checkbox && positionContainer) {
                 checkbox.addEventListener('change', function() {
                     if (this.checked) {
+                        // Check if we can add another checked button
+                        if (!canCheckButton(buttonId)) {
+                            // Prevent checking if we already have 3 checked buttons
+                            this.checked = false;
+                            alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                            return;
+                        }
                         positionContainer.style.display = 'flex';
+                        updateAddAppVisibility();
+                        updateAddUrlVisibility();
                     } else {
                         positionContainer.style.display = 'none';
                         // Reset position selection when unchecked
@@ -546,13 +954,15 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                             updatePositionPreview();
                             validateUniquePositions();
                         }
+                        updateAddAppVisibility();
+                        updateAddUrlVisibility();
                     }
                 });
             }
         });
 
         // Add event listeners for application button checkboxes
-        const appButtonIds = ['customApp1', 'customApp2', 'customApp3'];
+        const appButtonIds = ['customApp1'];
         const addButtonContainer = document.getElementById('addAppButtonContainer');
         const addButton = document.getElementById('addAppButton');
 
@@ -580,9 +990,17 @@ document.getElementById('organizationName').addEventListener('input', validateOr
 
                 checkbox.addEventListener('change', function() {
                     if (this.checked) {
+                        // Check if we can add another checked button
+                        if (!canCheckButton(buttonId)) {
+                            // Prevent checking if we already have 3 checked buttons
+                            this.checked = false;
+                            alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                            return;
+                        }
                         if (positionContainer) positionContainer.style.display = 'flex';
                         if (inputs) inputs.style.display = 'flex';
                         updateAddAppVisibility();
+                        updateAddUrlVisibility();
                     } else {
                         if (positionContainer) positionContainer.style.display = 'none';
                         if (inputs) inputs.style.display = 'none';
@@ -592,11 +1010,9 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                             updatePositionPreview();
                             validateUniquePositions();
                         }
-                        // If the first app is unchecked, clear dynamic apps; then update visibility
-                        if (buttonId === 'customApp1') {
-                            clearDynamicAppButtons();
-                        }
+                        // Update visibility when app is unchecked
                         updateAddAppVisibility();
+                        updateAddUrlVisibility();
                     }
                 });
             }
@@ -614,20 +1030,16 @@ document.getElementById('organizationName').addEventListener('input', validateOr
         });
 
         // Ensure initial visibility reflects current state
-        // First, hide all app buttons 2 and 3 initially
-        const app2 = document.getElementById('customApp2');
-        const app3 = document.getElementById('customApp3');
-        if (app2) app2.style.display = 'none';
-        if (app3) app3.style.display = 'none';
+        // No need to hide buttons 2 and 3 anymore since we removed them
         
-        // Force hide the add button containers initially
+        // Show the add button containers initially (they're always visible now)
         const addAppContainer = document.getElementById('addAppButtonContainer');
         const addUrlContainer = document.getElementById('addUrlButtonContainer');
         if (addAppContainer) {
-            addAppContainer.style.display = 'none';
+            addAppContainer.style.display = 'block';
         }
         if (addUrlContainer) {
-            addUrlContainer.style.display = 'none';
+            addUrlContainer.style.display = 'block';
         }
         
         // Then update add button visibility based on current checkbox states
@@ -640,24 +1052,13 @@ document.getElementById('organizationName').addEventListener('input', validateOr
         }
 
         // URL buttons add functionality
-        const addUrlButton = document.getElementById('addUrlButton');
-        if (addUrlButton) {
-            addUrlButton.addEventListener('click', function() {
-                const url2 = document.getElementById('customUrl2');
-                const url3 = document.getElementById('customUrl3');
-                if (url2 && url2.style.display === 'none') {
-                    url2.style.display = 'block';
-                } else if (url3 && url3.style.display === 'none') {
-                    url3.style.display = 'block';
-                }
-                updateAddButtonState();
-                updateAddUrlVisibility();
-                updatePositionPreview();
-            });
+        const addUrlButtonElement = document.getElementById('addUrlButton');
+        if (addUrlButtonElement) {
+            addUrlButtonElement.addEventListener('click', addUrlButton);
         }
 
         // Add event listeners for URL button enable checkboxes (toggle inputs/preview only)
-        const urlButtonIds = ['customUrl1', 'customUrl2', 'customUrl3'];
+        const urlButtonIds = ['customUrl1'];
         const addUrlButtonContainer = document.getElementById('addUrlButtonContainer');
         urlButtonIds.forEach(buttonId => {
             const checkbox = document.getElementById(`${buttonId}.enabled`);
@@ -672,12 +1073,22 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                     inputsContainer.style.display = isChecked ? 'block' : 'none';
                     updateUrlButtonVisibility(buttonId);
                     updateAddUrlVisibility();
+                    updateAddAppVisibility();
                 };
 
                 // Set initial
                 applyState();
 
                 checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Check if we can add another checked button
+                        if (!canCheckButton(buttonId)) {
+                            // Prevent checking if we already have 3 checked buttons
+                            this.checked = false;
+                            alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                            return;
+                        }
+                    }
                     applyState();
                     if (!this.checked && positionSelector) {
                         positionSelector.value = '';
@@ -686,12 +1097,30 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                     } else {
                         updatePositionPreview();
                     }
+                    updateAddAppVisibility();
+                    updateAddUrlVisibility();
                 });
+                
+                // Add event listeners for test and view URL buttons
+                const testUrlBtn = document.getElementById(`testUrl${buttonId.replace('customUrl','')}Btn`);
+                const viewUrlBtn = document.getElementById(`viewUrl${buttonId.replace('customUrl','')}Btn`);
+                
+                if (testUrlBtn) {
+                    testUrlBtn.addEventListener('click', function() {
+                        testURLStatus(`${buttonId}.url`);
+                    });
+                }
+                
+                if (viewUrlBtn) {
+                    viewUrlBtn.addEventListener('click', function() {
+                        viewURL(`${buttonId}.url`);
+                    });
+                }
             }
         });
 
     // Add event listeners for custom URL inputs to update preview
-    const customUrlIds = ['customUrl1', 'customUrl2', 'customUrl3'];
+    const customUrlIds = ['customUrl1'];
     customUrlIds.forEach(buttonId => {
         const labelInput = document.getElementById(`${buttonId}.label`);
         const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
@@ -715,7 +1144,7 @@ document.getElementById('organizationName').addEventListener('input', validateOr
     });
 
     // Add event listeners for custom application inputs to update preview
-    const customAppIds = ['customApp1', 'customApp2', 'customApp3'];
+    const customAppIds = ['customApp1'];
     customAppIds.forEach(buttonId => {
         const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
         const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
@@ -799,7 +1228,136 @@ function validateOrganizationName() {
     return true; // Valid Organization Name
 }
 
-//Tests a URL by opening it in a new tab
+//Tests a URL status by checking if it's reachable (without opening in new tab)
+async function testURLStatus(inputId) {
+    const urlInput = document.getElementById(inputId);
+    if (!urlInput) {
+        console.error('URL input field not found:', inputId);
+        return;
+    }
+
+    const url = urlInput.value.trim();
+    if (!url) {
+        alert('Please enter a URL first');
+        urlInput.focus();
+        return;
+    }
+
+    // Resolve status indicator element next to this input
+    const baseId = inputId.split('.')[0];
+    const statusEl = document.getElementById(`${baseId}Status`);
+    const testBtn = document.getElementById(`testUrl${baseId.replace('customUrl','')}Btn`);
+
+    // Helper to set classes
+    const setStatus = (state) => {
+        if (!statusEl) return;
+        statusEl.classList.remove('loading', 'success', 'error');
+        if (state) statusEl.classList.add(state);
+    };
+
+    // Basic URL normalization
+    let finalUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        finalUrl = 'https://' + url;
+        urlInput.value = finalUrl;
+    }
+
+    // Basic syntax validation using URL constructor
+    try {
+        // Will throw if invalid
+        // eslint-disable-next-line no-new
+        new URL(finalUrl);
+    } catch (_) {
+        setStatus('error');
+        alert('Invalid URL format. Please check and try again.');
+        urlInput.focus();
+        return;
+    }
+
+    // Begin loading state
+    setStatus('loading');
+    if (testBtn) testBtn.disabled = true;
+
+    // Best-effort reachability check
+    let reachable = false;
+    try {
+        // Try CORS-aware fetch first
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        const response = await fetch(finalUrl, { method: 'HEAD', mode: 'cors', redirect: 'follow', signal: controller.signal });
+        clearTimeout(timeout);
+        // If we can read a response and it's ok or redirected, consider reachable
+        reachable = response && (response.ok || (response.status >= 200 && response.status < 400));
+    } catch (e1) {
+        // Fallback to no-cors (opaque) GET; success of the promise means at least network didn't immediately fail
+        try {
+            const controller2 = new AbortController();
+            const timeout2 = setTimeout(() => controller2.abort(), 5000);
+            await fetch(finalUrl, { method: 'GET', mode: 'no-cors', redirect: 'follow', cache: 'no-store', signal: controller2.signal });
+            clearTimeout(timeout2);
+            reachable = true; // opaque but resolved
+        } catch (e2) {
+            reachable = false;
+        }
+    }
+
+    // Update indicator
+    if (reachable) {
+        setStatus('success');
+    } else {
+        setStatus('error');
+    }
+
+    // Re-enable button
+    if (testBtn) testBtn.disabled = false;
+}
+
+//Opens a URL in a new tab (without status checking)
+function viewURL(inputId) {
+    const urlInput = document.getElementById(inputId);
+    if (!urlInput) {
+        console.error('URL input field not found:', inputId);
+        return;
+    }
+
+    const url = urlInput.value.trim();
+    if (!url) {
+        alert('Please enter a URL first');
+        urlInput.focus();
+        return;
+    }
+
+    // Basic URL normalization
+    let finalUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        finalUrl = 'https://' + url;
+        urlInput.value = finalUrl;
+    }
+
+    // Basic syntax validation using URL constructor
+    try {
+        // Will throw if invalid
+        // eslint-disable-next-line no-new
+        new URL(finalUrl);
+    } catch (_) {
+        alert('Invalid URL format. Please check and try again.');
+        urlInput.focus();
+        return;
+    }
+
+    // Open in new tab
+    try {
+        const newWindow = window.open(finalUrl, '_blank');
+        if (!newWindow) {
+            alert('Popup blocked. Please allow popups for this site to view URLs, or manually copy and test the URL: ' + finalUrl);
+        }
+    } catch (error) {
+        console.error('Error opening URL:', error);
+        alert('Unable to open URL. It may be unreachable or blocked.');
+    }
+}
+
+//Tests a URL by opening it in a new tab (legacy function - kept for compatibility)
 async function testURL(inputId) {
     const urlInput = document.getElementById(inputId);
     if (!urlInput) {
@@ -901,7 +1459,7 @@ async function testURL(inputId) {
 // Populates the predefined buttons from loaded config
 function populatePredefinedButtons(extraItems) {
     // Reset all buttons to "Not Used" first
-    const buttonIds = ['usb', 'volume', 'voice', 'signOut', 'customUrl1', 'customUrl2', 'customUrl3', 'customApp1', 'customApp2', 'customApp3'];
+    const buttonIds = ['usb', 'volume', 'voice', 'signOut', 'customUrl1', 'customApp1'];
     buttonIds.forEach(buttonId => {
         const positionSelect = document.getElementById(`${buttonId}.position`);
         if (positionSelect) {
@@ -965,7 +1523,7 @@ function populatePredefinedButtons(extraItems) {
             }
         } else if (item.type === 'link') {
             // Find the first available custom URL button
-            const customButtons = ['customUrl1', 'customUrl2', 'customUrl3'];
+            const customButtons = ['customUrl1'];
             for (const buttonId of customButtons) {
                 const positionSelect = document.getElementById(`${buttonId}.position`);
                 if (positionSelect && positionSelect.value === '') {
@@ -990,7 +1548,7 @@ function populatePredefinedButtons(extraItems) {
             }
         } else if (item.type === 'application') {
             // Find the first available custom application button
-            const customAppButtons = ['customApp1', 'customApp2', 'customApp3'];
+            const customAppButtons = ['customApp1'];
             for (const buttonId of customAppButtons) {
                 const positionSelect = document.getElementById(`${buttonId}.position`);
                 if (positionSelect && positionSelect.value === '') {
@@ -1021,32 +1579,33 @@ function populatePredefinedButtons(extraItems) {
 
 // Collects predefined button configurations for download
 function collectPredefinedButtons() {
-    // Define all button configurations
-    const buttonConfigs = [
+    // Define predefined button configurations
+    const predefinedConfigs = [
         { id: 'usb', type: 'control', feature: 'usbopeneject' },
         { id: 'volume', type: 'control', feature: 'volume' },
         { id: 'voice', type: 'control', feature: 'voice' },
-        { id: 'signOut', type: 'action', feature: 'signout' },
-        { id: 'customUrl1', type: 'link' },
-        { id: 'customUrl2', type: 'link' },
-        { id: 'customUrl3', type: 'link' },
-        { id: 'customApp1', type: 'application' },
-        { id: 'customApp2', type: 'application' },
-        { id: 'customApp3', type: 'application' }
+        { id: 'signOut', type: 'action', feature: 'signout' }
     ];
+    
+    const buttonConfigs = [...predefinedConfigs];
+    
+    // Add custom URL buttons (including dynamic ones)
+    for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+        buttonConfigs.push({ id: `customUrl${i}`, type: 'link' });
+    }
+    
+    // Add custom Application buttons (including dynamic ones)
+    for (let i = 1; i <= dynamicAppButtonCount; i++) {
+        buttonConfigs.push({ id: `customApp${i}`, type: 'application' });
+    }
 
     // Collect buttons that have positions assigned
     const positionedButtons = [];
 
     buttonConfigs.forEach(config => {
-        // For predefined buttons, check if they're enabled first
-        const isPredefinedButton = ['usb', 'volume', 'voice', 'signOut'].includes(config.id);
-        let isEnabled = true;
-        
-        if (isPredefinedButton) {
+        // For all buttons, check if they're enabled first
             const enabledCheckbox = document.getElementById(`${config.id}.enabled`);
-            isEnabled = enabledCheckbox && enabledCheckbox.checked;
-        }
+        const isEnabled = enabledCheckbox && enabledCheckbox.checked;
         
         const positionSelect = document.getElementById(`${config.id}.position`);
         if (isEnabled && positionSelect && positionSelect.value && positionSelect.value !== '') {
@@ -1163,11 +1722,18 @@ async function generatePDF() {
     const navSection = step3Element.querySelector('.step-navigation');
     let tempImage = null;
 
+    // Store original display styles before hiding elements
+    const originalStyles = {
+        downloadSection: downloadSection ? downloadSection.style.display : '',
+        navSection: navSection ? navSection.style.display : '',
+        morphicBarPreview: morphicBarPreview ? morphicBarPreview.style.display : ''
+    };
+
     // A single cleanup function to restore the original state
     const cleanup = () => {
-        if (morphicBarPreview) morphicBarPreview.style.display = '';
-        if (downloadSection) downloadSection.style.display = '';
-        if (navSection) navSection.style.display = '';
+        if (morphicBarPreview) morphicBarPreview.style.display = originalStyles.morphicBarPreview || '';
+        if (downloadSection) downloadSection.style.display = originalStyles.downloadSection || '';
+        if (navSection) navSection.style.display = originalStyles.navSection || '';
         if (tempImage) tempImage.remove();
     };
 
@@ -1190,11 +1756,11 @@ async function generatePDF() {
         tempImage.src = imageDataUrl;
         tempImage.style.width = '100%';
         tempImage.id = 'temp-morphic-bar-image';
-        
+
         morphicBarPreview.style.display = 'none'; // Hide the original HTML preview
         downloadSection.style.display = 'none';
         navSection.style.display = 'none';
-        
+
         // Insert the new image in place of the original preview
         morphicBarPreview.parentNode.insertBefore(tempImage, morphicBarPreview);
 
@@ -1208,32 +1774,56 @@ async function generatePDF() {
                     <p style="color: #333;">Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
                 </div>
             `,
+            css: ['styles.css'],
+            style: `
+                .summary-content {
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    gap: 0.5rem 1rem;
+                    font-size: 0.9rem;
+                    line-height: 1.4;
+                }
+                .summary-content .label {
+                    font-weight: 600;
+                    color: black;
+                }
+                .summary-content .value {
+                    color: #252525;
+                }
+                .settings-summary {
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 0.5rem;
+                    padding: 1.5rem;
+                    margin-bottom: 2rem;
+                }
+                .settings-summary h4 {
+                    color: #486284;
+                    margin-bottom: 1rem;
+                    font-size: 1.25rem;
+                }
+            `,
             targetStyles: ['*'],
             documentTitle: 'Morphic Configuration Summary',
             onPrintDialogClose: cleanup, // Cleanup when the print dialog is closed
             onError: (error) => {
                 console.error('Error with Print.js:', error);
-                alert('An error occurred during printing.');
                 cleanup(); // Ensure cleanup happens on error too
+                throw new Error('PDF generation failed'); // Throw error to be caught by handleDownloadClick
             }
         });
 
         return true;
     } catch (error) {
         console.error('Error generating PDF:', error);
-        alert('There was an error preparing the PDF. Please try again.');
         cleanup(); // Call cleanup if any part of the process fails
-        return false;
+        throw error; // Re-throw error to be caught by handleDownloadClick
     }
 }
 
-// Handle download button click - check if validation has been done
+// Handle download button click
 async function handleDownloadClick() {
     const downloadBtn = document.getElementById('download');
-    if (downloadBtn.disabled) {
-        alert('Please check for errors first by clicking the "Check for Errors" button.');
-        return;
-    }
 
     // Disable the download button while processing
     downloadBtn.disabled = true;
@@ -1242,148 +1832,219 @@ async function handleDownloadClick() {
     try {
         // Download config.json
         downloadConfig();
-        
+
         // Generate and download PDF
         await generatePDF();
-        
-        alert('Configuration files have been downloaded successfully!');
+
+        // Show success message
+        setTimeout(() => {
+            alert('Configuration files have been downloaded successfully!\n\n• config.json\n• PDF summary');
+        }, 1000); // Small delay to ensure PDF dialog has processed
+
     } catch (error) {
         console.error('Error during file generation:', error);
-        alert('There was an error generating the files. Please try again.');
+        alert('There was an error generating the files. Please try again.\n\nError: ' + (error.message || 'Unknown error occurred'));
     } finally {
-        // Re-enable the download button
+        // Re-enable the download button and ensure it's visible
         downloadBtn.disabled = false;
         downloadBtn.textContent = 'Download config.json';
+
+        // Ensure download section is visible
+        const downloadSection = document.querySelector('.download-section');
+        if (downloadSection) {
+            downloadSection.style.display = '';
+        }
+
+        // Ensure navigation section is visible
+        const navSection = document.querySelector('.step-navigation');
+        if (navSection) {
+            navSection.style.display = '';
+        }
     }
 }
 
-// Check for errors and validate the form
-function checkForErrors() {
-    const errorMessages = document.getElementById('errorMessages');
-    const successMessage = document.getElementById('successMessage');
-    const downloadBtn = document.getElementById('download');
-
-    // Clear previous messages
-    errorMessages.style.display = 'none';
-    successMessage.style.display = 'none';
-    errorMessages.replaceChildren();
-
+// Check for errors in a specific step
+function checkStepErrors(stepNumber) {
     const errors = [];
 
-    // Validate unique positions
-    if (!validateUniquePositions()) {
-        errors.push('Duplicate button positions detected. Each button must have a unique position (1, 2, or 3).');
-    }
+    // Clear any existing error displays for this step
+    clearStepErrors(stepNumber);
 
-    // Validate organization name is not empty and doesn't contain forbidden characters
-    const orgName = document.getElementById('organizationName').value.trim();
-    if (!orgName) {
-        errors.push('Organization Name is required.');
-    } else {
-        // Check for forbidden characters: double quotes, backslash, and linefeed
-        const forbiddenChars = /["\\\n\r]/;
-        if (forbiddenChars.test(orgName)) {
-            errors.push('Organization Name cannot contain double quotes ("), backslash (\\), or line breaks.');
-        }
-    }
+    if (stepNumber === 1) {
+        // Step 1 validation: Basic settings
 
-    // Validate Site ID is filled in
-    const siteId = document.getElementById('telemetry.siteId').value.trim();
-    if (!siteId) {
-        errors.push('Site ID is required.');
-    }
-
-    // Validate Site ID format (if Site ID has content)
-    if (siteId && !validateSiteId()) {
-        errors.push('Site ID must contain only ASCII letters and numbers (no spaces or symbols).');
-    }
-
-    // Validate Date to show MorphicBar is filled in (only if delay morphic is enabled)
-    const delayMorphicEnabled = document.getElementById('enableDelayMorphic').checked;
-    const morphicShowDate = document.getElementById('hideMorphicAfterLoginUntil').value;
-    if (delayMorphicEnabled && !morphicShowDate) {
-        errors.push('Date to show MorphicBar is required when Delay Morphic Appearance is enabled.');
-    }
-
-    // Validate custom URL buttons have all required fields if position is selected
-    const customUrlButtons = ['customUrl1', 'customUrl2', 'customUrl3'];
-    customUrlButtons.forEach(buttonId => {
-        const position = document.getElementById(`${buttonId}.position`).value;
-        if (position) {
-            const label = document.getElementById(`${buttonId}.label`).value.trim();
-            const url = document.getElementById(`${buttonId}.url`).value.trim();
-            const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value.trim();
-            const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value.trim();
-
-            if (!label) {
-                errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')} (Position ${position}): Button Text is required.`);
+        // Validate organization name is not empty and doesn't contain forbidden characters
+        const orgName = document.getElementById('organizationName').value.trim();
+        if (!orgName) {
+            errors.push('Organization Name is required.');
+        } else {
+            // Check for forbidden characters: double quotes, backslash, and linefeed
+            const forbiddenChars = /["\\\n\r]/;
+            if (forbiddenChars.test(orgName)) {
+                errors.push('Organization Name cannot contain double quotes ("), backslash (\\), or line breaks.');
             }
-            if (!url) {
-                errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')} (Position ${position}): URL is required.`);
-            } else {
-                // Basic URL validation
-                if (!url.startsWith('http://') && !url.startsWith('https://') && !url.includes('.')) {
-                    errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')} (Position ${position}): URL appears to be invalid.`);
+        }
+
+        // Validate Site ID is filled in
+        const siteId = document.getElementById('telemetry.siteId').value.trim();
+        if (!siteId) {
+            errors.push('Site ID is required.');
+        }
+
+        // Validate Site ID format (if Site ID has content)
+        if (siteId && !validateSiteId()) {
+            errors.push('Site ID must contain only ASCII letters and numbers (no spaces or symbols).');
+        }
+
+        // Validate Date to show MorphicBar is filled in (only if delay morphic is enabled)
+        const delayMorphicEnabled = document.getElementById('enableDelayMorphic').checked;
+        const morphicShowDate = document.getElementById('hideMorphicAfterLoginUntil').value;
+        if (delayMorphicEnabled && !morphicShowDate) {
+            errors.push('Date to show MorphicBar is required when Delay Morphic Appearance is enabled.');
+        }
+
+        // Validate hide until date if delay morphic is enabled and date is provided
+        if (delayMorphicEnabled && morphicShowDate) {
+            const selectedDate = new Date(morphicShowDate);
+            const today = new Date();
+            if (selectedDate <= today) {
+                errors.push('Date to show MorphicBar must be in the future.');
+            }
+        }
+
+    } else if (stepNumber === 2) {
+        // Step 2 validation: Button configuration
+
+        // Validate unique positions
+        if (!validateUniquePositions()) {
+            errors.push('Duplicate button positions detected. Each button must have a unique position (1, 2, or 3).');
+        }
+
+        // Validate custom URL buttons have all required fields if they are enabled (checked)
+        for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+            const buttonId = `customUrl${i}`;
+            const checkbox = document.getElementById(`${buttonId}.enabled`);
+            const position = document.getElementById(`${buttonId}.position`);
+            if (checkbox && checkbox.checked && position) {
+                const label = document.getElementById(`${buttonId}.label`);
+                const url = document.getElementById(`${buttonId}.url`);
+                const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
+                const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+
+                const labelValue = label ? label.value.trim() : '';
+                const urlValue = url ? url.value.trim() : '';
+                const tooltipHeaderValue = tooltipHeader ? tooltipHeader.value.trim() : '';
+                const tooltipTextValue = tooltipText ? tooltipText.value.trim() : '';
+                const positionValue = position.value;
+
+                if (!labelValue) {
+                    errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')}: Button Text is required.`);
+                }
+                if (!urlValue) {
+                    errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')}: URL is required.`);
+                } else {
+                    // Basic URL validation
+                    if (!urlValue.startsWith('http://') && !urlValue.startsWith('https://') && !urlValue.includes('.')) {
+                        errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')}: URL appears to be invalid.`);
+                    }
+                }
+                if (!tooltipHeaderValue) {
+                    errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')}: Tooltip Header is required.`);
+                }
+                if (!tooltipTextValue) {
+                    errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')}: Tooltip Text is required.`);
+                }
+                if (!positionValue) {
+                    errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')}: Position is required.`);
                 }
             }
-            if (!tooltipHeader) {
-                errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')} (Position ${position}): Tooltip Header is required.`);
-            }
-            if (!tooltipText) {
-                errors.push(`${buttonId.replace('customUrl', 'Custom URL Button ')} (Position ${position}): Tooltip Text is required.`);
-            }
         }
-    });
 
-    // Validate custom application buttons have all required fields if position is selected
-    const customAppButtons = ['customApp1', 'customApp2', 'customApp3'];
-    customAppButtons.forEach(buttonId => {
-        const position = document.getElementById(`${buttonId}.position`).value;
-        if (position) {
-            const appId = document.getElementById(`${buttonId}.appId`).value.trim();
+        // Validate custom application buttons have all required fields if they are enabled (checked)
+        for (let i = 1; i <= dynamicAppButtonCount; i++) {
+            const buttonId = `customApp${i}`;
+            const checkbox = document.getElementById(`${buttonId}.enabled`);
+            const position = document.getElementById(`${buttonId}.position`);
+            if (checkbox && checkbox.checked && position) {
+                const appId = document.getElementById(`${buttonId}.appId`);
 
-            if (!appId) {
-                errors.push(`${buttonId.replace('customApp', 'Custom Application Button ')} (Position ${position}): Application selection is required.`);
+                const appIdValue = appId ? appId.value.trim() : '';
+                const positionValue = position.value;
+
+                if (!appIdValue) {
+                    errors.push(`${buttonId.replace('customApp', 'Custom Application Button ')}: Application selection is required.`);
+                }
+                if (!positionValue) {
+                    errors.push(`${buttonId.replace('customApp', 'Custom Application Button ')}: Position is required.`);
+                }
             }
-        }
-    });
-
-    // Validate hide until date if delay morphic is enabled and date is provided
-    if (delayMorphicEnabled && morphicShowDate) {
-        const selectedDate = new Date(morphicShowDate);
-        const today = new Date();
-        if (selectedDate <= today) {
-            errors.push('Date to show MorphicBar must be in the future.');
         }
     }
 
-
-
-    // Display results
-
+    // Display errors if any
     if (errors.length > 0) {
-        const h4 = document.createElement('h4');
-        h4.textContent = 'Errors found:';
-        const ul = document.createElement('ul');
-        errors.forEach(error => {
-            const li = document.createElement('li');
-            li.textContent = error;
-            ul.appendChild(li)
-        })
-        errorMessages.style.display = 'block';
-        downloadBtn.disabled = true;
-        downloadBtn.classList.add('disabled');
-        errorMessages.replaceChildren(h4, ul);
+        displayStepErrors(stepNumber, errors);
+        return false; // Prevent advancing to next step
     }
-    else {
-        successMessage.style.display = 'block';
-        downloadBtn.disabled = false;
-        downloadBtn.classList.remove('disabled');
+
+    return true; // Allow advancing to next step
+}
+
+// Clear error display for a specific step
+function clearStepErrors(stepNumber) {
+    const stepElement = document.getElementById(`step${stepNumber}`);
+    if (!stepElement) return;
+
+    const existingErrorContainer = stepElement.querySelector('.step-errors');
+    if (existingErrorContainer) {
+        existingErrorContainer.remove();
     }
 }
 
+// Display errors at the top of a specific step
+function displayStepErrors(stepNumber, errors) {
+    const stepElement = document.getElementById(`step${stepNumber}`);
+    if (!stepElement) return;
+
+    // Create error container
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'step-errors';
+    errorContainer.style.cssText = `
+        background-color: #fee;
+        border: 1px solid #f88;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #a00;
+    `;
+
+    const h4 = document.createElement('h4');
+    h4.textContent = 'Please fix the following errors before proceeding:';
+    h4.style.cssText = 'margin: 0 0 10px 0; color: #a00;';
+
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'margin: 0; padding-left: 20px;';
+
+    errors.forEach(error => {
+        const li = document.createElement('li');
+        li.textContent = error;
+        li.style.cssText = 'margin-bottom: 5px;';
+        ul.appendChild(li);
+    });
+
+    errorContainer.appendChild(h4);
+    errorContainer.appendChild(ul);
+
+    // Insert at the top of the step content
+    stepElement.insertBefore(errorContainer, stepElement.firstChild);
+
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
 function downloadConfig() {
-    // All validation should already be done by checkForErrors()
+    // Generate config.json file for download
 
     const isAutoRunEnabled = document.getElementById('features.autorunAfterLogin.enabled').checked;
 
@@ -1594,20 +2255,24 @@ function updateAppButtonPreview(buttonId) {
     updatePositionPreview();
 }
 
-// Updated function to validate unique positions for predefined buttons
+// Updated function to validate unique positions for all buttons (including dynamic ones)
 function validateUniquePositions() {
     const positionSelects = [
         'usb.position',
         'volume.position',
         'voice.position',
-        'signOut.position',
-        'customUrl1.position',
-        'customUrl2.position',
-        'customUrl3.position',
-        'customApp1.position',
-        'customApp2.position',
-        'customApp3.position'
+        'signOut.position'
     ];
+    
+    // Add all custom URL button positions
+    for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+        positionSelects.push(`customUrl${i}.position`);
+    }
+    
+    // Add all custom Application button positions
+    for (let i = 1; i <= dynamicAppButtonCount; i++) {
+        positionSelects.push(`customApp${i}.position`);
+    }
 
     const usedPositions = new Map(); // Map position to button ID that uses it
     const conflicts = new Set(); // Set of positions that have conflicts
@@ -1725,53 +2390,37 @@ function updatePositionPreview() {
             name: 'Sign Out',
             type: 'action',
             displayText: 'Sign Out'
-        },
-        {
-            id: 'customUrl1',
-            name: 'Custom URL Button 1',
-            type: 'url',
-            displayText: () => document.getElementById('customUrl1.label').value || 'Custom Button'
-        },
-        {
-            id: 'customUrl2',
-            name: 'Custom URL Button 2',
-            type: 'url',
-            displayText: () => document.getElementById('customUrl2.label').value || 'Custom Button'
-        },
-        {
-            id: 'customUrl3',
-            name: 'Custom URL Button 3',
-            type: 'url',
-            displayText: () => document.getElementById('customUrl3.label').value || 'Custom Button'
-        },
-        {
-            id: 'customApp1',
-            name: 'Custom Application Button 1',
-            type: 'application',
-            displayText: () => {
-                const appId = document.getElementById('customApp1.appId').value;
-                return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-            }
-        },
-        {
-            id: 'customApp2',
-            name: 'Custom Application Button 2',
-            type: 'application',
-            displayText: () => {
-                const appId = document.getElementById('customApp2.appId').value;
-                return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-            }
-        },
-        {
-            id: 'customApp3',
-            name: 'Custom Application Button 3',
-            type: 'application',
-            displayText: () => {
-                const appId = document.getElementById('customApp3.appId').value;
-                return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
-            }
         }
     ];
+    
+    // Add all custom URL buttons dynamically
+    for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+        const buttonId = `customUrl${i}`;
+        buttonConfigs.push({
+            id: buttonId,
+            name: `Custom URL Button ${i}`,
+            type: 'url',
+            displayText: () => {
+                const labelElement = document.getElementById(`${buttonId}.label`);
+                return labelElement ? labelElement.value || 'Custom Button' : 'Custom Button';
+            }
+        });
+    }
+    
+    // Add all custom Application buttons dynamically
+    for (let i = 1; i <= dynamicAppButtonCount; i++) {
+        const buttonId = `customApp${i}`;
+        buttonConfigs.push({
+            id: buttonId,
+            name: `Custom Application Button ${i}`,
+            type: 'application',
+            displayText: () => {
+                const appIdElement = document.getElementById(`${buttonId}.appId`);
+                const appId = appIdElement ? appIdElement.value : '';
+                return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+            }
+        });
+    }
 
     const positionAssignments = new Map(); // Track which buttons are assigned to which positions
     const sourceInfo = [];
@@ -1822,7 +2471,13 @@ function updatePositionPreview() {
                         return sourceElement.cloneNode(true);
                     }
                 }
-                return null;
+                // Fallback: create a simple button if the source element doesn't exist
+                const newButton = document.createElement('div');
+                newButton.className = 'preview-button';
+                const span = document.createElement('span');
+                span.textContent = button.displayText;
+                newButton.appendChild(span);
+                return newButton;
             }
             if (button.type === 'url') {
                 const labelInput = document.getElementById(`${button.id}.label`);
@@ -1844,7 +2499,8 @@ function updatePositionPreview() {
                 return newButton;
             }
             if (button.type === 'application') {
-                const appId = document.getElementById(`${button.id}.appId`).value;
+                const appIdElement = document.getElementById(`${button.id}.appId`);
+                const appId = appIdElement ? appIdElement.value : '';
                 const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
                 const newButton = document.createElement('div');
                 newButton.className = 'preview-button url-button application-button';
@@ -1885,7 +2541,7 @@ function updatePositionPreview() {
 
         const div = document.createElement('div');
         div.style.marginBottom = '8px';
-        div.textContent = 'Conflicts:';
+        div.textContent = 'Errors:';
         div.style.fontWeight = 'bold';
         div.appendChild(document.createElement('br'));
         container.appendChild(div);
@@ -1904,7 +2560,7 @@ function updatePositionPreview() {
             //sourcesHTML += '<div class="button-source-item">No conflicts</div>';
             const div3 = document.createElement('div');
             div3.className = 'button-source-item';
-            div3.textContent = 'No conflicts';
+            div3.textContent = 'No errors';
             div3.appendChild(document.createElement('br'));
             container.appendChild(div3);
         }

@@ -17,20 +17,20 @@
 
         <!-- Step Progress Indicator -->
         <div class="step-progress">
-            <div class="step active" data-step="1">
+            <a href="#configure" class="step active" data-step="1">
                 <div class="step-number">1</div>
                 <div class="step-title">Configure</div>
-            </div>
+            </a>
             <div class="step-connector"></div>
-            <div class="step" data-step="2">
+            <a href="#customize-buttons" class="step" data-step="2">
                 <div class="step-number">2</div>
-                <div class="step-title">Customize</div>
-            </div>
+                <div class="step-title">Customize Buttons</div>
+            </a>
             <div class="step-connector"></div>
-            <div class="step" data-step="3">
+            <a href="#summary" class="step" data-step="3">
                 <div class="step-number">3</div>
-                <div class="step-title">Download</div>
-            </div>
+                <div class="step-title">Summary</div>
+            </a>
         </div>
 
         <!-- Step 1: Configure -->
@@ -331,10 +331,10 @@
                 </label>
                 <!-- Step Navigation -->
                 <div class="step-navigation">
-                    <button type="button" class="nav-btn prev-btn" onclick="prevStep()" disabled>Previous</button>
+                    <button type="button" class="nav-btn prev-btn" disabled>Previous</button>
                     <div class="right-buttons">
-                        <button type="button" class="nav-btn clear-btn" onclick="clearStep()">Clear</button>
-                        <button type="button" class="nav-btn next-btn" onclick="nextStep()">Next</button>
+                        <button type="button" class="nav-btn clear-btn">Clear</button>
+                        <button type="button" class="nav-btn next-btn">Next</button>
                     </div>
                 </div>
             </div>
@@ -495,7 +495,7 @@
                                     <input type="checkbox" id="customApp1.enabled" name="customApp1.enabled">
                                 </div>
                                 <div class="button-info">
-                                    <h5>Custom Application Button 1</h5>
+                                    <h5>Predefined Application Button</h5>
                                     <small>Create a custom button that launches a specific application</small>
 
                                 </div>
@@ -536,105 +536,10 @@
                             </div>
                         </div>
 
-                        <!-- Application Button 2 (Hidden initially) -->
-                        <div class="predefined-button" id="customApp2" style="display: none;">
-                            <div class="button-header">
-                                <div class="checkbox-container">
-                                    <input type="checkbox" id="customApp2.enabled" name="customApp2.enabled">
-                                </div>
-                                <div class="button-info">
-                                    <h5>Custom Application Button 2</h5>
-                                    <small>Create a custom button that launches a specific application</small>
-
-                                </div>
-                                <div class="button-preview-container">
-                                    <div class="preview-button url-button" id="customApp2Preview">
-                                        <span id="customApp2Label">Custom<br>App</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="url-inputs" id="customApp2.inputs" style="display: none;">
-                                <label><b>Position:</b>
-                                    <select name="customApp2.position" id="customApp2.position">
-                                        <option value="">-</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                    </select>
-                                </label>
-                                <label><b>Application:</b>
-                                    <select id="customApp2.appId">
-                                        <option value="">Select Application</option>
-                                        <option value="calculator">Calculator</option>
-                                        <option value="firefox">Firefox</option>
-                                        <option value="googleChrome">Google Chrome</option>
-                                        <option value="microsoftAccess">Microsoft Access</option>
-                                        <option value="microsoftEdge">Microsoft Edge</option>
-                                        <option value="microsoftExcel">Microsoft Excel</option>
-                                        <option value="microsoftOneNote">Microsoft OneNote</option>
-                                        <option value="microsoftOutlook">Microsoft Outlook</option>
-                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
-                                        <option value="microsoftQuickAssist">Microsoft Quick Assist (Windows Only)
-                                        </option>
-                                        <option value="microsoftTeams">Microsoft Teams</option>
-                                        <option value="microsoftWord">Microsoft Word</option>
-                                        <option value="opera">Opera</option>
-                                    </select>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Application Button 3 (Hidden initially) -->
-                        <div class="predefined-button" id="customApp3" style="display: none;">
-                            <div class="button-header">
-                                <div class="checkbox-container">
-                                    <input type="checkbox" id="customApp3.enabled" name="customApp3.enabled">
-                                </div>
-                                <div class="button-info">
-                                    <h5>Custom Application Button 3</h5>
-                                    <small>Create a custom button that launches a specific application</small>
-
-                                </div>
-                                <div class="button-preview-container">
-                                    <div class="preview-button url-button" id="customApp3Preview">
-                                        <span id="customApp3Label">Custom<br>App</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="url-inputs" id="customApp3.inputs" style="display: none;">
-                                <label><b>Position:</b>
-                                    <select name="customApp3.position" id="customApp3.position">
-                                        <option value="">-</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                    </select>
-                                </label>
-                                <label><b>Application:</b>
-                                    <select id="customApp3.appId">
-                                        <option value="">Select Application</option>
-                                        <option value="calculator">Calculator</option>
-                                        <option value="firefox">Firefox</option>
-                                        <option value="googleChrome">Google Chrome</option>
-                                        <option value="microsoftAccess">Microsoft Access</option>
-                                        <option value="microsoftEdge">Microsoft Edge</option>
-                                        <option value="microsoftExcel">Microsoft Excel</option>
-                                        <option value="microsoftOneNote">Microsoft OneNote</option>
-                                        <option value="microsoftOutlook">Microsoft Outlook</option>
-                                        <option value="microsoftPowerPoint">Microsoft PowerPoint</option>
-                                        <option value="microsoftQuickAssist">Microsoft Quick Assist (Windows Only)
-                                        </option>
-                                        <option value="microsoftTeams">Microsoft Teams</option>
-                                        <option value="microsoftWord">Microsoft Word</option>
-                                        <option value="opera">Opera</option>
-                                    </select>
-                                </label>
-                            </div>
-                        </div>
-
+                       
                         <!-- Add Button (Hidden initially) -->
                         <div class="add-button-container" id="addAppButtonContainer" style="display: none;">
-                            <button type="button" id="addAppButton" class="add-app-btn">+ Add Application
+                            <button type="button" id="addAppButton" class="add-app-btn">+ Add Another Application
                                 Button</button>
                         </div>
                     </div>
@@ -642,7 +547,7 @@
 
                     <!-- Custom URL Buttons Section -->
                     <div class="url-buttons-section">
-                        <h5>Predefined Button Options</h5>
+                        <h5>Custom Button Options</h5>
                         <small>Choose to display any one tool upto 3 times</small>
 
                         <!-- Custom URL Button 1 -->
@@ -689,7 +594,9 @@
                                                 <input type="url" id="customUrl1.url" placeholder="https://example.com">
                                                 <span class="url-status-indicator" id="customUrl1Status" aria-hidden="true"></span>
                                                 <button type="button" class="test-url-btn" id="testUrl1Btn"
-                                                    title="Test URL in new tab">Test URL</button>
+                                                    title="Test URL status">Test URL</button>
+                                                <button type="button" class="view-url-btn" id="viewUrl1Btn"
+                                                    title="View URL in new tab">View URL</button>
                                             </div>
                                         </label>
                                     </div>
@@ -709,135 +616,10 @@
                             </div>
                         </div>
 
-                        <!-- Custom URL Button 2 -->
-                        <div class="predefined-button" id="customUrl2" style="display: none;">
-                            <div class="button-header">
-                                <div class="checkbox-container">
-                                    <input type="checkbox" id="customUrl2.enabled" name="customUrl2.enabled">
-                                </div>
-                                <div class="button-info">
-                                    <h5>Custom URL Button</h5>
-                                    <small>Create a second custom button that opens a specific website or web
-                                        application</small>
-                                </div>
-                                <div class="button-preview-container">
-                                    <div class="preview-button url-button" id="customUrl2Preview">
-                                        <span id="customUrl2Label">Button<br>Text</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="button-config">
-                                <div class="url-inputs-container">
-                                    <div class="url-inputs">
-                                        <label><b>Position:</b>
-                                            <select name="customUrl2.position" id="customUrl2.position">
-                                                <option value="">-</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </label>
-                                        <label><b>Button Text:</b>
-                                            <input type="text" id="customUrl2.label" placeholder="Button Text">
-                                        </label>
-                                        <label><b>Tooltip Header:</b>
-                                            <input type="text" id="customUrl2.tooltipHeader" placeholder="Header text">
-                                        </label>
-                                        <label><b>Tooltip Text:</b>
-                                            <input type="text" id="customUrl2.tooltipText"
-                                                placeholder="Description text">
-                                        </label>
-                                        <label><b>URL:</b>
-                                            <div class="url-input-wrapper">
-                                                <input type="url" id="customUrl2.url" placeholder="https://example.com">
-                                                <span class="url-status-indicator" id="customUrl2Status" aria-hidden="true"></span>
-                                                <button type="button" class="test-url-btn" id="testUrl2Btn"
-                                                    title="Test URL in new tab">Test URL</button>
-                                            </div>
-                                        </label>
-                                    </div>
-                                    <div class="tooltip-preview">
-                                        <h6>Preview</h6>
-                                        <div class="preview-button url-button" id="customUrl2ConfigPreview">
-                                            <span id="customUrl2ConfigLabel">Button<br>Text</span>
-                                        </div>
-                                        <div class="tooltip-preview-box" id="customUrl2TooltipPreview">
-                                            <div class="tooltip-header" id="customUrl2TooltipHeaderPreview">Header text
-                                            </div>
-                                            <div class="tooltip-text" id="customUrl2TooltipTextPreview">Description text
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Custom URL Button 3 -->
-                        <div class="predefined-button" id="customUrl3" style="display: none;">
-                            <div class="button-header">
-                                <div class="checkbox-container">
-                                    <input type="checkbox" id="customUrl3.enabled" name="customUrl3.enabled">
-                                </div>
-                                <div class="button-info">
-                                    <h5>Custom URL Button</h5>
-                                    <small>Create a third custom button that opens a specific website or web
-                                        application</small>
-                                </div>
-                                <div class="button-preview-container">
-                                    <div class="preview-button url-button" id="customUrl3Preview">
-                                        <span id="customUrl3Label">Button<br>Text</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="button-config">
-                                <div class="url-inputs-container">
-                                    <div class="url-inputs">
-                                        <label><b>Position:</b>
-                                            <select name="customUrl3.position" id="customUrl3.position">
-                                                <option value="">-</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </label>
-                                        <label><b>Button Text:</b>
-                                            <input type="text" id="customUrl3.label" placeholder="Button Text">
-                                        </label>
-                                        <label><b>Tooltip Header:</b>
-                                            <input type="text" id="customUrl3.tooltipHeader" placeholder="Header text">
-                                        </label>
-                                        <label><b>Tooltip Text:</b>
-                                            <input type="text" id="customUrl3.tooltipText"
-                                                placeholder="Description text">
-                                        </label>
-                                        <label><b>URL:</b>
-                                            <div class="url-input-wrapper">
-                                                <input type="url" id="customUrl3.url" placeholder="https://example.com">
-                                                <span class="url-status-indicator" id="customUrl3Status" aria-hidden="true"></span>
-                                                <button type="button" class="test-url-btn" id="testUrl3Btn"
-                                                    title="Test URL in new tab">Test URL</button>
-                                            </div>
-                                        </label>
-                                    </div>
-                                    <div class="tooltip-preview">
-                                        <h6>Preview</h6>
-                                        <div class="preview-button url-button" id="customUrl3ConfigPreview">
-                                            <span id="customUrl3ConfigLabel">Button<br>Text</span>
-                                        </div>
-                                        <div class="tooltip-preview-box" id="customUrl3TooltipPreview">
-                                            <div class="tooltip-header" id="customUrl3TooltipHeaderPreview">Header text
-                                            </div>
-                                            <div class="tooltip-text" id="customUrl3TooltipTextPreview">Description text
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Add URL Button (Hidden initially until first is present) -->
                         <div class="add-button-container" id="addUrlButtonContainer">
-                            <button type="button" id="addUrlButton" class="add-url-btn">+ Add URL Button</button>
+                            <button type="button" id="addUrlButton" class="add-url-btn">+ Add Another URL Button</button>
                         </div>
 
                     </div><!-- /.url-buttons-section -->
@@ -845,10 +627,12 @@
 
                 </div>
 
-                <h4>MorphicBar Preview</h4>
-                <p class="description">Preview of how your custom buttons will appear on the actual MorphicBar:</p>
+                <!-- MorphicBar Preview Section -->
+                <div class="morphic-bar-preview-section">
+                    <h5>MorphicBar Preview</h5>
+                    <small>Preview of how your custom buttons will appear on the actual MorphicBar:</small>
 
-                <div class="morphic-bar-preview">
+                    <div class="morphic-bar-preview">
                     <div class="morphic-bar-container">
                         <!-- Custom buttons will be inserted here -->
                         <div class="custom-buttons-container" id="customButtonsContainer">
@@ -909,14 +693,15 @@
                     <div class="button-sources" id="buttonSources">
                         <!-- Button source info and conflicts will be shown here -->
                     </div>
-                </div>
+                    </div>
+                </div><!-- /.morphic-bar-preview-section -->
 
                 <!-- Step Navigation -->
                 <div class="step-navigation">
-                    <button type="button" class="nav-btn prev-btn" onclick="prevStep()">Previous</button>
+                    <button type="button" class="nav-btn prev-btn">Previous</button>
                     <div class="right-buttons">
-                        <button type="button" class="nav-btn clear-btn" onclick="clearStep()">Clear</button>
-                        <button type="button" class="nav-btn next-btn" onclick="nextStep()">Next</button>
+                        <button type="button" class="nav-btn clear-btn">Clear</button>
+                        <button type="button" class="nav-btn next-btn">Next</button>
                     </div>
                 </div>
             </div>
@@ -935,9 +720,12 @@
                     </div>
                 </div>
 
-                <div class="morphic-bar-preview">
-                    <h4>MorphicBar Preview</h4>
-                    <p class="description">Preview of how your custom buttons will appear on the actual MorphicBar:</p>
+                <!-- MorphicBar Preview Section -->
+                <div class="morphic-bar-preview-section">
+                    <h5>MorphicBar Preview</h5>
+                    <small>Preview of how your custom buttons will appear on the actual MorphicBar:</small>
+
+                    <div class="morphic-bar-preview">
                     <div class="morphic-bar-container">
                         <!-- Custom buttons will be inserted here -->
                         <div class="custom-buttons-container" id="topCustomButtonsContainer">
@@ -999,23 +787,14 @@
                         <!-- Button source info and conflicts will be shown here -->
 
                     </div>
-                </div>
-                <div class="download-section">
-                    <div class="download-section-buttons">
-                        <button id="checkErrors" class="check-errors-btn">Check for Errors</button>
-                        <button id="download" class="download-btn" disabled>Download config.json</button>
                     </div>
-                    <div id="errorMessages" class="error-messages"></div>
-                    <div id="successMessage" class="success-message">
-                        No errors found! You can now download the config.json file.
-                    </div>
-                </div>
+                </div><!-- /.morphic-bar-preview-section -
 
                 <!-- Step Navigation -->
                 <div class="step-navigation">
-                    <button type="button" class="nav-btn prev-btn" onclick="prevStep()">Previous</button>
+                    <button type="button" class="nav-btn prev-btn">Previous</button>
                     <div class="right-buttons">
-                        <button type="button" class="nav-btn clear-btn" onclick="clearStep()">Clear</button>
+                        <button type="button" id="download" class="download-btn">Download config.json</button>
                     </div>
                 </div>
             </div>
