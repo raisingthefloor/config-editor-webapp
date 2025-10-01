@@ -436,14 +436,14 @@ function updateAddButtonState() {
     const addButton = document.getElementById('addAppButton');
     if (addButton) {
         addButton.disabled = false;
-        addButton.textContent = '+ Add Application Button';
+        addButton.textContent = '+ Add Another Application Button';
     }
 
     // URL add button is always enabled
     const addUrlBtn = document.getElementById('addUrlButton');
     if (addUrlBtn) {
         addUrlBtn.disabled = false;
-        addUrlBtn.textContent = '+ Add URL Button';
+        addUrlBtn.textContent = '+ Add Another URL Button';
     }
 }
 
@@ -455,47 +455,86 @@ function updateSettingsSummary() {
     // Clear existing content
     summaryContent.replaceChildren();
 
-    // Helper function to create a setting row
-    function createSettingRow(label, value) {
+    // Helper function to create a setting row with edit button
+    function createSettingRow(label, value, stepNumber = null, elementId = null) {
         const labelDiv = document.createElement('div');
         labelDiv.className = 'label';
         labelDiv.textContent = label;
 
         const valueDiv = document.createElement('div');
         valueDiv.className = 'value';
-        valueDiv.textContent = value;
-
+        
+        // Create a container for value and edit button
+        const valueContainer = document.createElement('div');
+        valueContainer.style.display = 'flex';
+        valueContainer.style.alignItems = 'center';
+        valueContainer.style.gap = '0.5rem';
+        valueContainer.style.justifyContent = 'space-between';
+        
+        const valueText = document.createElement('span');
+        valueText.textContent = value;
+        valueContainer.appendChild(valueText);
+        
+        // Add edit button if stepNumber and elementId are provided
+        if (stepNumber && elementId) {
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.className = 'edit-setting-btn';
+            editButton.style.cssText = `
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                font-size: 0.75rem;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                white-space: nowrap;
+            `;
+            editButton.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#2c5282';
+            });
+            editButton.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = 'var(--primary-color)';
+            });
+            editButton.addEventListener('click', function() {
+                navigateToSetting(stepNumber, elementId);
+            });
+            valueContainer.appendChild(editButton);
+        }
+        
+        valueDiv.appendChild(valueContainer);
         summaryContent.appendChild(labelDiv);
         summaryContent.appendChild(valueDiv);
     }
 
     // Basic settings
-    createSettingRow('Organization Name', document.getElementById('organizationName').value || 'Not set');
-    createSettingRow('Site ID', document.getElementById('telemetry.siteId').value || 'Not set');
+    createSettingRow('Organization Name', document.getElementById('organizationName').value || 'Not set', 1, 'organizationName');
+    createSettingRow('Site ID', document.getElementById('telemetry.siteId').value || 'Not set', 1, 'telemetry.siteId');
 
     // Features
     createSettingRow('Open Morphic Automatically at Login', 
-        document.getElementById('features.autorunAfterLogin.enabled').checked ? 'True' : 'False');
+        document.getElementById('features.autorunAfterLogin.enabled').checked ? 'True' : 'False', 1, 'features.autorunAfterLogin.enabled');
     createSettingRow('See Which Accessibility Features are Helpful', 
-        document.getElementById('features.atUseCounter.enabled').checked ? 'True' : 'False');
+        document.getElementById('features.atUseCounter.enabled').checked ? 'True' : 'False', 1, 'features.atUseCounter.enabled');
     createSettingRow('Delay Showing Morphic to Compare Before & After', 
-        document.getElementById('enableDelayMorphic').checked ? 'True' : 'False');
+        document.getElementById('enableDelayMorphic').checked ? 'True' : 'False', 1, 'enableDelayMorphic');
     if (document.getElementById('enableDelayMorphic').checked) {
         createSettingRow('Show Morphic Bar On', 
-            document.getElementById('hideMorphicAfterLoginUntil').value || 'Not set');
+            document.getElementById('hideMorphicAfterLoginUntil').value || 'Not set', 1, 'hideMorphicAfterLoginUntil');
     }
     createSettingRow('Enable AT-on-Demand (Available for Windows Only)', 
-        document.getElementById('features.atOnDemand.enabled').checked ? 'True' : 'False');
+        document.getElementById('features.atOnDemand.enabled').checked ? 'True' : 'False', 1, 'features.atOnDemand.enabled');
     createSettingRow('Enable Custom MorphicBars', 
-        document.getElementById('features.customMorphicBars.enabled').checked ? 'True' : 'False');
+        document.getElementById('features.customMorphicBars.enabled').checked ? 'True' : 'False', 1, 'features.customMorphicBars.enabled');
     createSettingRow('Enable Check for Updates with each Launch', 
-        document.getElementById('features.checkForUpdates.enabled').checked ? 'True' : 'False');
+        document.getElementById('features.checkForUpdates.enabled').checked ? 'True' : 'False', 1, 'features.checkForUpdates.enabled');
     createSettingRow('MorphicBar Visibility after Login', 
-        document.getElementById('morphicBar.visibilityAfterLogin').value);
+        document.getElementById('morphicBar.visibilityAfterLogin').value, 1, 'morphicBar.visibilityAfterLogin');
     createSettingRow('MorphicBar Default Location', 
-        document.getElementById('morphicBar.defaultLocation').value);
+        document.getElementById('morphicBar.defaultLocation').value, 1, 'morphicBar.defaultLocation');
     createSettingRow('Reset 5 Windows Settings to Default', 
-        document.getElementById('features.resetSettings.enabled').checked ? 'True' : 'False');
+        document.getElementById('features.resetSettings.enabled').checked ? 'True' : 'False', 1, 'features.resetSettings.enabled');
 
     // Custom buttons
     const customButtons = collectPredefinedButtons();
@@ -506,7 +545,7 @@ function updateSettingsSummary() {
 
     // Display application buttons first
     applicationButtons.forEach((button, index) => {
-        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set');
+        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set', 2, `customApp${index + 1}.enabled`);
     });
 
     // Add horizontal line if both application and URL buttons exist
@@ -518,11 +557,37 @@ function updateSettingsSummary() {
 
     // Display URL buttons
     urlButtons.forEach((button, index) => {
-        createSettingRow(`Custom URL Button ${index + 1} Text`, button.label || 'Not set');
-        createSettingRow(`Custom URL Button ${index + 1} Tooltip Header`, button.tooltipHeader || 'Not set');
-        createSettingRow(`Custom URL Button ${index + 1} Tooltip Text`, button.tooltipText || 'Not set');
-        createSettingRow(`Custom URL Button ${index + 1} URL`, button.url || 'Not set');
+        createSettingRow(`Custom URL Button ${index + 1} Text`, button.label || 'Not set', 2, `customUrl${index + 1}.enabled`);
+        createSettingRow(`Custom URL Button ${index + 1} Tooltip Header`, button.tooltipHeader || 'Not set', 2, `customUrl${index + 1}.enabled`);
+        createSettingRow(`Custom URL Button ${index + 1} Tooltip Text`, button.tooltipText || 'Not set', 2, `customUrl${index + 1}.enabled`);
+        createSettingRow(`Custom URL Button ${index + 1} URL`, button.url || 'Not set', 2, `customUrl${index + 1}.enabled`);
     });
+}
+
+// Function to navigate to a specific setting
+function navigateToSetting(stepNumber, elementId) {
+    // Navigate to the appropriate step
+    showStep(stepNumber);
+    
+    // Scroll to the element after a short delay to ensure the step is visible
+    setTimeout(() => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            
+            // Add a temporary highlight to draw attention
+            element.style.transition = 'background-color 0.3s ease';
+            element.style.backgroundColor = '#fff3cd';
+            
+            // Remove highlight after 2 seconds
+            setTimeout(() => {
+                element.style.backgroundColor = '';
+            }, 2000);
+        }
+    }, 100);
 }
 
 // Step navigation functions
@@ -552,52 +617,43 @@ function showStep(stepNumber) {
         }
     });
 
-    // Update URL hash
-    const hashMap = {
-        1: '#configure',
-        2: '#customize-buttons',
-        3: '#summary'
-    };
-    
-    if (hashMap[stepNumber] && window.location.hash !== hashMap[stepNumber]) {
-        window.history.pushState(null, null, hashMap[stepNumber]);
-    }
-
     // Clear any existing step errors when switching steps
     clearStepErrors(stepNumber);
 
     // Update settings summary when showing step 3
     if (stepNumber === 3) {
         updateSettingsSummary();
+        
+        // Ensure download button event listener is attached when step 3 is shown
+        const downloadBtn = document.getElementById('download');
+        if (downloadBtn && !downloadBtn.hasAttribute('data-listener-attached')) {
+            downloadBtn.addEventListener('click', handleDownloadClick);
+            downloadBtn.setAttribute('data-listener-attached', 'true');
+            console.log('Download button event listener attached when step 3 shown');
+        }
     }
 
-    // Update navigation button states
-    updateNavigationButtons(stepNumber);
-
     currentStep = stepNumber;
-}
 
-// Update navigation button states based on current step
-function updateNavigationButtons(stepNumber) {
-    // Update Previous buttons
-    document.querySelectorAll('.prev-btn').forEach(btn => {
-        btn.disabled = (stepNumber === 1);
-    });
-
-    // Update Next buttons - hide them on the last step
-    document.querySelectorAll('.next-btn').forEach(btn => {
-        if (stepNumber === totalSteps) {
-            btn.style.display = 'none';
-        } else {
-            btn.style.display = '';
+    // Sync URL hash for deep linking
+    try {
+        const stepToHash = { 1: '#configure', 2: '#customize-buttons', 3: '#review-and-download' };
+        const desiredHash = stepToHash[stepNumber] || '';
+        if (window.location.hash !== desiredHash) {
+            // Use replaceState to avoid cluttering history for internal step changes
+            const newUrl = desiredHash ? `${window.location.pathname}${desiredHash}` : window.location.pathname;
+            window.history.replaceState(null, '', newUrl);
         }
-    });
+    } catch (e) {
+        console.warn('Failed to update URL hash for step navigation', e);
+    }
 }
 
 function nextStep() {
     if (currentStep < totalSteps) {
         // Check for errors in the current step before proceeding
         if (checkStepErrors(currentStep)) {
+            // showStep will sync hash
             showStep(currentStep + 1);
         }
     }
@@ -605,42 +661,203 @@ function nextStep() {
 
 function prevStep() {
     if (currentStep > 1) {
+        // showStep will sync hash
         showStep(currentStep - 1);
     }
 }
 
+// Default values for form fields
+const defaultValues = {
+    step1: {
+        'organizationName': '',
+        'telemetry.siteId': '',
+        'features.autorunAfterLogin.enabled': true,
+        'features.autorunAfterLogin.scope': 'allLocalUsers',
+        'features.atUseCounter.enabled': false,
+        'enableDelayMorphic': false,
+        'hideMorphicAfterLoginUntil': '',
+        'features.atOnDemand.enabled': false,
+        'features.customMorphicBars.enabled': true,
+        'features.checkForUpdates.enabled': false,
+        'morphicBar.visibilityAfterLogin': 'show',
+        'morphicBar.defaultLocation': 'bottomTrailing',
+        'features.resetSettings.enabled': false
+    }
+};
+
+// Show clear confirmation modal
+function showClearModal() {
+    const modal = document.getElementById('clearModal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+// Hide clear confirmation modal
+function hideClearModal() {
+    const modal = document.getElementById('clearModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+// Clear step 1 - Configure
+function clearStep1() {
+    const defaults = defaultValues.step1;
+
+    // Clear text inputs
+    document.getElementById('organizationName').value = defaults['organizationName'];
+    document.getElementById('telemetry.siteId').value = defaults['telemetry.siteId'];
+    document.getElementById('hideMorphicAfterLoginUntil').value = defaults['hideMorphicAfterLoginUntil'];
+
+    // Reset checkboxes
+    document.getElementById('features.autorunAfterLogin.enabled').checked = defaults['features.autorunAfterLogin.enabled'];
+    document.getElementById('features.atUseCounter.enabled').checked = defaults['features.atUseCounter.enabled'];
+    document.getElementById('enableDelayMorphic').checked = defaults['enableDelayMorphic'];
+    document.getElementById('features.atOnDemand.enabled').checked = defaults['features.atOnDemand.enabled'];
+    document.getElementById('features.customMorphicBars.enabled').checked = defaults['features.customMorphicBars.enabled'];
+    document.getElementById('features.checkForUpdates.enabled').checked = defaults['features.checkForUpdates.enabled'];
+    document.getElementById('features.resetSettings.enabled').checked = defaults['features.resetSettings.enabled'];
+
+    // Reset selects
+    document.getElementById('features.autorunAfterLogin.scope').value = defaults['features.autorunAfterLogin.scope'];
+    document.getElementById('morphicBar.visibilityAfterLogin').value = defaults['morphicBar.visibilityAfterLogin'];
+    document.getElementById('morphicBar.defaultLocation').value = defaults['morphicBar.defaultLocation'];
+
+    // Clear error messages
+    document.getElementById('organizationNameError').style.display = 'none';
+    document.getElementById('siteIdError').style.display = 'none';
+    document.getElementById('organizationName').classList.remove('error');
+    document.getElementById('telemetry.siteId').classList.remove('error');
+
+    // Trigger dependent field updates
+    toggleScopeAccess();
+    toggleDelayMorphicAccess();
+}
+
+// Clear step 2 - Customize
+function clearStep2() {
+    // Uncheck all predefined buttons
+    const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
+    predefinedButtons.forEach(id => {
+        const checkbox = document.getElementById(`${id}.enabled`);
+        if (checkbox) {
+            checkbox.checked = false;
+            // Hide position selector
+            const posContainer = document.getElementById(`${id}.positionContainer`);
+            if (posContainer) {
+                posContainer.style.display = 'none';
+            }
+            // Reset position
+            const posSelect = document.getElementById(`${id}.position`);
+            if (posSelect) {
+                posSelect.value = '';
+            }
+        }
+    });
+
+    // Clear custom application buttons
+    for (let i = 1; i <= dynamicAppButtonCount; i++) {
+        const buttonId = `customApp${i}`;
+        const checkbox = document.getElementById(`${buttonId}.enabled`);
+        const position = document.getElementById(`${buttonId}.position`);
+        const appId = document.getElementById(`${buttonId}.appId`);
+        const inputs = document.getElementById(`${buttonId}.inputs`);
+
+        if (checkbox) checkbox.checked = false;
+        if (position) position.value = '';
+        if (appId) appId.value = '';
+        if (inputs) inputs.style.display = 'none';
+
+        // Update preview
+        const preview = document.getElementById(`${buttonId}Preview`);
+        if (preview) {
+            const span = preview.querySelector('span');
+            if (span) span.textContent = 'Custom\nApp';
+        }
+    }
+
+    // Clear custom URL buttons
+    for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+        const buttonId = `customUrl${i}`;
+        const checkbox = document.getElementById(`${buttonId}.enabled`);
+        const position = document.getElementById(`${buttonId}.position`);
+        const label = document.getElementById(`${buttonId}.label`);
+        const url = document.getElementById(`${buttonId}.url`);
+        const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
+        const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+
+        if (checkbox) {
+            checkbox.checked = false;
+            // Update dependent visibility
+            const tooltipPreview = checkbox.closest('.predefined-button')?.querySelector('.tooltip-preview');
+            if (tooltipPreview) tooltipPreview.style.display = 'none';
+        }
+        if (position) position.value = '';
+        if (label) label.value = '';
+        if (url) url.value = '';
+        if (tooltipHeader) tooltipHeader.value = '';
+        if (tooltipText) tooltipText.value = '';
+
+        // Clear URL status indicator
+        const statusIndicator = document.getElementById(`${buttonId}Status`);
+        if (statusIndicator) {
+            statusIndicator.className = 'url-status-indicator';
+        }
+
+        // Update preview elements
+        const previewLabel = document.getElementById(`${buttonId}Label`);
+        if (previewLabel) previewLabel.textContent = 'Button\nText';
+
+        const configPreviewLabel = document.getElementById(`${buttonId}ConfigLabel`);
+        if (configPreviewLabel) configPreviewLabel.textContent = 'Button\nText';
+
+        const tooltipHeaderPreview = document.getElementById(`${buttonId}TooltipHeaderPreview`);
+        if (tooltipHeaderPreview) tooltipHeaderPreview.textContent = 'Header text';
+
+        const tooltipTextPreview = document.getElementById(`${buttonId}TooltipTextPreview`);
+        if (tooltipTextPreview) tooltipTextPreview.textContent = 'Description text';
+    }
+
+    // Update MorphicBar preview
+    updatePositionPreview();
+}
+
+// Main clear function
 function clearStep() {
-    // TODO: Implement clear functionality for each step
-    // This will be implemented later as requested
-    console.log('Clear button clicked for step:', currentStep);
+    showClearModal();
+}
+
+// Execute clear based on current step
+function executeClear() {
+    console.log('Clearing step:', currentStep);
+
+    switch(currentStep) {
+        case 1:
+            clearStep1();
+            break;
+        case 2:
+            clearStep2();
+            break;
+        case 3:
+            // Step 3 is download/summary, no clear needed
+            console.log('Step 3 has no clearable fields');
+            break;
+        default:
+            console.log('Unknown step');
+    }
+
+    hideClearModal();
 }
 
 // Allow clicking on step indicators to navigate
 function initStepNavigation() {
     document.querySelectorAll('.step').forEach((step, index) => {
-        step.addEventListener('click', (e) => {
-            e.preventDefault();
+        step.addEventListener('click', () => {
+            // showStep will sync hash
             showStep(index + 1);
         });
     });
-}
-
-// Handle hash changes for direct URL navigation
-function handleHashChange() {
-    const hash = window.location.hash;
-    const hashToStepMap = {
-        '#configure': 1,
-        '#customize-buttons': 2,
-        '#summary': 3
-    };
-    
-    const stepNumber = hashToStepMap[hash];
-    if (stepNumber && stepNumber !== currentStep) {
-        showStep(stepNumber);
-    } else if (!hash || !hashToStepMap[hash]) {
-        // Default to step 1 if no valid hash
-        showStep(1);
-    }
 }
 
 // Initialize event listeners based on current page
@@ -651,27 +868,32 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isConfigBuilder) {
         // Initialize step navigation
         initStepNavigation();
-        
-        // Add hash change event listener
-        window.addEventListener('hashchange', handleHashChange);
-        
-        // Handle initial hash or default to step 1
-        handleHashChange();
+        // Determine initial step from hash if present
+        const hashToStep = { '#configure': 1, '#customize-buttons': 2, '#review-and-download': 3 };
+        const initialStep = hashToStep[window.location.hash] || 1;
+        showStep(initialStep);
 
-        // Add navigation button event listeners
-        document.querySelectorAll('.prev-btn').forEach(btn => {
-            btn.addEventListener('click', prevStep);
+        // Respond to hash changes (e.g., user edits URL or navigates via back/forward)
+        window.addEventListener('hashchange', () => {
+            const stepFromHash = hashToStep[window.location.hash];
+            if (stepFromHash) {
+                showStep(stepFromHash);
+            }
         });
-        document.querySelectorAll('.next-btn').forEach(btn => {
-            btn.addEventListener('click', nextStep);
-        });
-        document.querySelectorAll('.clear-btn').forEach(btn => {
-            btn.addEventListener('click', clearStep);
-        });
-
         // Config Builder page setup
         document.getElementById('upload')?.addEventListener('change', handleFileUpload);
-        document.getElementById('download')?.addEventListener('click', handleDownloadClick);
+        
+        // Debug: Check if download button exists when page loads
+        const downloadBtn = document.getElementById('download');
+        console.log('Download button found on page load:', downloadBtn);
+        
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', handleDownloadClick);
+            console.log('Download button event listener attached');
+        } else {
+            console.error('Download button not found on page load!');
+        }
+        
         document.getElementById('fileInputBtn')?.addEventListener('click', function() {
             document.getElementById('upload').click();
         });
@@ -687,6 +909,41 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error('Error loading stored config:', error);
             }
+        }
+
+        // Setup navigation button event listeners
+        document.querySelectorAll('.prev-btn').forEach(btn => {
+            btn.addEventListener('click', prevStep);
+        });
+
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', nextStep);
+        });
+
+        document.querySelectorAll('.clear-btn').forEach(btn => {
+            btn.addEventListener('click', clearStep);
+        });
+
+        // Setup modal event listeners
+        const modal = document.getElementById('clearModal');
+        const cancelBtn = modal?.querySelector('.modal-btn-cancel');
+        const confirmBtn = modal?.querySelector('.modal-btn-confirm');
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', hideClearModal);
+        }
+
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', executeClear);
+        }
+
+        // Close modal when clicking outside of it
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    hideClearModal();
+                }
+            });
         }
     } else {
         // Index page setup
@@ -733,12 +990,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // See more/less toggle handlers
-document.getElementById('visibility-toggle').addEventListener('click', function(e) {
+document.getElementById('visibility-toggle')?.addEventListener('click', function(e) {
     e.preventDefault();
     toggleDescription('visibility');
 });
 
-document.getElementById('location-toggle').addEventListener('click', function(e) {
+document.getElementById('location-toggle')?.addEventListener('click', function(e) {
     e.preventDefault();
     toggleDescription('location');
 });
@@ -769,41 +1026,27 @@ function toggleScopeAccess() {
     const autorunEnabled = document.getElementById('features.autorunAfterLogin.enabled').checked;
     const scopeSelect = document.getElementById('features.autorunAfterLogin.scope');
     const scopeLabel = document.getElementById('features.autorunAfterLogin.scope.label');
-    const resetCheckbox = document.getElementById('features.resetSettings.enabled');
-    const resetLabel = document.getElementById('features.resetSettings.label');
-
 
     if (autorunEnabled) {
         // Enable dependent options when autorun is enabled
         scopeSelect.disabled = false;
-        resetCheckbox.disabled = false;
         scopeLabel.disabled = false;
-        resetLabel.disabled = false;
         // Remove visual styling for disabled state
         scopeSelect.style.opacity = '1';
-        resetCheckbox.style.opacity = '1';
         scopeLabel.style.opacity = '1';
-        resetLabel.style.opacity = '1';
         scopeSelect.style.cursor = 'pointer';
-        resetCheckbox.style.cursor = 'pointer';
     }
     else {
         // Disable dependent options when autorun is disabled
         scopeSelect.disabled = true;
-        resetCheckbox.disabled = true;
         scopeLabel.disabled = true;
-        resetLabel.disabled = true;
         // Set default values when disabled
         scopeSelect.value = 'allLocalUsers';
-        resetCheckbox.checked = false;
 
         // Add visual styling to indicate disabled state
         scopeSelect.style.opacity = '0.6';
-        resetCheckbox.style.opacity = '0.6';
         scopeLabel.style.opacity = '0.6';
-        resetLabel.style.opacity = '0.6';
         scopeSelect.style.cursor = 'not-allowed';
-        resetCheckbox.style.cursor = 'not-allowed';
     }
 }
 
@@ -1722,18 +1965,11 @@ async function generatePDF() {
     const navSection = step3Element.querySelector('.step-navigation');
     let tempImage = null;
 
-    // Store original display styles before hiding elements
-    const originalStyles = {
-        downloadSection: downloadSection ? downloadSection.style.display : '',
-        navSection: navSection ? navSection.style.display : '',
-        morphicBarPreview: morphicBarPreview ? morphicBarPreview.style.display : ''
-    };
-
     // A single cleanup function to restore the original state
     const cleanup = () => {
-        if (morphicBarPreview) morphicBarPreview.style.display = originalStyles.morphicBarPreview || '';
-        if (downloadSection) downloadSection.style.display = originalStyles.downloadSection || '';
-        if (navSection) navSection.style.display = originalStyles.navSection || '';
+        if (morphicBarPreview) morphicBarPreview.style.display = '';
+        if (downloadSection) downloadSection.style.display = '';
+        if (navSection) navSection.style.display = '';
         if (tempImage) tempImage.remove();
     };
 
@@ -1756,11 +1992,11 @@ async function generatePDF() {
         tempImage.src = imageDataUrl;
         tempImage.style.width = '100%';
         tempImage.id = 'temp-morphic-bar-image';
-
+        
         morphicBarPreview.style.display = 'none'; // Hide the original HTML preview
         downloadSection.style.display = 'none';
         navSection.style.display = 'none';
-
+        
         // Insert the new image in place of the original preview
         morphicBarPreview.parentNode.insertBefore(tempImage, morphicBarPreview);
 
@@ -1774,92 +2010,58 @@ async function generatePDF() {
                     <p style="color: #333;">Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
                 </div>
             `,
-            css: ['styles.css'],
-            style: `
-                .summary-content {
-                    display: grid;
-                    grid-template-columns: auto 1fr;
-                    gap: 0.5rem 1rem;
-                    font-size: 0.9rem;
-                    line-height: 1.4;
-                }
-                .summary-content .label {
-                    font-weight: 600;
-                    color: black;
-                }
-                .summary-content .value {
-                    color: #252525;
-                }
-                .settings-summary {
-                    background-color: #f8fafc;
-                    border: 1px solid #e2e8f0;
-                    border-radius: 0.5rem;
-                    padding: 1.5rem;
-                    margin-bottom: 2rem;
-                }
-                .settings-summary h4 {
-                    color: #486284;
-                    margin-bottom: 1rem;
-                    font-size: 1.25rem;
-                }
-            `,
             targetStyles: ['*'],
             documentTitle: 'Morphic Configuration Summary',
             onPrintDialogClose: cleanup, // Cleanup when the print dialog is closed
             onError: (error) => {
                 console.error('Error with Print.js:', error);
+                alert('An error occurred during printing.');
                 cleanup(); // Ensure cleanup happens on error too
-                throw new Error('PDF generation failed'); // Throw error to be caught by handleDownloadClick
             }
         });
 
         return true;
     } catch (error) {
         console.error('Error generating PDF:', error);
+        alert('There was an error preparing the PDF. Please try again.');
         cleanup(); // Call cleanup if any part of the process fails
-        throw error; // Re-throw error to be caught by handleDownloadClick
+        return false;
     }
 }
 
 // Handle download button click
 async function handleDownloadClick() {
+    console.log('Download button clicked!');
     const downloadBtn = document.getElementById('download');
+    console.log('Download button found:', downloadBtn);
+
+    if (!downloadBtn) {
+        console.error('Download button not found!');
+        return;
+    }
 
     // Disable the download button while processing
     downloadBtn.disabled = true;
     downloadBtn.textContent = 'Generating Files...';
 
     try {
+        console.log('Starting download process...');
         // Download config.json
         downloadConfig();
-
+        console.log('Config downloaded, generating PDF...');
+        
         // Generate and download PDF
         await generatePDF();
-
-        // Show success message
-        setTimeout(() => {
-            alert('Configuration files have been downloaded successfully!\n\n• config.json\n• PDF summary');
-        }, 1000); // Small delay to ensure PDF dialog has processed
-
+        console.log('PDF generated successfully');
+        
+        alert('Configuration files have been downloaded successfully!');
     } catch (error) {
         console.error('Error during file generation:', error);
-        alert('There was an error generating the files. Please try again.\n\nError: ' + (error.message || 'Unknown error occurred'));
+        alert('There was an error generating the files. Please try again.');
     } finally {
-        // Re-enable the download button and ensure it's visible
+        // Re-enable the download button
         downloadBtn.disabled = false;
         downloadBtn.textContent = 'Download config.json';
-
-        // Ensure download section is visible
-        const downloadSection = document.querySelector('.download-section');
-        if (downloadSection) {
-            downloadSection.style.display = '';
-        }
-
-        // Ensure navigation section is visible
-        const navSection = document.querySelector('.step-navigation');
-        if (navSection) {
-            navSection.style.display = '';
-        }
     }
 }
 
@@ -2318,25 +2520,43 @@ function validateUniquePositions() {
             }
             
             const position = select.value;
-            const positionSelector = select.closest('.position-selector') || select.closest('.position-selector-container');
+            // Try to find a sensible container to place the conflict indicator for both predefined and custom buttons
+            let positionSelector = select.closest('.position-selector') || select.closest('.position-selector-container');
+            if (!positionSelector) {
+                // Fallbacks for custom URL/Application button layouts
+                positionSelector = select.closest('.url-inputs') || select.closest('.button-fields') || select.parentElement;
+            }
+            // Prefer to place the indicator right next to the select element
+            const indicatorContainer = select.parentElement || positionSelector;
 
             if (isEnabled && position && conflicts.has(position)) {
-                // Add conflict indicator if it doesn't exist
-                let conflictIndicator = positionSelector.querySelector('.conflict-indicator');
-                if (!conflictIndicator) {
-                    conflictIndicator = document.createElement('div');
-                    conflictIndicator.className = 'conflict-indicator';
-                    conflictIndicator.textContent = 'Conflict';
-                    positionSelector.appendChild(conflictIndicator);
+                if (indicatorContainer) {
+                    // Add conflict indicator if it doesn't exist next to the select
+                    let conflictIndicator = indicatorContainer.querySelector('.conflict-indicator');
+                    if (!conflictIndicator) {
+                        conflictIndicator = document.createElement('span');
+                        conflictIndicator.className = 'conflict-indicator';
+                        conflictIndicator.textContent = 'Conflict';
+                        // Ensure it appears inline next to the select
+                        conflictIndicator.style.display = 'inline-block';
+                        conflictIndicator.style.marginLeft = '6px';
+                        // Insert right after the select element when possible
+                        if (select.nextSibling) {
+                            select.parentElement.insertBefore(conflictIndicator, select.nextSibling);
+                        } else {
+                            indicatorContainer.appendChild(conflictIndicator);
+                        }
+                    }
                 }
             } else {
                 // Remove conflict indicator if it exists
-                if (positionSelector) {
-                    const conflictIndicator = positionSelector.querySelector('.conflict-indicator');
+                const containersToCheck = [indicatorContainer, positionSelector].filter(Boolean);
+                containersToCheck.forEach(container => {
+                    const conflictIndicator = container.querySelector('.conflict-indicator');
                     if (conflictIndicator) {
                         conflictIndicator.remove();
                     }
-                }
+                });
             }
         }
     });

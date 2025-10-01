@@ -17,29 +17,31 @@
 
         <!-- Step Progress Indicator -->
         <div class="step-progress">
-            <a href="#configure" class="step active" data-step="1">
+            <div class="step active" data-step="1">
                 <div class="step-number">1</div>
                 <div class="step-title">Configure</div>
-            </a>
+            </div>
             <div class="step-connector"></div>
-            <a href="#customize-buttons" class="step" data-step="2">
+            <div class="step" data-step="2">
                 <div class="step-number">2</div>
-                <div class="step-title">Customize Buttons</div>
-            </a>
+                <div class="step-title">Customize</div>
+            </div>
             <div class="step-connector"></div>
-            <a href="#summary" class="step" data-step="3">
+            <div class="step" data-step="3">
                 <div class="step-number">3</div>
-                <div class="step-title">Summary</div>
-            </a>
+                <div class="step-title">Download</div>
+            </div>
         </div>
 
         <!-- Step 1: Configure -->
+        <span id="configure"></span>
         <div class="step-content" id="step1" style="display: block;">
 
 
             <div class="section two-column-layout">
                 <h1>Configure config.json Settings</h1>
-                <span>Configuration file controls the behaviour of the computer on which it is installed. Computers in
+                <span class="big-text">Configuration file controls the behaviour of the computer on which it is
+                    installed. Computers in
                     different areas (e.g. main floor, lab, classroom) can have different have config files to provide
                     different setting or different “three extra buttons”. See instructions for the location for the
                     config.json file or PCs or Macs.</span>
@@ -48,14 +50,16 @@
                 <label>
                     <div class="label-text">
                         Organization Name
-                        <span class="required">Required</span>
-                        <small>This can be any name you would like to identify your organization. If you will be using
-                            different config files for different groups of computers – you might want to put the
-                            location
-                            that this config.file will be used in here so you can identify which config file this is.
-                            You
-                            can use any characters except these three characters " or \
-                        </small>
+                        <small class="required">Required</small>
+                        <span class="big-text">This can be any name you would like to use to identify your
+                            organization.</span>
+                        <span class="small-text">If you will be using different config files for different groups of
+                            computers – you might want to append the location that
+                            this config.file will be used on the end of this name so you can identify which config file
+                            this is.
+                            <span class="red-text">You can use any
+                                characters except these two characters &quot; or \</span>
+                        </span>
                     </div>
                     <div class="control-container">
                         <input type="text" id="organizationName" placeholder="organization name">
@@ -69,13 +73,13 @@
                     <div class="label-text">
                         Site ID
                         <span class="required">Required</span>
-                        <small>For Site ID use letters or numbers only. No symbols or spaces.
-                            If organization wants separate cumulative counts for different areas (e.g. wants to track
-                            usage
-                            in classrooms, library, and other places separately ) – then provide different site ids in
-                            the
-                            config files in those different areas.
-                        </small>
+                        <span class="big-text">For the Site ID use <u>letters or numbers only.</u> No symbols or
+                            spaces.</span>
+                        <span class="small-text">If organization wants separate cumulative counts for different areas
+                            (e.g. wants to separately track general use of
+                            Morphic in classrooms, vs library, or other places) – then provide different site ids in the
+                            config files in those different
+                            areas.</span>
                     </div>
                     <div class="control-container">
                         <input type="text" id="telemetry.siteId" pattern="[A-Za-z0-9]*" placeholder="e.g. umd">
@@ -88,8 +92,17 @@
                 <label>
                     <div class="label-text">
                         Automatically Run Mophic on System Log In.
-                        <small>Causes Morphic to start up automatically when the OS is booted.
-                        </small>
+                        <span class="big-text">Causes Morphic to start up automatically when the OS is booted.</span>
+                        <div class="inline-help">
+                            <span class="small-text">This only causes the small icon in the system tray to appear. There
+                                is a separate setting for whether the MorphicBar
+                                is visible as startup or not.
+                            </span>
+                            <span class="red-text">Strongly recommend keeping this enabled.</span>
+                            <span class="small-text"> It is unlikely that morphic will be used
+                                much without this being on.</span>
+                        </div>
+
                     </div>
                     <div class="control-container">
                         <input type="checkbox" id="features.autorunAfterLogin.enabled" checked>
@@ -98,8 +111,7 @@
                 <label id="features.autorunAfterLogin.scope.label" class="dependent-option">
                     <div class="label-text">
                         Scope of AutoStart
-                        <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sed.
-                        </small>
+                        <span class="big-text">Usually “All Local Users” for shared-use or public computers.</span>
                     </div>
                     <div class="control-container">
                         <select name="features.autorunAfterLogin.scope" id="features.autorunAfterLogin.scope">
@@ -112,12 +124,13 @@
                 <label>
                     <div class="label-text">
                         Enable AT Use Counter
-                        <small>Allows collection of anonymous use of accessibility features to better understand which
-                            features are of use at institution. NO user information is gathered. In fact, no information
-                            on
-                            even which computer was used. Only gathers cumulative counts for the entire enterprise site.
-                            Strongly recommend keeping this enabled.
-                        </small>
+                        <span class="big-text">Allows collection of anonymous use of accessibility features to better
+                            understand which features are of
+                            use at institution. NO user information is gathered.<span>
+                                <span class="small-text">In fact, no information is gathered on even which computer was
+                                    used. Only gathers cumulative counts for the entire
+                                    enterprise site – like a doormat with a counter built in.</span>
+                                <span class="red-text">Strongly recommend keeping this enabled.</span>
                     </div>
                     <div class="control-container">
                         <input type="checkbox" id="features.atUseCounter.enabled">
@@ -127,20 +140,23 @@
                 <label>
                     <div class="label-text">
                         Delay Morphic Appearance to gather Baseline Date
-                        <small>It is useful to be able to say how much Morphic has improved user access to accessibility
-                            features. To do this you can delay the appearance of the MorphicBar by 3 weeks or so. Then
-                            when
-                            you install Morphic, it will begin measuring the use of the built in accessibility features
-                            right away – but delay the appearance of Morphic until the date you set below. On that date
-                            (at
-                            midnight + 1 minute) the MorphicBar will show up on all computers at the same time. You can
-                            then
-                            see from the telemetry how much Morphic has helped. To date it has yielded increases of
-                            700%,
-                            10,000% and more. <strong>This feature automatically turns on "Enable AT Use Counter"
-                                (telemetry) above since that is how it
-                                works.</strong>
-                        </small>
+                        <span class="big-text">This causes the MorphicBar to not show up when Morphic is installed, but
+                            to instead automatically appear
+                            at a later date.</span>
+                        <span class="small-text">This allows us (and you) to see how much the built-in accessibility
+                            features in the computer are used <b><u>before</u></b> the
+                            MorphicBar appears. Then, when the MorphicBar automatically starts showing –it is possible
+                            to clearly see how much
+                            the MorphicBar helps people discover and use the accessibility features by comparing
+                            (anonymous) use of the
+                            accessibility features across your organization before and after. <b>This feature
+                                automatically
+                                turns on &quot; Anonymous
+                                AT Use Counter &quot; above since that is how it works.</b><span>
+                                <span class="red-text">Request turning this ON because it helps us (and you) in
+                                    evaluation and proving the impact and value of Morphic installation.</span>
+                                <span class="small-text">To date, it has shown increases of 700%,
+                                    10,000% and more.</span>
                     </div>
                     <div class="control-container">
                         <input type="checkbox" id="enableDelayMorphic">
@@ -149,7 +165,8 @@
                 <label id="delayMorphicDateLabel" class="dependent-option">
                     <div class="label-text">
                         Date to show MorphicBar
-                        <small>Select a date to show the MorphicBar.</small>
+                        <span class="big-text">Select a date for the MorphicBar to appear. Usually, 21 to 28 days
+                            later</span>
                     </div>
 
                     <div class="control-container date-input-container">
@@ -163,16 +180,18 @@
                         <small><b id="atOnDemandWarning">This option is in beta testing and is not generally available
                                 yet.</b>
                             <br>
-                            This option allows Users to be able to use their own AT they (or the enterprise) has a
-                            licence
-                            for safely on any enterprise computers. When a user signs in and AT-on-Demand is enabled,
-                            the
-                            computer will automatically pull a clean, sterile copy of the users software from the
-                            location
-                            below on the IT DEPT controlled server and install it on the computer, then set it up for
-                            the
-                            user. When they are done it disappears. For more see <a href="https://morphic.org/atod"
-                                target="_blank">https://morphic.org/atod</a>
+                            <span class="small-text">
+                                This option will allow AT users to <b><u><i></i>safely and securely</u></b> use their AT
+                                on any computer
+                                Morphic and AToD are enabled
+                                on. When a user signs in (and AT-on-Demand is enabled), the computer will automatically
+                                pull a clean, sterile copy of
+                                the AT the person uses from <b>a location below on an IT DEPT controlled computer </b>
+                                and
+                                install it on the computer --
+                                and then set it up for the user. When the user is done it disappears. For more see <a
+                                    href="https://morphic.org/atod" target="_blank">https://morphic.org/atod</a>
+                            </span>
                         </small>
                     </div>
                     <div class="control-container">
@@ -189,16 +208,18 @@
                 <label>
                     <div class="label-text">
                         Enable Custom MorphicBars
-                        <small>It is possible for users to have their own custom MorphicBars that they have saved to the
-                            cloud. The setting enables them to use a custom MorphicBar on the enterprise computers.
-                            These
-                            custom MorphicBars contain only standard MorphicBar functions and custom URLs for the user.
-                            These MorphicBars automatically disappear and the standard enterprise MorphicBar appears
-                            when
-                            the user signs out or the computer is rebooted. Setting this feature automatically turn on
-                            the
-                            next feature "allowing users to sign in" because that is required for this feature to work.
-                        </small>
+                        <span class="big-text">It is possible for users to have their own custom MorphicBars that they
+                            have saved to the cloud. This
+                            setting enables them to use their custom MorphicBar on the enterprise computers.</span>
+                        <span class="small-text">
+                            These custom MorphicBars contain only standard MorphicBar functions and custom URLs (Website
+                            links) for the
+                            user. These MorphicBars automatically disappear and the standard enterprise MorphicBar
+                            appears when the user
+                            signs out or the computer is rebooted. <b>This requires no work on the part of the
+                                institution
+                                and should be left ON.</b>
+                        </span>
                     </div>
                     <div class="control-container">
                         <input type="checkbox" id="features.customMorphicBars.enabled" checked>
@@ -209,14 +230,16 @@
                 <label>
                     <div class="label-text">
                         Enable Check for Updates with each Launch
-                        <small>This should be left OFF for most enterprise installations. It would cause an alert to pop
-                            up
-                            when the computer is booted and there is an update available. Unless users are able to
-                            install
-                            their own software this would have no function. IT depts will be alerted when updates are
-                            available and they can make them when they deem it appropriate in the same manner they
-                            update
-                            everything else on the computers they control.
+                        <small><b id="checkForUpdatesWarning">This option is in beta testing and is not generally
+                                available
+                                yet.</b>
+                            <span class="small-text">
+                                On computers where users <b> install software and updates</b>, this provides an alert
+                                whenever an update is
+                                available. For enterprise (or any other computers) <b><i>where users cannot install
+                                        updates</i></b> – this would pop up a
+                                ‘notice of update’ that they can do nothing about.
+                            </span>
                         </small>
                     </div>
                     <div class="control-container">
@@ -227,37 +250,15 @@
                 <label>
                     <div class="label-text">
                         MorphicBar Visibility after Login
-                        <small>
-                            <span class="description-short" id="visibility-short">There are three settings for this.
-                                <b>Show</b>
-                                causes the MorphicBar to show up on login. <b>Hide</b> causes the MorphicBar to be
-                                hidden on
-                                login.
-                                <b>Restore</b> – causes the MorphicBar to assume the same state as when a user signed
-                                out.</span>
-                            <span class="description-full" id="visibility-full">There are three
-                                settings for this. <b>Show</b> causes the MorphicBar to show up on login. <b>Hide</b>
-                                causes
-                                the
-                                MorphicBar to be hidden on login. <b>Restore</b> – causes the MorphicBar to assume the
-                                same
-                                state
-                                as when a user signed out. The Restore feature is only useful on personally assigned
-                                computers that do not reset after users and not generally of use on shared-use
-                                enterprise
-                                computers. We very highly recommend this be set to <b>Show</b>. For those who do not
-                                want
-                                the
-                                MorphicBar, it can be easily dismissed by clicking on the x in the upper right-hand
-                                corner
-                                of the MorphicBar. We have found that not having the MorphicBar show on startup results
-                                in
-                                very little if any use of Morphic and consequently the same very low level of awareness
-                                and
-                                use of the accessibility features built into the computer. (And very little benefit from
-                                installing Morphic.)</span>
-                            <a href="#" class="see-more-link" id="visibility-toggle">See more</a>
-                        </small>
+                        <span class="big-text">There are three settings for this. <b>SHOW</b> causes the MorphicBar to
+                            always show up on login. <b>HIDE</b> causes
+                            the MorphicBar to be always hidden on login. <b>RESTORE</b> – causes the MorphicBar to
+                            assume the same
+                            state as when a user signed out.</span>
+                        <span class="red-text">It is recommended this always be SHOW.</span>
+                        <span class="small-text">It is easy for a user to hide the bar if they don’t need it. However,
+                            in places where the MorphicBar is <b>hidden</b>, usage is
+                            extremely low, with few discovering or using it.</span>
                     </div>
                     <div class="control-container">
                         <select name="morphicBar.visibilityAfterLogin" id="morphicBar.visibilityAfterLogin">
@@ -271,34 +272,15 @@
                 <label>
                     <div class="label-text">
                         MorphicBar Default Location
-                        <small>
-                            <span class="description-short" id="location-short">Users can move the MorphicBar themselves
-                                to
-                                any corner of any screen they want to. This setting however determines where the
-                                MorphicBar
-                                will show up when Morphic is started. The default location is bottomTrailing which would
-                                be
-                                the bottom-right-hand corner for a left-to-right language. However, some libraries use
-                                that
-                                corner for their sign in or timed use controls. So this setting is provided to allow the
-                                MorphicBar to start in another corner of the main screen on startup.</span>
-                            <span class="description-full" id="location-full">Users can move the
-                                MorphicBar themselves to any corner of any screen they want to. This setting however
-                                determines where the MorphicBar will show up when Morphic is started. The default
-                                location
-                                is bottomTrailing which would be the bottom-right-hand corner for a left-to-right
-                                language.
-                                However, some libraries use that corner for their sign in or timed use controls. So this
-                                setting is provided to allow the MorphicBar to start in another corner of the main
-                                screen on
-                                startup. The choices are topLeft, topRight, bottomLeft, bottomRight, topLeading,
-                                topTrailing, bottomLeading, bottomTrailing. The leading and trailing options are useful
-                                in
-                                sites that may support multiple languages where things may shift left and right. The
-                                default
-                                is Bottom Trailing.</span>
-                            <a href="#" class="see-more-link" id="location-toggle">See more</a>
-                        </small>
+                        <span class="big-text">Users can move the MorphicBar themselves to any corner of any screen they
+                            want to. This setting
+                            however determines where the MorphicBar will show up when Morphic is started.</span>
+                        <span class="small-text">The default location is bottom-trailing corner (the bottom-right-hand
+                            corner for a left-to-right languages). However,
+                            some libraries use that corner for their sign in or timed-use controls. So this setting is
+                            provided to allow the
+                            MorphicBar to start in another corner of the main screen on startup.</span>
+                        <span class="red-text">Default is bottom-trailing</span>
                     </div>
                     <div class="control-container">
                         <select name="morphicBar.defaultLocation" id="morphicBar.defaultLocation">
@@ -317,13 +299,14 @@
                 <label id="features.resetSettings.label">
                     <div class="label-text">
                         Reset 5 Windows Settings to Default
-                        <small>This was a special setting created for a location that wanted to automatically reset the
+                        <span class="big-text">This was a special setting created by request from a location that wanted
+                            to automatically reset the
                             following Windows settings when the user signs out of Windows: TEXT SIZE(screen scale),
-                            CONTRAST, COLOR, DARKMODE & NIGHTMODE.
-                            This is not needed in most locations because they automatically set things back on reboot
-                            but
-                            can be used if it is needed.
-                        </small>
+                            CONTRAST,
+                            COLOR, DARKMODE &amp; NIGHTMODE.</span>
+                        <span class="small-text">This is not needed in most locations because they automatically set
+                            things back on reboot using DeepFreeze or
+                            another method - but can be used if it is needed. <b>Default is “OFF”.</b></span>
                     </div>
                     <div class="control-container">
                         <input type="checkbox" id="features.resetSettings.enabled">
@@ -332,27 +315,38 @@
                 <!-- Step Navigation -->
                 <div class="step-navigation">
                     <button type="button" class="nav-btn prev-btn" disabled>Previous</button>
-                    <div class="right-buttons">
-                        <button type="button" class="nav-btn clear-btn">Clear</button>
-                        <button type="button" class="nav-btn next-btn">Next</button>
-                    </div>
+                    <button type="button" class="nav-btn clear-btn">Clear</button>
+                    <button type="button" class="nav-btn next-btn">Next</button>
                 </div>
             </div>
         </div>
 
         <!-- Step 2: Customize -->
+        <span id="customize-buttons"></span>
         <div class="step-content" id="step2" style="display: none;">
 
             <div class="section two-column-layout">
                 <h1>Customize Your MorphicBar</h1>
                 <span>Enterprises can customize the MorphicBar with up to three additional buttons via the config file.
-                    You can use the same set across all computers or create location-specific sets (e.g., classrooms, library, labs) by using different config files.</span>
+                    You can use the same set of custom buttons across all your computers or you can create location-
+                    specific sets of 3 buttons (e.g., classrooms, library, labs) by simply using different config files
+                    in
+                    those computers.</span>
                 <br><br>
+                <span>
+                    You can use any combination of pre-defined or custom URL buttons that you like but you can
+                    only add a total of 3 buttons.
+                </span>
+                <br><br>
+                <ol>
+                    <li>to add a button just click the checkmark next to the button (or button type)</li>
+                    <li>then select which position on the bar you would like the button</li>
+                    <li>if you want more than one <b>“Application Button”</b> or <b>“Custom URL button”</b> use the <b>“+ Add Another ______ Button”</b></li>
+                </ol>
 
                 <!-- Predefined Buttons Section -->
                 <div class="application-buttons-section">
-                <h5>Predefined Button Options</h5>
-                <small>Choose to display one tool only once</small>
+                    <h5>Predefined Button Options</h5>
 
                     <div class="button-container">
                         <!-- Predefined Buttons Grid (2x2) -->
@@ -365,8 +359,7 @@
                                     </div>
                                     <div class="button-info">
                                         <h5>USB Open/Eject</h5>
-                                        <small>Allows a user to easily open or eject all USB drives plugged into
-                                            a computer</small>
+                                        <small>Allows a user to easily open or eject all USB drives plugged into a computer</small>
                                         <div class="position-selector-container" id="usb.positionContainer"
                                             style="display: none;">
                                             <label for="usb.position">Position:</label>
@@ -398,9 +391,7 @@
                                     </div>
                                     <div class="button-info">
                                         <h5>Volume</h5>
-                                        <small>Allows a user to easily change the volume and mute (but not the
-                                            microphone
-                                            volume)</small>
+                                        <small>Allows a user to easily change the volume and mute (but not the microphone volume)</small>
                                         <div class="position-selector-container" id="volume.positionContainer"
                                             style="display: none;">
                                             <label for="volume.position">Position:</label>
@@ -496,7 +487,7 @@
                                 </div>
                                 <div class="button-info">
                                     <h5>Predefined Application Button</h5>
-                                    <small>Create a custom button that launches a specific application</small>
+                                    <small>You can add a button that will launch one of a select number of applications with one click</small>
 
                                 </div>
                                 <div class="button-preview-container">
@@ -536,7 +527,7 @@
                             </div>
                         </div>
 
-                       
+
                         <!-- Add Button (Hidden initially) -->
                         <div class="add-button-container" id="addAppButtonContainer" style="display: none;">
                             <button type="button" id="addAppButton" class="add-app-btn">+ Add Another Application
@@ -548,7 +539,6 @@
                     <!-- Custom URL Buttons Section -->
                     <div class="url-buttons-section">
                         <h5>Custom Button Options</h5>
-                        <small>Choose to display any one tool upto 3 times</small>
 
                         <!-- Custom URL Button 1 -->
                         <div class="predefined-button" id="customUrl1">
@@ -558,8 +548,7 @@
                                 </div>
                                 <div class="button-info">
                                     <h5>Custom URL Button</h5>
-                                    <small>Create a custom button that opens a specific website or web
-                                        application</small>
+                                    <small>Create your own Custom buttons to open any web page (local or internet) with one click</small>
                                 </div>
                                 <div class="button-preview-container">
                                     <div class="preview-button url-button" id="customUrl1Preview">
@@ -592,7 +581,8 @@
                                         <label><b>URL:</b>
                                             <div class="url-input-wrapper">
                                                 <input type="url" id="customUrl1.url" placeholder="https://example.com">
-                                                <span class="url-status-indicator" id="customUrl1Status" aria-hidden="true"></span>
+                                                <span class="url-status-indicator" id="customUrl1Status"
+                                                    aria-hidden="true"></span>
                                                 <button type="button" class="test-url-btn" id="testUrl1Btn"
                                                     title="Test URL status">Test URL</button>
                                                 <button type="button" class="view-url-btn" id="viewUrl1Btn"
@@ -619,7 +609,8 @@
 
                         <!-- Add URL Button (Hidden initially until first is present) -->
                         <div class="add-button-container" id="addUrlButtonContainer">
-                            <button type="button" id="addUrlButton" class="add-url-btn">+ Add Another URL Button</button>
+                            <button type="button" id="addUrlButton" class="add-url-btn">+ Add Another URL
+                                Button</button>
                         </div>
 
                     </div><!-- /.url-buttons-section -->
@@ -630,84 +621,83 @@
                 <!-- MorphicBar Preview Section -->
                 <div class="morphic-bar-preview-section">
                     <h5>MorphicBar Preview</h5>
-                    <small>Preview of how your custom buttons will appear on the actual MorphicBar:</small>
+                    <small>See what your MorphicBar will look like –as you build it</small>
 
                     <div class="morphic-bar-preview">
-                    <div class="morphic-bar-container">
-                        <!-- Custom buttons will be inserted here -->
-                        <div class="custom-buttons-container" id="customButtonsContainer">
-                            <!-- Buttons will be dynamically added here -->
-                        </div>
-                        <div class="spacer"></div>
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Text Size</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">+</button>
-                                    <button class="split-button right">-</button>
+                        <div class="morphic-bar-container">
+                            <!-- Custom buttons will be inserted here -->
+                            <div class="custom-buttons-container" id="customButtonsContainer">
+                                <!-- Buttons will be dynamically added here -->
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Text Size</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">+</button>
+                                        <button class="split-button right">-</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Magnifier</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">Show</button>
-                                    <button class="split-button right">Hide</button>
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Magnifier</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">Show</button>
+                                        <button class="split-button right">Hide</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Snip</div>
+                                    <div class="split-button-container">
+                                        <button class="normal-button">Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Read Selected</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">&#9654;</button>
+                                        <button class="split-button right">&#x23f8;</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Contrast & color</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">Contrast</button>
+                                        <button class="split-button middle">Color</button>
+                                        <button class="split-button middle">Dark</button>
+                                        <button class="split-button right">Night</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Snip</div>
-                                <div class="split-button-container">
-                                    <button class="normal-button">Copy</button>
-                                </div>
-                            </div>
+                        <!-- Button source information and conflicts-->
+                        <div class="button-sources" id="buttonSources">
+                            <!-- Button source info and conflicts will be shown here -->
                         </div>
-
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Read Selected</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">&#9654;</button>
-                                    <button class="split-button right">&#x23f8;</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Contrast & color</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">Contrast</button>
-                                    <button class="split-button middle">Color</button>
-                                    <button class="split-button middle">Dark</button>
-                                    <button class="split-button right">Night</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Button source information and conflicts-->
-                    <div class="button-sources" id="buttonSources">
-                        <!-- Button source info and conflicts will be shown here -->
-                    </div>
                     </div>
                 </div><!-- /.morphic-bar-preview-section -->
 
                 <!-- Step Navigation -->
                 <div class="step-navigation">
                     <button type="button" class="nav-btn prev-btn">Previous</button>
-                    <div class="right-buttons">
-                        <button type="button" class="nav-btn clear-btn">Clear</button>
-                        <button type="button" class="nav-btn next-btn">Next</button>
-                    </div>
+                    <button type="button" class="nav-btn clear-btn">Clear</button>
+                    <button type="button" class="nav-btn next-btn">Next</button>
                 </div>
             </div>
         </div>
 
         <!-- Step 3: Download -->
+        <span id="review-and-download"></span>
         <div class="step-content" id="step3" style="display: none;">
 
 
@@ -723,79 +713,78 @@
                 <!-- MorphicBar Preview Section -->
                 <div class="morphic-bar-preview-section">
                     <h5>MorphicBar Preview</h5>
-                    <small>Preview of how your custom buttons will appear on the actual MorphicBar:</small>
+                    <small>This is what your Morphi`cBar will look like</small>
 
                     <div class="morphic-bar-preview">
-                    <div class="morphic-bar-container">
-                        <!-- Custom buttons will be inserted here -->
-                        <div class="custom-buttons-container" id="topCustomButtonsContainer">
-                            <!-- Buttons will be dynamically added here -->
-                        </div>
-                        <div class="spacer"></div>
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Text Size</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">+</button>
-                                    <button class="split-button right">-</button>
+                        <div class="morphic-bar-container">
+                            <!-- Custom buttons will be inserted here -->
+                            <div class="custom-buttons-container" id="topCustomButtonsContainer">
+                                <!-- Buttons will be dynamically added here -->
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Text Size</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">+</button>
+                                        <button class="split-button right">-</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Magnifier</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">Show</button>
-                                    <button class="split-button right">Hide</button>
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Magnifier</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">Show</button>
+                                        <button class="split-button right">Hide</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Snip</div>
+                                    <div class="split-button-container">
+                                        <button class="normal-button">Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Read Selected</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">&#9654;</button>
+                                        <button class="split-button right">&#x23f8;</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button-preview-container">
+                                <div class="preview-button-group">
+                                    <div class="button-label">Contrast & color</div>
+                                    <div class="split-button-container">
+                                        <button class="split-button left">Contrast</button>
+                                        <button class="split-button middle">Color</button>
+                                        <button class="split-button middle">Dark</button>
+                                        <button class="split-button right">Night</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Snip</div>
-                                <div class="split-button-container">
-                                    <button class="normal-button">Copy</button>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Button source information and conflicts-->
+                        <div class="button-sources" id="topButtonSources">
+                            <!-- Button source info and conflicts will be shown here -->
 
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Read Selected</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">&#9654;</button>
-                                    <button class="split-button right">&#x23f8;</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="button-preview-container">
-                            <div class="preview-button-group">
-                                <div class="button-label">Contrast & color</div>
-                                <div class="split-button-container">
-                                    <button class="split-button left">Contrast</button>
-                                    <button class="split-button middle">Color</button>
-                                    <button class="split-button middle">Dark</button>
-                                    <button class="split-button right">Night</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
-
-                    <!-- Button source information and conflicts-->
-                    <div class="button-sources" id="topButtonSources">
-                        <!-- Button source info and conflicts will be shown here -->
-
-                    </div>
-                    </div>
-                </div><!-- /.morphic-bar-preview-section -
+                </div><!-- /.morphic-bar-preview-section -->
 
                 <!-- Step Navigation -->
                 <div class="step-navigation">
                     <button type="button" class="nav-btn prev-btn">Previous</button>
-                    <div class="right-buttons">
-                        <button type="button" id="download" class="download-btn">Download config.json</button>
-                    </div>
+                    <span></span>
+                    <button id="download" class="nav-btn download-btn">Download config.json</button>
                 </div>
             </div>
         </div>
@@ -804,6 +793,19 @@
         <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="script.js"></script>
+    </div>
+
+    <!-- Clear Confirmation Modal -->
+    <div id="clearModal" class="modal">
+        <div class="modal-content">
+            <h3>Clear All Settings?</h3>
+            <p>This will reset all settings on this step to their default values. Any changes you've made will be lost.
+            </p>
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn modal-btn-cancel">Cancel</button>
+                <button type="button" class="modal-btn modal-btn-confirm">Clear</button>
+            </div>
+        </div>
     </div>
 </body>
 

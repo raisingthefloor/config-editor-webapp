@@ -30,6 +30,38 @@
     color: #252525;
 }
 
+/* Edit button styling in summary */
+.edit-setting-btn {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 0.25rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+    min-width: 3rem !important;
+    margin: 0 !important;
+}
+
+.edit-setting-btn:hover {
+    background-color: #2c5282 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.edit-setting-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.edit-setting-btn:focus {
+    outline: 2px solid #3182ce !important;
+    outline-offset: 2px !important;
+}
+
 @media (max-width: 768px) {
     .summary-content {
         grid-template-columns: 1fr;
@@ -39,6 +71,13 @@
     .summary-content .label {
         border-bottom: 1px solid #e2e8f0;
         padding-bottom: 0.25rem;
+    }
+
+    /* Make edit buttons larger on mobile for better touch targets */
+    .edit-setting-btn {
+        padding: 0.375rem 0.75rem !important;
+        font-size: 0.875rem !important;
+        min-width: 4rem !important;
     }
 }
 
@@ -102,13 +141,10 @@
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-}
-
-.step:hover {
-    text-decoration: none;
-    color: inherit;
+    /* Wrap number + title without layout shift */
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 3px solid transparent;
 }
 
 .step-number {
@@ -141,9 +177,14 @@
 
 .step.active .step-title {
     color: var(--primary-color);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 16px; /* Larger text for current step */
     transition: font-size 0.3s ease;
+}
+
+/* Rounded border highlight for the active/current step (number + title) */
+.step.active {
+    border-color: var(--primary-color);
 }
 
 .step.completed .step-number {
@@ -202,12 +243,13 @@
 
 /* Step Navigation */
 .step-navigation {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     margin-top: 40px;
     padding-top: 30px;
     border-top: 1px solid #e0e0e0;
+    gap: 10px;
 }
 
 .right-buttons {
@@ -245,6 +287,7 @@
     background-color: white;
     color: var(--primary-color);
     border: 2px solid var(--primary-color);
+    justify-self: start;
 }
 
 .prev-btn:hover {
@@ -256,6 +299,7 @@
     background-color: white;
     color: var(--primary-color);
     border: 2px solid var(--primary-color);
+    justify-self: center;
 }
 
 .clear-btn:hover {
@@ -264,13 +308,7 @@
 }
 
 .next-btn {
-    margin-left: auto;
-}
-
-/* When there's only one button, center it or align appropriately */
-.step-navigation .nav-btn:only-child {
-    margin-left: auto;
-    margin-right: auto;
+    justify-self: end;
 }
 
 h2 {
@@ -377,6 +415,47 @@ body {
     font-size: 0.75rem;
     font-weight: 600;
     margin-left: 0.25rem;
+}
+
+/* Text utility classes */
+.label-text {
+	font-size: 1.1667rem; /* 14pt -> ~18.67px -> 1.1667rem */
+}
+
+.big-text {
+	color: #000;
+	font-size: 0.9167rem; /* 11pt -> ~14.67px -> 0.9167rem */
+    font-weight: 500;
+    opacity: inherit;
+}
+
+.small-text {
+	color: #000;
+	font-size: 0.75rem; /* 9pt -> 12px -> 0.75rem */
+    font-weight: 500;
+    opacity: inherit;
+}
+
+.red-text {
+	color: #e53e3e; /* match .required color */
+	font-size: 0.75rem; /* 9pt */
+    font-weight: 600;
+    opacity: inherit;
+}
+
+/* Helper text layout inside label-text */
+.label-text .big-text {
+	display: block;
+	margin-top: 0.25rem;
+}
+
+
+/* Stack helper lines one below the other inside label-text */
+.label-text .small-text,
+.label-text .red-text {
+	display: block;
+	margin: 0.125rem 0 0;
+	line-height: 1.2;
 }
 
 
@@ -603,11 +682,21 @@ small {
 
 }
 
-/* Small text in two-column layout should use 80% of the full container width */
-.two-column-layout small {
+/* Small text in two-column layout should use 100% width inside label area */
+.two-column-layout .small-text {
     width: 100%;
     max-width: none;
     position: relative;
+}
+
+/* Keep "Required" inline next to the title label */
+.two-column-layout .label-text > small.required,
+.two-column-layout .label-text > .required {
+	display: inline-block;
+	width: auto;
+	max-width: none;
+	margin-left: 0.5rem;
+	position: static;
 }
 
 
@@ -681,9 +770,9 @@ small {
 }
 
 /* Small text width for checkbox labels */
-.two-column-layout label:has(input[type="checkbox"]) small {
-    width: 80%;
-    max-width: 80%;
+.two-column-layout label:has(input[type="checkbox"]) .small-text {
+    width: 100%;
+    max-width: none;
 }
 
 /* Input styling for two-column layout */
@@ -727,6 +816,12 @@ small {
     font-size: 0.875rem;
 }
 
+/* Ensure disabled state cascades to all child elements */
+.dependent-option[style*="opacity: 0.6"] .label-text,
+.dependent-option[style*="opacity: 0.6"] .label-text * {
+    opacity: 0.6;
+}
+
 .dependent-option label {
     margin-bottom: 0.75rem;
 }
@@ -748,10 +843,11 @@ option:disabled {
 /* Disabled form elements styling - Grayed out */
 select:disabled,
 input:disabled {
-    background-color: #f7fafc;
-    color: #a0aec0;
-    cursor: not-allowed;
-    opacity: 0.6;
+    background-color: #f7fafc !important;
+    color: #a0aec0 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    pointer-events: none !important;
 }
 
 /* Button styling */
@@ -778,8 +874,25 @@ button:disabled {
 }
 
 /* Primary button styling - Blue */
-.btn-primary,
-#download,
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+}
+
+.btn-primary:hover {
+    background-color: #2c5282;
+    transform: translateY(-0.0625rem);
+    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
+}
+
+/* File input button styling */
 .file-input-btn {
     background-color: var(--primary-color);
     color: white;
@@ -787,16 +900,12 @@ button:disabled {
     border-radius: 2rem;
 }
 
-.btn-primary:hover,
-#download:hover,
 .file-input-btn:hover {
     background-color: #2c5282;
     transform: translateY(-0.0625rem);
     box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
 }
 
-.btn-primary:active,
-#download:active,
 .file-input-btn:active {
     transform: translateY(0);
     box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
@@ -847,7 +956,8 @@ input[type="file"] {
     color: #000;
 }
 
-#atOnDemandWarning {
+#atOnDemandWarning
+#checkForUpdatesWarning {
     color: #e53e3e;
 }
 
@@ -858,30 +968,33 @@ input[type="file"] {
 }
 
 /* Download button styling */
-#download {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    min-width: 12.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.25rem 0.5rem rgba(49, 130, 206, 0.3);
-    transition: all 0.3s ease;
-    font-weight: 600;
+#download.download-btn,
+button#download {
+    background-color: var(--primary-color);
     color: white;
     border: none;
+    padding: 0.8rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    justify-self: end;
 }
 
-#download:hover:not(:disabled) {
-    transform: translateY(-0.125rem);
-    box-shadow: 0 0.375rem 0.75rem rgba(49, 130, 206, 0.4);
+#download.download-btn:hover:not(:disabled),
+button#download:hover:not(:disabled) {
+    background-color: #3a5068;
+    transform: translateY(-1px);
 }
 
-#download:disabled {
-    background: #a0aec0;
+#download.download-btn:disabled,
+button#download:disabled {
+    background-color: #ccc;
+    color: #000000;
     cursor: not-allowed;
     transform: none;
-    box-shadow: none;
-    opacity: 0.6;
 }
 
 
@@ -1282,10 +1395,11 @@ input[type="file"] {
     background: #f7fafc;
     border-radius: 1rem;
     border: 2px solid #e2e8f0;
+    overflow: visible;
 }
 
 .morphic-bar-container {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     background: white;
     border-radius: 0.3125rem;
@@ -1293,24 +1407,68 @@ input[type="file"] {
     border: 1.5px solid #2c3e50;
     min-height: 3.5rem;
     min-width: 31.25rem;
-    max-width: 56.25rem;
+    max-width: 100%;
+    width: 100%;
     margin: 0 auto;
     position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .custom-buttons-container {
     display: flex;
     align-items: center;
     gap: 0.375rem;
-    flex: 1;
+    flex: 0 0 auto;
     margin-right: 0.5rem;
+    min-width: 0;
 }
 
+/* Ensure spacer provides visual separation */
+.morphic-bar-container .spacer {
+    width: 1px;
+    height: 2.5rem;
+    background-color: #e2e8f0;
+    margin: 0 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Custom scrollbar for morphic bar */
+.morphic-bar-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.morphic-bar-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.morphic-bar-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.morphic-bar-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Firefox scrollbar */
+.morphic-bar-container {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* Ensure default buttons don't shrink or wrap */
+.morphic-bar-container .button-preview-container {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
 
 /* Morphic bar styling */
 .morphic-bar-container .preview-button-group,
 .morphic-bar-container .preview-button {
     margin: 0;
+    flex-shrink: 0;
 }
 
 /* Button source information styling */
@@ -2286,4 +2444,110 @@ select:focus-visible {
 @keyframes urlPulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.2); }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.2s ease-in;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h3 {
+    color: var(--primary-color);
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.modal-content p {
+    color: #2d3748;
+    margin: 0 0 1.5rem 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 100px;
+}
+
+.modal-btn-cancel {
+    background-color: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.modal-btn-cancel:hover {
+    background-color: #f7fafc;
+}
+
+.modal-btn-confirm {
+    background-color: #e53e3e;
+    color: white;
+}
+
+.modal-btn-confirm:hover {
+    background-color: #c53030;
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .modal-btn {
+        width: 100%;
+    }
 }
