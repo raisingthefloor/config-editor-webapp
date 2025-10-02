@@ -545,18 +545,19 @@ function updateSettingsSummary() {
 
     // Display application buttons first
     applicationButtons.forEach((button, index) => {
-        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set', 2, `customApp${index + 1}.enabled`);
-    });
-
-    // Add horizontal line if both application and URL buttons exist
-    if (applicationButtons.length > 0 && urlButtons.length > 0) {
         const hr = document.createElement('hr');
         hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
         summaryContent.appendChild(hr);
-    }
+        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set', 2, `customApp${index + 1}.enabled`);
+    });
+
+    
 
     // Display URL buttons
     urlButtons.forEach((button, index) => {
+        const hr = document.createElement('hr');
+        hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
+        summaryContent.appendChild(hr);
         createSettingRow(`Custom URL Button ${index + 1} Text`, button.label || 'Not set', 2, `customUrl${index + 1}.enabled`);
         createSettingRow(`Custom URL Button ${index + 1} Tooltip Header`, button.tooltipHeader || 'Not set', 2, `customUrl${index + 1}.enabled`);
         createSettingRow(`Custom URL Button ${index + 1} Tooltip Text`, button.tooltipText || 'Not set', 2, `customUrl${index + 1}.enabled`);
@@ -1957,74 +1958,169 @@ function populateUI(config) {
 
 //Generates and downloads the final config.json file
 
-// Function to generate and download PDF using Print.js and html2canvas
+// Function to generate and download PDF using jsPDF and html2canvas
 async function generatePDF() {
-    const step3Element = document.getElementById('step3');
-    const morphicBarPreview = step3Element.querySelector('.morphic-bar-preview');
-    const downloadSection = step3Element.querySelector('.download-section');
-    const navSection = step3Element.querySelector('.step-navigation');
-    let tempImage = null;
-
-    // A single cleanup function to restore the original state
-    const cleanup = () => {
-        if (morphicBarPreview) morphicBarPreview.style.display = '';
-        if (downloadSection) downloadSection.style.display = '';
-        if (navSection) navSection.style.display = '';
-        if (tempImage) tempImage.remove();
-    };
-
     try {
-        if (!step3Element || !morphicBarPreview || !downloadSection || !navSection) {
+        const { jsPDF } = window.jspdf;
+        const step3Element = document.getElementById('step3');
+        const morphicBarPreview = step3Element.querySelector('.morphic-bar-preview');
+        const summaryContent = document.getElementById('settingsSummary');
+
+        if (!morphicBarPreview || !summaryContent) {
             console.error('Required elements for PDF generation not found');
             return false;
         }
 
-        // 1. Generate a high-quality canvas from the MorphicBar preview
-        const canvas = await html2canvas(morphicBarPreview, {
-            scale: 2, // Use a higher scale for a sharper image
-            useCORS: true,
-            logging: false
-        });
-        const imageDataUrl = canvas.toDataURL('image/png');
+        // Create PDF document (A4 size)
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 15;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = margin;
 
-        // 2. Prepare the document for printing
-        tempImage = document.createElement('img');
-        tempImage.src = imageDataUrl;
-        tempImage.style.width = '100%';
-        tempImage.id = 'temp-morphic-bar-image';
-        
-        morphicBarPreview.style.display = 'none'; // Hide the original HTML preview
-        downloadSection.style.display = 'none';
-        navSection.style.display = 'none';
-        
-        // Insert the new image in place of the original preview
-        morphicBarPreview.parentNode.insertBefore(tempImage, morphicBarPreview);
+        // Add title and date
+        pdf.setFontSize(20);
+        pdf.setTextColor(72, 98, 132); // #486284
+        pdf.text('Morphic Configuration Summary', pageWidth / 2, yPosition, { align: 'center' });
 
-        // 3. Use Print.js to generate the PDF from the modified HTML
-        printJS({
-            printable: 'step3',
-            type: 'html',
-            header: `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h1 style="color: #486284; font-size: 24px;">Morphic Configuration Summary</h1>
-                    <p style="color: #333;">Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
-                </div>
-            `,
-            targetStyles: ['*'],
-            documentTitle: 'Morphic Configuration Summary',
-            onPrintDialogClose: cleanup, // Cleanup when the print dialog is closed
-            onError: (error) => {
-                console.error('Error with Print.js:', error);
-                alert('An error occurred during printing.');
-                cleanup(); // Ensure cleanup happens on error too
+        yPosition += 10;
+        pdf.setFontSize(10);
+        pdf.setTextColor(51, 51, 51);
+        const dateStr = `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`;
+        pdf.text(dateStr, pageWidth / 2, yPosition, { align: 'center' });
+
+        yPosition += 15;
+
+        // Add settings summary with selectable text
+        pdf.setFontSize(16);
+        pdf.setTextColor(72, 98, 132);
+        pdf.text('Settings Summary', margin, yPosition);
+        yPosition += 8;
+
+        // Get all label-value pairs from the summary
+        const labels = summaryContent.querySelectorAll('.label');
+        const values = summaryContent.querySelectorAll('.value');
+
+        pdf.setFontSize(10);
+        const lineHeight = 6;
+        const labelWidth = 80;
+
+        for (let i = 0; i < labels.length; i++) {
+            // Add label (bold) - wrap label text too
+            pdf.setFont('helvetica', 'bold');
+            pdf.setTextColor(60, 60, 60);
+            const labelText = labels[i].textContent + ':';
+            const splitLabel = pdf.splitTextToSize(labelText, labelWidth);
+
+            // Add value (normal) - extract text without "Edit" button text
+            const valueSpan = values[i].querySelector('span');
+            const valueText = valueSpan ? valueSpan.textContent : values[i].textContent.replace('Edit', '').trim();
+            pdf.setFont('helvetica', 'normal');
+            pdf.setTextColor(80, 80, 80);
+            const splitValue = pdf.splitTextToSize(valueText, contentWidth - labelWidth - 5);
+
+            // Calculate the height needed for this row (max of label and value lines)
+            const maxLines = Math.max(splitLabel.length, splitValue.length);
+            const rowHeight = lineHeight * maxLines;
+
+            // Check if we need a new page
+            if (yPosition + rowHeight > pageHeight - margin) {
+                pdf.addPage();
+                yPosition = margin;
             }
+
+            // Add label
+            pdf.setFont('helvetica', 'bold');
+            pdf.setTextColor(60, 60, 60);
+            pdf.text(splitLabel, margin, yPosition);
+
+            // Add value
+            pdf.setFont('helvetica', 'normal');
+            pdf.setTextColor(80, 80, 80);
+            pdf.text(splitValue, margin + labelWidth + 5, yPosition);
+
+            yPosition += rowHeight + 3;
+        }
+
+        // Add some space before Morphic Bar preview
+        yPosition += 10;
+
+        // Check if we need a new page for the Morphic Bar
+        if (yPosition + 60 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Add Morphic Bar preview section title
+        pdf.setFontSize(16);
+        pdf.setTextColor(72, 98, 132);
+        pdf.text('Morphic Bar Preview', margin, yPosition);
+        yPosition += 8;
+
+        // Get the morphic bar container for better capture
+        const morphicBarContainer = morphicBarPreview.querySelector('.morphic-bar-container');
+        const elementToCapture = morphicBarContainer || morphicBarPreview;
+
+        // Ensure the element is visible and has dimensions
+        const rect = elementToCapture.getBoundingClientRect();
+        console.log('Element dimensions:', rect);
+
+        if (rect.width === 0 || rect.height === 0) {
+            console.error('Element has no dimensions:', rect);
+            throw new Error('Morphic Bar preview is not visible');
+        }
+
+        // Capture Morphic Bar as high-quality image
+        const canvas = await html2canvas(elementToCapture, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: true,
+            backgroundColor: '#ffffff',
+            width: rect.width,
+            height: rect.height
         });
+
+        console.log('Canvas created:', { width: canvas.width, height: canvas.height });
+
+        // Validate canvas dimensions
+        if (!canvas || canvas.width === 0 || canvas.height === 0) {
+            console.error('Invalid canvas dimensions');
+            throw new Error('Failed to capture Morphic Bar preview');
+        }
+
+        // Convert to JPEG for better compatibility
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+        // Calculate dimensions with validation
+        const imgWidth = contentWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        console.log('Image dimensions:', { imgWidth, imgHeight });
+
+        // Validate calculated dimensions
+        if (!imgWidth || !imgHeight || imgWidth <= 0 || imgHeight <= 0 || !isFinite(imgWidth) || !isFinite(imgHeight)) {
+            console.error('Invalid image dimensions:', { imgWidth, imgHeight, canvasWidth: canvas.width, canvasHeight: canvas.height });
+            throw new Error('Invalid image dimensions calculated');
+        }
+
+        // Check if image fits on current page
+        if (yPosition + imgHeight > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        pdf.addImage(imgData, 'JPEG', margin, yPosition, imgWidth, imgHeight);
+
+        // Save the PDF
+        const filename = `Morphic_Config_Summary_${new Date().toISOString().split('T')[0]}.pdf`;
+        pdf.save(filename);
 
         return true;
     } catch (error) {
         console.error('Error generating PDF:', error);
-        alert('There was an error preparing the PDF. Please try again.');
-        cleanup(); // Call cleanup if any part of the process fails
+        alert('There was an error generating the PDF. Please try again.');
         return false;
     }
 }
