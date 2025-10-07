@@ -39,7 +39,10 @@
 
 
             <div class="section two-column-layout">
-                <h1>Configure config.json Settings</h1>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <h1>Configure config.json Settings</h1>
+                    <button type="button" id="toggleHelpText" class="toggle-help-btn">Hide help text</button>
+                </div>
                 <span class="big-text">Configuration file controls the behaviour of the computer on which it is
                     installed. Computers in
                     different areas (e.g. main floor, lab, classroom) can have different have config files to provide
@@ -133,7 +136,7 @@
                                 <span class="red-text">Strongly recommend keeping this enabled.</span>
                     </div>
                     <div class="control-container">
-                        <input type="checkbox" id="features.atUseCounter.enabled">
+                        <input type="checkbox" id="features.atUseCounter.enabled" checked>
                     </div>
                 </label>
                 <hr>
@@ -174,7 +177,11 @@
                     </div>
                 </label>
                 <hr>
+                
+
+                <!-- AT-on-Demand feature temporarily commented out
                 <label>
+
                     <div class="label-text">
                         Enable AT-on-Demand (Windows Only)
                         <small><b id="atOnDemandWarning">This option is in beta testing and is not generally available
@@ -198,6 +205,8 @@
                         <input type="checkbox" id="features.atOnDemand.enabled" disabled>
                     </div>
                 </label>
+                -->
+                
             </div>
 
             <div class="section two-column-layout">
@@ -250,9 +259,9 @@
                 <label>
                     <div class="label-text">
                         MorphicBar Visibility after Login
-                        <span class="big-text">There are three settings for this. <b>SHOW</b> causes the MorphicBar to
-                            always show up on login. <b>HIDE</b> causes
-                            the MorphicBar to be always hidden on login. <b>RESTORE</b> – causes the MorphicBar to
+                        <span class="big-text">There are three settings for this.<br> <b>SHOW</b> causes the MorphicBar to
+                            always show up on login. <br> <b>HIDE</b> causes
+                            the MorphicBar to be always hidden on login.<br> <b>RESTORE</b> – causes the MorphicBar to
                             assume the same
                             state as when a user signed out.</span>
                         <span class="red-text">It is recommended this always be SHOW.</span>
@@ -301,9 +310,8 @@
                         Reset 5 Windows Settings to Default
                         <span class="big-text">This was a special setting created by request from a location that wanted
                             to automatically reset the
-                            following Windows settings when the user signs out of Windows: TEXT SIZE(screen scale),
-                            CONTRAST,
-                            COLOR, DARKMODE &amp; NIGHTMODE.</span>
+                            following Windows settings when the user signs out of Windows:<br> TEXT SIZE(screen scale),
+                            CONTRAST, COLOR, DARKMODE &amp; NIGHTMODE.</span>
                         <span class="small-text">This is not needed in most locations because they automatically set
                             things back on reboot using DeepFreeze or
                             another method - but can be used if it is needed. <b>Default is “OFF”.</b></span>

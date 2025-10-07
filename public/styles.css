@@ -257,6 +257,34 @@
     gap: 10px;
 }
 
+.toggle-help-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+/* Align the Help toggle button to the right within its flex container */
+#toggleHelpText {
+    margin-left: auto;
+}
+
+.toggle-help-btn:hover {
+    background-color: #3a5068;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-help-btn:active {
+    transform: translateY(0);
+}
+
 .nav-btn {
     background-color: var(--primary-color);
     color: white;
@@ -956,7 +984,8 @@ input[type="file"] {
     color: #000;
 }
 
-#atOnDemandWarning
+/* AT-on-Demand feature temporarily commented out
+#atOnDemandWarning */
 #checkForUpdatesWarning {
     color: #e53e3e;
 }

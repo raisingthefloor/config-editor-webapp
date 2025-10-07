@@ -523,8 +523,9 @@ function updateSettingsSummary() {
         createSettingRow('Show Morphic Bar On', 
             document.getElementById('hideMorphicAfterLoginUntil').value || 'Not set', 1, 'hideMorphicAfterLoginUntil');
     }
-    createSettingRow('Enable AT-on-Demand (Available for Windows Only)', 
-        document.getElementById('features.atOnDemand.enabled').checked ? 'True' : 'False', 1, 'features.atOnDemand.enabled');
+    // AT-on-Demand feature temporarily commented out
+    // createSettingRow('Enable AT-on-Demand (Available for Windows Only)', 
+    //     document.getElementById('features.atOnDemand.enabled').checked ? 'True' : 'False', 1, 'features.atOnDemand.enabled');
     createSettingRow('Enable Custom MorphicBars', 
         document.getElementById('features.customMorphicBars.enabled').checked ? 'True' : 'False', 1, 'features.customMorphicBars.enabled');
     createSettingRow('Enable Check for Updates with each Launch', 
@@ -674,10 +675,10 @@ const defaultValues = {
         'telemetry.siteId': '',
         'features.autorunAfterLogin.enabled': true,
         'features.autorunAfterLogin.scope': 'allLocalUsers',
-        'features.atUseCounter.enabled': false,
+        'features.atUseCounter.enabled': true,
         'enableDelayMorphic': false,
         'hideMorphicAfterLoginUntil': '',
-        'features.atOnDemand.enabled': false,
+        // 'features.atOnDemand.enabled': false, // AT-on-Demand feature temporarily commented out
         'features.customMorphicBars.enabled': true,
         'features.checkForUpdates.enabled': false,
         'morphicBar.visibilityAfterLogin': 'show',
@@ -715,7 +716,7 @@ function clearStep1() {
     document.getElementById('features.autorunAfterLogin.enabled').checked = defaults['features.autorunAfterLogin.enabled'];
     document.getElementById('features.atUseCounter.enabled').checked = defaults['features.atUseCounter.enabled'];
     document.getElementById('enableDelayMorphic').checked = defaults['enableDelayMorphic'];
-    document.getElementById('features.atOnDemand.enabled').checked = defaults['features.atOnDemand.enabled'];
+    // document.getElementById('features.atOnDemand.enabled').checked = defaults['features.atOnDemand.enabled']; // AT-on-Demand feature temporarily commented out
     document.getElementById('features.customMorphicBars.enabled').checked = defaults['features.customMorphicBars.enabled'];
     document.getElementById('features.checkForUpdates.enabled').checked = defaults['features.checkForUpdates.enabled'];
     document.getElementById('features.resetSettings.enabled').checked = defaults['features.resetSettings.enabled'];
@@ -912,6 +913,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        // Toggle help text functionality
+        const toggleHelpTextBtn = document.getElementById('toggleHelpText');
+        if (toggleHelpTextBtn) {
+            let helpTextVisible = true;
+            toggleHelpTextBtn.addEventListener('click', function() {
+                const smallTextElements = document.querySelectorAll('.small-text');
+                helpTextVisible = !helpTextVisible;
+
+                smallTextElements.forEach(element => {
+                    element.style.display = helpTextVisible ? '' : 'none';
+                });
+
+                this.textContent = helpTextVisible ? 'Hide help text' : 'Show help text';
+            });
+        }
+
         // Setup navigation button event listeners
         document.querySelectorAll('.prev-btn').forEach(btn => {
             btn.addEventListener('click', prevStep);
@@ -1011,8 +1028,9 @@ document.getElementById('viewUrl1Btn')?.addEventListener('click', function() {
     viewURL('customUrl1.url');
 });
 
-const checkbox = document.getElementById('features.atOnDemand.enabled');
-checkbox.indeterminate = true;
+// AT-on-Demand feature temporarily commented out
+// const checkbox = document.getElementById('features.atOnDemand.enabled');
+// checkbox.indeterminate = true;
 
 
 // This controls the access to dependent options (scope and reset settings)
@@ -1924,10 +1942,10 @@ function populateUI(config) {
     document.getElementById('organizationName').value = config.organizationName ?? "";
 
     // Features section - handle nested structure
-    document.getElementById('features.atOnDemand.enabled').checked =
-        config.features?.atOnDemand?.enabled ?? false;
+    // document.getElementById('features.atOnDemand.enabled').checked =
+    //     config.features?.atOnDemand?.enabled ?? false; // AT-on-Demand feature temporarily commented out
     document.getElementById('features.atUseCounter.enabled').checked =
-        config.features?.atUseCounter?.enabled ?? false;
+        config.features?.atUseCounter?.enabled ?? true;
     document.getElementById('features.autorunAfterLogin.enabled').checked =
         config.features?.autorunAfterLogin?.enabled ?? true;
     document.getElementById('features.autorunAfterLogin.scope').value =
@@ -2352,9 +2370,9 @@ function downloadConfig() {
         "organizationName": document.getElementById('organizationName').value.trim(),
 
         "features": {
-            "atOnDemand": {
-                "enabled": document.getElementById('features.atOnDemand.enabled').checked
-            },
+            // "atOnDemand": { // AT-on-Demand feature temporarily commented out
+            //     "enabled": document.getElementById('features.atOnDemand.enabled').checked
+            // },
             "atUseCounter": {
                 "enabled": document.getElementById('features.atUseCounter.enabled').checked
             },
@@ -2626,33 +2644,33 @@ function validateUniquePositions() {
             const indicatorContainer = select.parentElement || positionSelector;
 
             if (isEnabled && position && conflicts.has(position)) {
-                if (indicatorContainer) {
-                    // Add conflict indicator if it doesn't exist next to the select
-                    let conflictIndicator = indicatorContainer.querySelector('.conflict-indicator');
-                    if (!conflictIndicator) {
-                        conflictIndicator = document.createElement('span');
-                        conflictIndicator.className = 'conflict-indicator';
-                        conflictIndicator.textContent = 'Conflict';
-                        // Ensure it appears inline next to the select
-                        conflictIndicator.style.display = 'inline-block';
-                        conflictIndicator.style.marginLeft = '6px';
-                        // Insert right after the select element when possible
-                        if (select.nextSibling) {
-                            select.parentElement.insertBefore(conflictIndicator, select.nextSibling);
-                        } else {
-                            indicatorContainer.appendChild(conflictIndicator);
-                        }
+                // Check if conflict indicator already exists in the select's parent container
+                const selectParentContainer = select.parentElement.parentElement;
+                let conflictIndicator = selectParentContainer.querySelector('.conflict-indicator');
+                if (!conflictIndicator) {
+                    conflictIndicator = document.createElement('div');
+                    conflictIndicator.className = 'conflict-indicator';
+                    conflictIndicator.textContent = 'Error: Two or more buttons assigned to the same position.';
+                    // Style to appear below the select
+                    conflictIndicator.style.display = 'block';
+                    conflictIndicator.style.marginTop = '4px';
+                    conflictIndicator.style.color = '#e53e3e';
+                    conflictIndicator.style.fontSize = '0.875rem';
+                    conflictIndicator.style.fontWeight = '500';
+                    // Insert after the select element's parent container
+                    if (select.parentElement.nextSibling) {
+                        selectParentContainer.insertBefore(conflictIndicator, select.parentElement.nextSibling);
+                    } else {
+                        selectParentContainer.appendChild(conflictIndicator);
                     }
                 }
             } else {
-                // Remove conflict indicator if it exists
-                const containersToCheck = [indicatorContainer, positionSelector].filter(Boolean);
-                containersToCheck.forEach(container => {
-                    const conflictIndicator = container.querySelector('.conflict-indicator');
-                    if (conflictIndicator) {
-                        conflictIndicator.remove();
-                    }
-                });
+                // Remove conflict indicator if it exists in the select's parent container
+                const selectParentContainer = select.parentElement.parentElement;
+                const conflictIndicator = selectParentContainer.querySelector('.conflict-indicator');
+                if (conflictIndicator) {
+                    conflictIndicator.remove();
+                }
             }
         }
     });
