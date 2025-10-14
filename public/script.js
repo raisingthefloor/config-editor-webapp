@@ -248,6 +248,7 @@ function updateElementIds(container, oldId, newId) {
     const statusIndicator = container.querySelector('.url-status-indicator');
     if (statusIndicator) {
         statusIndicator.classList.remove('loading', 'success', 'error');
+        statusIndicator.textContent = '';
     }
 }
 
@@ -456,26 +457,8 @@ function updateSettingsSummary() {
     summaryContent.replaceChildren();
 
     // Helper function to create a setting row with edit button
-    function createSettingRow(label, value, stepNumber = null, elementId = null) {
-        const labelDiv = document.createElement('div');
-        labelDiv.className = 'label';
-        labelDiv.textContent = label;
-
-        const valueDiv = document.createElement('div');
-        valueDiv.className = 'value';
-        
-        // Create a container for value and edit button
-        const valueContainer = document.createElement('div');
-        valueContainer.style.display = 'flex';
-        valueContainer.style.alignItems = 'center';
-        valueContainer.style.gap = '0.5rem';
-        valueContainer.style.justifyContent = 'space-between';
-        
-        const valueText = document.createElement('span');
-        valueText.textContent = value;
-        valueContainer.appendChild(valueText);
-        
-        // Add edit button if stepNumber and elementId are provided
+    function createSettingRow(label, value, stepNumber = null, elementId = null, position = null) {
+        // Add edit button first (or empty div if no button)
         if (stepNumber && elementId) {
             const editButton = document.createElement('button');
             editButton.textContent = 'Edit';
@@ -500,10 +483,28 @@ function updateSettingsSummary() {
             editButton.addEventListener('click', function() {
                 navigateToSetting(stepNumber, elementId);
             });
-            valueContainer.appendChild(editButton);
+            summaryContent.appendChild(editButton);
+        } else {
+            // Add empty div to maintain grid alignment when no edit button
+            const emptyDiv = document.createElement('div');
+            summaryContent.appendChild(emptyDiv);
         }
         
-        valueDiv.appendChild(valueContainer);
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'label';
+        labelDiv.style.marginTop = '0.5rem';
+        
+        if (position) {
+            // Format label with position in round brackets for PDF
+            labelDiv.textContent = `${label} (Position ${position})`;
+        } else {
+            labelDiv.textContent = label;
+        }
+
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'value';
+        valueDiv.textContent = value;
+        
         summaryContent.appendChild(labelDiv);
         summaryContent.appendChild(valueDiv);
     }
@@ -526,6 +527,13 @@ function updateSettingsSummary() {
     // AT-on-Demand feature temporarily commented out
     // createSettingRow('Enable AT-on-Demand (Available for Windows Only)', 
     //     document.getElementById('features.atOnDemand.enabled').checked ? 'True' : 'False', 1, 'features.atOnDemand.enabled');
+    
+    // Separator before Default Settings section
+    const defaultSettingsSeparator = document.createElement('hr');
+    defaultSettingsSeparator.style.cssText = 'margin: 20px 0; border: none; border-top: 2px solid #e2e8f0; grid-column: 1 / -1;';
+    summaryContent.appendChild(defaultSettingsSeparator);
+    
+    // Default Settings section
     createSettingRow('Enable Custom MorphicBars', 
         document.getElementById('features.customMorphicBars.enabled').checked ? 'True' : 'False', 1, 'features.customMorphicBars.enabled');
     createSettingRow('Enable Check for Updates with each Launch', 
@@ -537,32 +545,107 @@ function updateSettingsSummary() {
     createSettingRow('Reset 5 Windows Settings to Default', 
         document.getElementById('features.resetSettings.enabled').checked ? 'True' : 'False', 1, 'features.resetSettings.enabled');
 
-    // Custom buttons
-    const customButtons = collectPredefinedButtons();
+    // Custom buttons (for summary display - keep position info)
+    const customButtons = collectPredefinedButtonsForSummary();
 
-    // Separate application buttons and URL buttons
+    // Separate different button types
+    const predefinedButtons = customButtons.filter(button => button.type === 'control' || button.type === 'action');
     const applicationButtons = customButtons.filter(button => button.type === 'application');
     const urlButtons = customButtons.filter(button => button.type === 'link');
 
-    // Display application buttons first
-    applicationButtons.forEach((button, index) => {
-        const hr = document.createElement('hr');
-        hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
-        summaryContent.appendChild(hr);
-        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set', 2, `customApp${index + 1}.enabled`);
+    // Add section separator before custom buttons
+    if (customButtons.length > 0) {
+        const customButtonsSeparator = document.createElement('hr');
+        customButtonsSeparator.style.cssText = 'margin: 20px 0; border: none; border-top: 2px solid #e2e8f0; grid-column: 1 / -1;';
+        summaryContent.appendChild(customButtonsSeparator);
+    }
+
+    // Display predefined buttons first (USB, Volume, Voice, Sign Out)
+    predefinedButtons.forEach((button, index) => {
+        // Add separator before each button except the first one (section separator already added)
+        if (index > 0) {
+            const hr = document.createElement('hr');
+            hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
+            summaryContent.appendChild(hr);
+        }
+        
+        // Map button features to display names and element IDs
+        const buttonMapping = {
+            'usbopeneject': { name: 'USB Open/Eject', elementId: 'usb.enabled' },
+            'volume': { name: 'Volume Control', elementId: 'volume.enabled' },
+            'voice': { name: 'Voice Control', elementId: 'voice.enabled' },
+            'signout': { name: 'Sign Out', elementId: 'signOut.enabled' }
+        };
+        
+        const mapping = buttonMapping[button.feature] || { name: button.feature, elementId: `${button.feature}.enabled` };
+        createSettingRow(`${mapping.name}`, 'Enabled', 2, mapping.elementId, button.position);
     });
 
-    
+    // Display application buttons
+    applicationButtons.forEach((button, index) => {
+        // Add separator before each button (skip first if no predefined buttons)
+        if (predefinedButtons.length > 0 || index > 0) {
+            const hr = document.createElement('hr');
+            hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
+            summaryContent.appendChild(hr);
+        }
+        
+        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set', 2, `customApp${index + 1}.enabled`, button.position);
+    });
 
     // Display URL buttons
     urlButtons.forEach((button, index) => {
-        const hr = document.createElement('hr');
-        hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
-        summaryContent.appendChild(hr);
-        createSettingRow(`Custom URL Button ${index + 1} Text`, button.label || 'Not set', 2, `customUrl${index + 1}.enabled`);
-        createSettingRow(`Custom URL Button ${index + 1} Tooltip Header`, button.tooltipHeader || 'Not set', 2, `customUrl${index + 1}.enabled`);
-        createSettingRow(`Custom URL Button ${index + 1} Tooltip Text`, button.tooltipText || 'Not set', 2, `customUrl${index + 1}.enabled`);
-        createSettingRow(`Custom URL Button ${index + 1} URL`, button.url || 'Not set', 2, `customUrl${index + 1}.enabled`);
+        // Add separator before each URL button (skip first if it's the very first custom button)
+        if (predefinedButtons.length > 0 || applicationButtons.length > 0 || index > 0) {
+            const hr = document.createElement('hr');
+            hr.style.cssText = 'margin: 15px 0; border: none; border-top: 1px solid #ddd; grid-column: 1 / -1;';
+            summaryContent.appendChild(hr);
+        }
+        
+        // Edit button first
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'edit-setting-btn';
+        editButton.addEventListener('click', function() {
+            navigateToSetting(2, `customUrl${index + 1}.enabled`);
+        });
+        summaryContent.appendChild(editButton);
+        
+        // Create header with position
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'label';
+        headerDiv.style.fontWeight = '700';
+        headerDiv.textContent = `Custom URL button #${index + 1} (Position ${button.position})`;
+        
+        summaryContent.appendChild(headerDiv);
+        
+        // Empty value column
+        const emptyValueDiv = document.createElement('div');
+        emptyValueDiv.className = 'value';
+        summaryContent.appendChild(emptyValueDiv);
+        
+        // Create indented sub-items
+        function createSubItem(label, value) {
+            const emptyDiv = document.createElement('div');
+            summaryContent.appendChild(emptyDiv);
+            
+            const subLabelDiv = document.createElement('div');
+            subLabelDiv.className = 'label';
+            subLabelDiv.style.paddingLeft = '2rem';
+            subLabelDiv.style.fontWeight = 'normal';
+            subLabelDiv.textContent = label;
+            summaryContent.appendChild(subLabelDiv);
+            
+            const subValueDiv = document.createElement('div');
+            subValueDiv.className = 'value';
+            subValueDiv.textContent = value;
+            summaryContent.appendChild(subValueDiv);
+        }
+        
+        createSubItem('Button text', button.label || 'Not set');
+        createSubItem('Tooltip header', button.tooltipHeader || 'Not set');
+        createSubItem('Tooltip Help', button.tooltipText || 'Not set');
+        createSubItem('URL', button.url || 'Not set');
     });
 }
 
@@ -636,6 +719,9 @@ function showStep(stepNumber) {
     }
 
     currentStep = stepNumber;
+
+    // Scroll to top of page when navigating to a step
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Sync URL hash for deep linking
     try {
@@ -805,6 +891,7 @@ function clearStep2() {
         const statusIndicator = document.getElementById(`${buttonId}Status`);
         if (statusIndicator) {
             statusIndicator.className = 'url-status-indicator';
+            statusIndicator.textContent = '';
         }
 
         // Update preview elements
@@ -1510,11 +1597,30 @@ async function testURLStatus(inputId) {
     const statusEl = document.getElementById(`${baseId}Status`);
     const testBtn = document.getElementById(`testUrl${baseId.replace('customUrl','')}Btn`);
 
-    // Helper to set classes
+    // Helper to set classes and text
     const setStatus = (state) => {
         if (!statusEl) return;
         statusEl.classList.remove('loading', 'success', 'error');
-        if (state) statusEl.classList.add(state);
+        if (state) {
+            statusEl.classList.add(state);
+            // Set text content for accessibility
+            switch (state) {
+                case 'loading':
+                    statusEl.textContent = 'TESTING...';
+                    break;
+                case 'success':
+                    statusEl.textContent = 'PASS';
+                    break;
+                case 'error':
+                    statusEl.textContent = 'FAIL';
+                    break;
+                default:
+                    statusEl.textContent = '';
+                    break;
+            }
+        } else {
+            statusEl.textContent = '';
+        }
     };
 
     // Basic URL normalization
@@ -1619,104 +1725,6 @@ function viewURL(inputId) {
     }
 }
 
-//Tests a URL by opening it in a new tab (legacy function - kept for compatibility)
-async function testURL(inputId) {
-    const urlInput = document.getElementById(inputId);
-    if (!urlInput) {
-        console.error('URL input field not found:', inputId);
-        return;
-    }
-
-    const url = urlInput.value.trim();
-    if (!url) {
-        alert('Please enter a URL first');
-        urlInput.focus();
-        return;
-    }
-
-    // Resolve status indicator element next to this input
-    const baseId = inputId.split('.')[0];
-    const statusEl = document.getElementById(`${baseId}Status`);
-    const testBtn = document.getElementById(`testUrl${baseId.replace('customUrl','')}Btn`);
-
-    // Helper to set classes
-    const setStatus = (state) => {
-        if (!statusEl) return;
-        statusEl.classList.remove('loading', 'success', 'error');
-        if (state) statusEl.classList.add(state);
-    };
-
-    // Basic URL normalization
-    let finalUrl = url;
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        finalUrl = 'https://' + url;
-        urlInput.value = finalUrl;
-    }
-
-    // Basic syntax validation using URL constructor
-    try {
-        // Will throw if invalid
-        // eslint-disable-next-line no-new
-        new URL(finalUrl);
-    } catch (_) {
-        setStatus('error');
-        alert('Invalid URL format. Please check and try again.');
-        urlInput.focus();
-        return;
-    }
-
-    // Begin loading state
-    setStatus('loading');
-    if (testBtn) testBtn.disabled = true;
-
-    // Best-effort reachability check
-    let reachable = false;
-    try {
-        // Try CORS-aware fetch first
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-        const response = await fetch(finalUrl, { method: 'HEAD', mode: 'cors', redirect: 'follow', signal: controller.signal });
-        clearTimeout(timeout);
-        // If we can read a response and it's ok or redirected, consider reachable
-        reachable = response && (response.ok || (response.status >= 200 && response.status < 400));
-    } catch (e1) {
-        // Fallback to no-cors (opaque) GET; success of the promise means at least network didn't immediately fail
-        try {
-            const controller2 = new AbortController();
-            const timeout2 = setTimeout(() => controller2.abort(), 5000);
-            await fetch(finalUrl, { method: 'GET', mode: 'no-cors', redirect: 'follow', cache: 'no-store', signal: controller2.signal });
-            clearTimeout(timeout2);
-            reachable = true; // opaque but resolved
-        } catch (e2) {
-            reachable = false;
-        }
-    }
-
-    // Update indicator
-    if (reachable) {
-        setStatus('success');
-    } else {
-        setStatus('error');
-    }
-
-    // Re-enable button
-    if (testBtn) testBtn.disabled = false;
-
-    // Open in new tab regardless, but warn if popup blocked
-    try {
-        const newWindow = window.open(finalUrl, '_blank');
-        if (!newWindow) {
-            alert('Popup blocked. Please allow popups for this site to test URLs, or manually copy and test the URL: ' + finalUrl);
-        }
-    } catch (error) {
-        console.error('Error opening URL:', error);
-        if (reachable) {
-            alert('The URL appears reachable, but the browser blocked opening a new tab.');
-        } else {
-            alert('Unable to open URL. It may be unreachable.');
-        }
-    }
-}
 
 // Populates the predefined buttons from loaded config
 function populatePredefinedButtons(extraItems) {
@@ -1839,7 +1847,79 @@ function populatePredefinedButtons(extraItems) {
     updatePositionPreview();
 }
 
-// Collects predefined button configurations for download
+// Collects predefined button configurations for summary display (keeps position info)
+function collectPredefinedButtonsForSummary() {
+    // Define predefined button configurations
+    const predefinedConfigs = [
+        { id: 'usb', type: 'control', feature: 'usbopeneject' },
+        { id: 'volume', type: 'control', feature: 'volume' },
+        { id: 'voice', type: 'control', feature: 'voice' },
+        { id: 'signOut', type: 'action', feature: 'signout' }
+    ];
+    
+    const buttonConfigs = [...predefinedConfigs];
+    
+    // Add custom URL buttons (including dynamic ones)
+    for (let i = 1; i <= dynamicUrlButtonCount; i++) {
+        buttonConfigs.push({ id: `customUrl${i}`, type: 'link' });
+    }
+    
+    // Add custom Application buttons (including dynamic ones)
+    for (let i = 1; i <= dynamicAppButtonCount; i++) {
+        buttonConfigs.push({ id: `customApp${i}`, type: 'application' });
+    }
+
+    // Collect buttons that have positions assigned
+    const positionedButtons = [];
+
+    buttonConfigs.forEach(config => {
+        // For all buttons, check if they're enabled first
+        const enabledCheckbox = document.getElementById(`${config.id}.enabled`);
+        const isEnabled = enabledCheckbox && enabledCheckbox.checked;
+        
+        const positionSelect = document.getElementById(`${config.id}.position`);
+        if (isEnabled && positionSelect && positionSelect.value && positionSelect.value !== '') {
+            const position = parseInt(positionSelect.value);
+            const buttonData = {
+                type: config.type,
+                position: position
+            };
+
+            if (config.type === 'control') {
+                buttonData.feature = config.feature;
+            } else if (config.type === 'action') {
+                buttonData.feature = config.feature; // Always set the feature property
+                if (config.feature === 'signout') {
+                    buttonData.label = "Sign\nOut";
+                    buttonData.tooltipHeader = "Sign Out";
+                    buttonData.tooltipText = "Sign out of this computer";
+                    buttonData.function = "signOut";
+                }
+            } else if (config.type === 'link') {
+                buttonData.label = document.getElementById(`${config.id}.label`).value || '';
+                buttonData.tooltipHeader = document.getElementById(`${config.id}.tooltipHeader`).value || '';
+                buttonData.tooltipText = document.getElementById(`${config.id}.tooltipText`).value || '';
+                buttonData.url = document.getElementById(`${config.id}.url`).value || '';
+            } else if (config.type === 'application') {
+                const appId = document.getElementById(`${config.id}.appId`).value || '';
+                buttonData.appId = appId;
+                const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
+                buttonData.label = appName;
+                buttonData.tooltipHeader = appName;
+                buttonData.tooltipText = `This launches the ${appName} application.`;
+            }
+
+            positionedButtons.push(buttonData);
+        }
+    });
+
+    // Sort by position and keep position property for summary display
+    positionedButtons.sort((a, b) => a.position - b.position);
+
+    return positionedButtons;
+}
+
+// Collects predefined button configurations for download (removes position info)
 function collectPredefinedButtons() {
     // Define predefined button configurations
     const predefinedConfigs = [
@@ -1880,13 +1960,12 @@ function collectPredefinedButtons() {
             if (config.type === 'control') {
                 buttonData.feature = config.feature;
             } else if (config.type === 'action') {
+                buttonData.feature = config.feature; // Always set the feature property
                 if (config.feature === 'signout') {
                     buttonData.label = "Sign\nOut";
                     buttonData.tooltipHeader = "Sign Out";
                     buttonData.tooltipText = "Sign out of this computer";
                     buttonData.function = "signOut";
-                } else {
-                    buttonData.feature = config.feature;
                 }
             } else if (config.type === 'link') {
                 buttonData.label = document.getElementById(`${config.id}.label`).value || '';
@@ -2130,6 +2209,165 @@ async function generatePDF() {
         }
 
         pdf.addImage(imgData, 'JPEG', margin, yPosition, imgWidth, imgHeight);
+        
+        yPosition += imgHeight + 20;
+
+        // Add installation instructions immediately after MorphicBar preview
+        // Check if we need a new page for title
+        if (yPosition + 15 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+        
+        // Title
+        pdf.setFontSize(16);
+        pdf.setTextColor(72, 98, 132);
+        pdf.text('Morphic config.json File Installation Instructions', margin, yPosition);
+        yPosition += 10;
+
+        pdf.setFontSize(10);
+        pdf.setTextColor(60, 60, 60);
+
+        // Check if we need a new page for Windows section
+        if (yPosition + 20 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Windows instructions
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('For WINDOWS installs', margin, yPosition);
+        yPosition += 6;
+
+        // Check page space before Windows path line
+        if (yPosition + 5 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+        
+        pdf.setFont('helvetica', 'normal');
+        const preText = 'The config.json file should be copied to ';
+        const boldText = '%PROGRAMDATA%\\Morphic\\config.json.';
+        
+        // Print the normal part
+        pdf.text(preText, margin, yPosition);
+        // Calculate position for bold text
+        const preTextWidth = pdf.getTextWidth(preText);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(boldText, margin + preTextWidth, yPosition);
+        pdf.setFont('helvetica', 'normal');
+        yPosition += 5;
+
+        // Check page space before Windows bullet
+        if (yPosition + 5 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Bullet point for Windows path info
+        const bulletIndent = 10; // Double indentation
+        const bulletText = '\u2022 For most Windows computers, this translates to ';
+        pdf.text(bulletText, margin + bulletIndent, yPosition);
+        const bulletTextWidth = pdf.getTextWidth(bulletText);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('C:\\ProgramData\\Morphic\\config.json', margin + bulletIndent + bulletTextWidth, yPosition);
+        pdf.setFont('helvetica', 'normal');
+        yPosition += 10;
+
+        // Check page space before Mac section
+        if (yPosition + 15 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Mac instructions
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('For MAC installs', margin, yPosition);
+        yPosition += 6;
+
+        // Check page space before Mac path line
+        if (yPosition + 5 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        pdf.setFont('helvetica', 'normal');
+        const macPreText = 'The config.json file should be copied to ';
+        pdf.text(macPreText, margin, yPosition);
+        const macPreTextWidth = pdf.getTextWidth(macPreText);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('"/Library/Application Support/Morphic"', margin + macPreTextWidth, yPosition);
+        pdf.setFont('helvetica', 'normal');
+        yPosition += 10;
+
+        // Check page space before Notes section
+        if (yPosition + 15 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Notes
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('NOTES (for both Windows and Mac)', margin, yPosition);
+        yPosition += 6;
+
+        pdf.setFont('helvetica', 'normal');
+        const notes = [
+            '\u2022 If your deployment software does not automatically create the "Morphic" subfolder as part of copying the config.json file, you may need to first create that subfolder and then copy the config.json file into it.',
+            '\u2022 We recommend setting file permissions for the deployed config.json file to read-only (as is typical for admin-owned configuration files).'
+        ];
+
+        notes.forEach(line => {
+            if (line === '') {
+                yPosition += 5;
+                return;
+            }
+            
+            // Wrap text to fit within page width
+            const wrappedLines = pdf.splitTextToSize(line, contentWidth - bulletIndent);
+            
+            wrappedLines.forEach((wrappedLine, index) => {
+                // Check if we need a new page
+                if (yPosition + 5 > pageHeight - margin) {
+                    pdf.addPage();
+                    yPosition = margin;
+                }
+                
+                // For bullet points, add double indentation, and indent continuation lines further
+                let xPos = margin;
+                if (line.startsWith('\u2022')) {
+                    xPos = index === 0 ? margin + bulletIndent : margin + bulletIndent + 5;
+                }
+                pdf.text(wrappedLine, xPos, yPosition);
+                yPosition += 5;
+            });
+        });
+
+        // Add spacing after notes
+        yPosition += 5;
+
+        // Check page space before "For full instructions" text
+        if (yPosition + 10 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Add "For full instructions" text
+        pdf.setFont('helvetica', 'normal');
+        pdf.setTextColor(60, 60, 60);
+        pdf.text('For full Morphic installation instructions see:', margin, yPosition);
+        yPosition += 6;
+
+        // Check page space before link
+        if (yPosition + 10 > pageHeight - margin) {
+            pdf.addPage();
+            yPosition = margin;
+        }
+
+        // Add link
+        pdf.setTextColor(0, 0, 255);
+        pdf.textWithLink('https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit', 
+            margin, yPosition, { url: 'https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit' });
 
         // Save the PDF
         const filename = `Morphic_Config_Summary_${new Date().toISOString().split('T')[0]}.pdf`;
@@ -2235,6 +2473,22 @@ function checkStepErrors(stepNumber) {
         if (!validateUniquePositions()) {
             errors.push('Duplicate button positions detected. Each button must have a unique position (1, 2, or 3).');
         }
+
+        // Validate predefined buttons have position assigned if they are enabled (checked)
+        const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
+        predefinedButtons.forEach(buttonId => {
+            const checkbox = document.getElementById(`${buttonId}.enabled`);
+            const position = document.getElementById(`${buttonId}.position`);
+            if (checkbox && checkbox.checked && position && !position.value) {
+                const buttonNames = {
+                    'usb': 'USB Open/Eject',
+                    'volume': 'Volume Control', 
+                    'voice': 'Voice Control',
+                    'signOut': 'Sign Out'
+                };
+                errors.push(`${buttonNames[buttonId]}: Position is required.`);
+            }
+        });
 
         // Validate custom URL buttons have all required fields if they are enabled (checked)
         for (let i = 1; i <= dynamicUrlButtonCount; i++) {
