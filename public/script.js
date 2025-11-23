@@ -1646,27 +1646,77 @@ async function testURLStatus(inputId) {
     setStatus('loading');
     if (testBtn) testBtn.disabled = true;
 
-    // Best-effort reachability check
+    // Best-effort reachability check using CORS proxy
     let reachable = false;
+    let errorMessage = null;
+    
+    // Helper function to test URL via CORS proxy
+    const testViaProxy = async (url) => {
+        // Use a CORS proxy service to bypass CORS restrictions
+        // Note: The proxy will return 200 even for 404s, so we can only verify reachability, not exact status
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        try {
+            const response = await fetch(proxyUrl, { 
+                method: 'GET', 
+                mode: 'cors',
+                signal: controller.signal 
+            });
+            clearTimeout(timeout);
+            
+            // If proxy responds successfully, the URL is reachable
+            // (Note: We can't determine exact HTTP status via this proxy)
+            if (response.ok) {
+                return { success: true };
+            } else {
+                return { success: false, error: `Proxy returned error: HTTP ${response.status}` };
+            }
+        } catch (error) {
+            clearTimeout(timeout);
+            if (error.name === 'AbortError') {
+                return { success: false, error: 'Request timed out. The URL may be unreachable or taking too long to respond.' };
+            }
+            // If proxy fails, it could be network error or unreachable URL
+            return { success: false, error: 'Unable to reach URL. Please verify the URL is correct and accessible.' };
+        }
+    };
+    
     try {
-        // Try CORS-aware fetch first
+        // First, try direct fetch (works if page is served from web server, not file://)
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 5000);
-        const response = await fetch(finalUrl, { method: 'HEAD', mode: 'cors', redirect: 'follow', signal: controller.signal });
-        clearTimeout(timeout);
-        // If we can read a response and it's ok or redirected, consider reachable
-        reachable = response && (response.ok || (response.status >= 200 && response.status < 400));
-    } catch (e1) {
-        // Fallback to no-cors (opaque) GET; success of the promise means at least network didn't immediately fail
         try {
-            const controller2 = new AbortController();
-            const timeout2 = setTimeout(() => controller2.abort(), 5000);
-            await fetch(finalUrl, { method: 'GET', mode: 'no-cors', redirect: 'follow', cache: 'no-store', signal: controller2.signal });
-            clearTimeout(timeout2);
-            reachable = true; // opaque but resolved
-        } catch (e2) {
-            reachable = false;
+            const response = await fetch(finalUrl, { 
+                method: 'HEAD', 
+                mode: 'cors', 
+                redirect: 'follow', 
+                signal: controller.signal 
+            });
+            clearTimeout(timeout);
+            
+            if (response.ok || (response.status >= 300 && response.status < 400)) {
+                reachable = true;
+            } else if (response.status === 404) {
+                errorMessage = 'Page not found (404)';
+            } else if (response.status >= 400) {
+                errorMessage = `Error: HTTP ${response.status}`;
+            }
+        } catch (directError) {
+            clearTimeout(timeout);
+            // Direct fetch failed (likely CORS), use proxy
+            const result = await testViaProxy(finalUrl);
+            if (result.success) {
+                reachable = true;
+            } else {
+                errorMessage = result.error || 'Unable to reach URL';
+            }
         }
+    } catch (error) {
+        // Unexpected error occurred
+        errorMessage = 'An unexpected error occurred while testing the URL. Please try again.';
+        console.error('URL validation error:', error);
     }
 
     // Update indicator
@@ -1674,6 +1724,9 @@ async function testURLStatus(inputId) {
         setStatus('success');
     } else {
         setStatus('error');
+        if (errorMessage) {
+            alert(errorMessage);
+        }
     }
 
     // Re-enable button
