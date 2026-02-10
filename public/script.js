@@ -202,7 +202,7 @@ function updateElementIds(container, oldId, newId) {
         element.id = element.id.replace(oldId, newId);
     });
 
-    // Also update elements that contain the old number (like testUrl1Btn, viewUrl1Btn)
+    // Also update elements that contain the old number (like testUrl1Button, viewUrl1Button)
     const elementsWithNumber = container.querySelectorAll(`[id*="${oldNumber}"]`);
     elementsWithNumber.forEach(element => {
         if (element.id.includes(oldNumber) && !element.id.startsWith(oldId)) {
@@ -369,25 +369,25 @@ function setupUrlButtonListeners(buttonId) {
     }
     
     // Add event listeners for test and view URL buttons
-    const testUrlBtnId = `testUrl${buttonId.replace('customUrl','')}Btn`;
-    const viewUrlBtnId = `viewUrl${buttonId.replace('customUrl','')}Btn`;
-    const testUrlBtn = document.getElementById(testUrlBtnId);
-    const viewUrlBtn = document.getElementById(viewUrlBtnId);
-    
-    if (testUrlBtn) {
-        testUrlBtn.addEventListener('click', function() {
+    const testUrlButtonId = `testUrl${buttonId.replace('customUrl','')}Button`;
+    const viewUrlButtonId = `viewUrl${buttonId.replace('customUrl','')}Button`;
+    const testUrlButton = document.getElementById(testUrlButtonId);
+    const viewUrlButton = document.getElementById(viewUrlButtonId);
+
+    if (testUrlButton) {
+        testUrlButton.addEventListener('click', function() {
             testURLStatus(`${buttonId}Url`);
         });
     } else {
-        console.warn(`Test URL button not found: ${testUrlBtnId}`);
+        console.warn(`Test URL button not found: ${testUrlButtonId}`);
     }
-    
-    if (viewUrlBtn) {
-        viewUrlBtn.addEventListener('click', function() {
+
+    if (viewUrlButton) {
+        viewUrlButton.addEventListener('click', function() {
             viewURL(`${buttonId}Url`);
         });
     } else {
-        console.warn(`View URL button not found: ${viewUrlBtnId}`);
+        console.warn(`View URL button not found: ${viewUrlButtonId}`);
     }
 }
 
@@ -424,17 +424,17 @@ function addUrlButton() {
 
 function updateAddButtonState() {
     // Add buttons are always enabled with the new logic
-    const addAppBtn = document.getElementById('addAppButton');
-    if (addAppBtn) {
-        addAppBtn.disabled = false;
-        addAppBtn.textContent = '+ Add Another Application Button';
+    const addAppButton = document.getElementById('addAppButton');
+    if (addAppButton) {
+        addAppButton.disabled = false;
+        addAppButton.textContent = '+ Add Another Application Button';
     }
 
     // URL add button is always enabled
-    const addUrlBtn = document.getElementById('addUrlButton');
-    if (addUrlBtn) {
-        addUrlBtn.disabled = false;
-        addUrlBtn.textContent = '+ Add Another URL Button';
+    const addUrlButton = document.getElementById('addUrlButton');
+    if (addUrlButton) {
+        addUrlButton.disabled = false;
+        addUrlButton.textContent = '+ Add Another URL Button';
     }
 }
 
@@ -450,10 +450,10 @@ function updateSettingsSummary() {
     function createSettingRow(label, value, stepNumber = null, elementId = null, position = null) {
         // Add edit button first (or empty div if no button)
         if (stepNumber && elementId) {
-            const editBtn = document.createElement('button');
-            editBtn.textContent = 'Edit';
-            editBtn.className = 'edit-setting-btn';
-            editBtn.style.cssText = `
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.className = 'edit-setting-btn';
+            editButton.style.cssText = `
                 background-color: var(--primary-color);
                 color: white;
                 border: none;
@@ -464,16 +464,16 @@ function updateSettingsSummary() {
                 transition: background-color 0.2s ease;
                 white-space: nowrap;
             `;
-            editBtn.addEventListener('mouseenter', function() {
+            editButton.addEventListener('mouseenter', function() {
                 this.style.backgroundColor = '#2c5282';
             });
-            editBtn.addEventListener('mouseleave', function() {
+            editButton.addEventListener('mouseleave', function() {
                 this.style.backgroundColor = 'var(--primary-color)';
             });
-            editBtn.addEventListener('click', function() {
+            editButton.addEventListener('click', function() {
                 navigateToSetting(stepNumber, elementId);
             });
-            summaryContent.appendChild(editBtn);
+            summaryContent.appendChild(editButton);
         } else {
             // Add empty div to maintain grid alignment when no edit button
             const emptyDiv = document.createElement('div');
@@ -593,13 +593,13 @@ function updateSettingsSummary() {
         }
         
         // Edit button first
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit';
-        editBtn.className = 'edit-setting-btn';
-        editBtn.addEventListener('click', function() {
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'edit-setting-btn';
+        editButton.addEventListener('click', function() {
             navigateToSetting(2, `customUrl${index + 1}Enabled`);
         });
-        summaryContent.appendChild(editBtn);
+        summaryContent.appendChild(editButton);
         
         // Create header with position
         const headerDiv = document.createElement('div');
@@ -700,10 +700,10 @@ function showStep(stepNumber) {
         updateSettingsSummary();
         
         // Ensure download button event listener is attached when step 3 is shown
-        const downloadBtn = document.getElementById('download');
-        if (downloadBtn && !downloadBtn.hasAttribute('data-listener-attached')) {
-            downloadBtn.addEventListener('click', handleDownloadClick);
-            downloadBtn.setAttribute('data-listener-attached', 'true');
+        const downloadButton = document.getElementById('download');
+        if (downloadButton && !downloadButton.hasAttribute('data-listener-attached')) {
+            downloadButton.addEventListener('click', handleDownloadClick);
+            downloadButton.setAttribute('data-listener-attached', 'true');
         }
     }
 
@@ -982,14 +982,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('upload')?.addEventListener('change', handleFileUpload);
         
         // Attach download button event listener
-        const downloadBtn = document.getElementById('download');
-        if (downloadBtn) {
-            downloadBtn.addEventListener('click', handleDownloadClick);
+        const downloadButton = document.getElementById('download');
+        if (downloadButton) {
+            downloadButton.addEventListener('click', handleDownloadClick);
         } else {
             console.error('Download button not found on page load!');
         }
         
-        document.getElementById('fileInputBtn')?.addEventListener('click', function() {
+        document.getElementById('fileInputButton')?.addEventListener('click', function() {
             document.getElementById('upload').click();
         });
 
@@ -1007,10 +1007,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Toggle help text functionality
-        const toggleHelpTextBtn = document.getElementById('toggleHelpText');
-        if (toggleHelpTextBtn) {
+        const toggleHelpTextButton = document.getElementById('toggleHelpText');
+        if (toggleHelpTextButton) {
             let helpTextVisible = true;
-            toggleHelpTextBtn.addEventListener('click', function() {
+            toggleHelpTextButton.addEventListener('click', function() {
                 const smallTextElements = document.querySelectorAll('.small-text');
                 helpTextVisible = !helpTextVisible;
 
@@ -1023,29 +1023,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Setup navigation button event listeners
-        document.querySelectorAll('.prev-btn').forEach(btn => {
-            btn.addEventListener('click', prevStep);
+        document.querySelectorAll('.prev-btn').forEach(button => {
+            button.addEventListener('click', prevStep);
         });
 
-        document.querySelectorAll('.next-btn').forEach(btn => {
-            btn.addEventListener('click', nextStep);
+        document.querySelectorAll('.next-btn').forEach(button => {
+            button.addEventListener('click', nextStep);
         });
 
-        document.querySelectorAll('.clear-btn').forEach(btn => {
-            btn.addEventListener('click', clearStep);
+        document.querySelectorAll('.clear-btn').forEach(button => {
+            button.addEventListener('click', clearStep);
         });
 
         // Setup modal event listeners
         const modal = document.getElementById('clearModal');
-        const cancelBtn = modal?.querySelector('.modal-btn-cancel');
-        const confirmBtn = modal?.querySelector('.modal-btn-confirm');
+        const cancelButton = modal?.querySelector('.modal-btn-cancel');
+        const confirmButton = modal?.querySelector('.modal-btn-confirm');
 
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', hideClearModal);
+        if (cancelButton) {
+            cancelButton.addEventListener('click', hideClearModal);
         }
 
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', executeClear);
+        if (confirmButton) {
+            confirmButton.addEventListener('click', executeClear);
         }
 
         // Close modal when clicking outside of it
@@ -1059,10 +1059,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Setup notification modal event listeners
         const notificationModal = document.getElementById('notificationModal');
-        const notificationOkBtn = document.getElementById('notificationOkBtn');
+        const notificationOkButton = document.getElementById('notificationOkButton');
 
-        if (notificationOkBtn) {
-            notificationOkBtn.addEventListener('click', hideNotificationModal);
+        if (notificationOkButton) {
+            notificationOkButton.addEventListener('click', hideNotificationModal);
         }
 
         // Close notification modal when clicking outside of it
@@ -1075,11 +1075,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     } else {
         // Index page setup
-        document.getElementById('createNewBtn')?.addEventListener('click', function() {
+        document.getElementById('createNewButton')?.addEventListener('click', function() {
             window.location.href = 'editor/index.html';
         });
         
-        document.getElementById('importSettingsBtn')?.addEventListener('click', function() {
+        document.getElementById('importSettingsButton')?.addEventListener('click', function() {
             document.getElementById('configFileInput').click();
         });
         
@@ -1129,12 +1129,12 @@ document.getElementById('location-toggle')?.addEventListener('click', function(e
 });
 
 // Test URL button handlers (only for customUrl1, others are dynamic)
-document.getElementById('testUrl1Btn')?.addEventListener('click', function() {
+document.getElementById('testUrl1Button')?.addEventListener('click', function() {
     testURLStatus('customUrl1.url');
 });
 
 // View URL button handlers (only for customUrl1, others are dynamic)
-document.getElementById('viewUrl1Btn')?.addEventListener('click', function() {
+document.getElementById('viewUrl1Button')?.addEventListener('click', function() {
     viewURL('customUrl1.url');
 });
 
@@ -1336,7 +1336,7 @@ document.getElementById('organizationName').addEventListener('input', validateOr
         // Add event listeners for application button checkboxes
         const appButtonIds = ['customApp1'];
         const addButtonContainer = document.getElementById('addAppButtonContainer');
-        const addAppBtn = document.getElementById('addAppButton');
+        const addAppButton = document.getElementById('addAppButton');
 
         
         appButtonIds.forEach(buttonId => {
@@ -1419,14 +1419,14 @@ document.getElementById('organizationName').addEventListener('input', validateOr
         updateAddUrlVisibility();
 
         // Add button functionality
-        if (addAppBtn) {
-            addAppBtn.addEventListener('click', addApplicationButton);
+        if (addAppButton) {
+            addAppButton.addEventListener('click', addApplicationButton);
         }
 
         // URL buttons add functionality
-        const addUrlBtn = document.getElementById('addUrlButton');
-        if (addUrlBtn) {
-            addUrlBtn.addEventListener('click', addUrlButton);
+        const addUrlButton = document.getElementById('addUrlButton');
+        if (addUrlButton) {
+            addUrlButton.addEventListener('click', addUrlButton);
         }
 
         // Add event listeners for URL button enable checkboxes (toggle inputs/preview only)
@@ -1473,17 +1473,17 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                 });
                 
                 // Add event listeners for test and view URL buttons
-                const testUrlBtn = document.getElementById(`testUrl${buttonId.replace('customUrl','')}Btn`);
-                const viewUrlBtn = document.getElementById(`viewUrl${buttonId.replace('customUrl','')}Btn`);
-                
-                if (testUrlBtn) {
-                    testUrlBtn.addEventListener('click', function() {
+                const testUrlButton = document.getElementById(`testUrl${buttonId.replace('customUrl','')}Button`);
+                const viewUrlButton = document.getElementById(`viewUrl${buttonId.replace('customUrl','')}Button`);
+
+                if (testUrlButton) {
+                    testUrlButton.addEventListener('click', function() {
                         testURLStatus(`${buttonId}Url`);
                     });
                 }
                 
-                if (viewUrlBtn) {
-                    viewUrlBtn.addEventListener('click', function() {
+                if (viewUrlButton) {
+                    viewUrlButton.addEventListener('click', function() {
                         viewURL(`${buttonId}Url`);
                     });
                 }
@@ -1617,7 +1617,7 @@ async function testURLStatus(inputId) {
     // Resolve status indicator element next to this input
     const baseId = inputId.split('.')[0];
     const statusEl = document.getElementById(`${baseId}Status`);
-    const testBtn = document.getElementById(`testUrl${baseId.replace('customUrl','')}Btn`);
+    const testButton = document.getElementById(`testUrl${baseId.replace('customUrl','')}Button`);
 
     // Helper to set classes and text
     const setStatus = (state) => {
@@ -1666,7 +1666,7 @@ async function testURLStatus(inputId) {
 
     // Begin loading state
     setStatus('loading');
-    if (testBtn) testBtn.disabled = true;
+    if (testButton) testButton.disabled = true;
 
     // Best-effort reachability check using CORS proxy
     let reachable = false;
@@ -1752,7 +1752,7 @@ async function testURLStatus(inputId) {
     }
 
     // Re-enable button
-    if (testBtn) testBtn.disabled = false;
+    if (testButton) testButton.disabled = false;
 }
 
 //Opens a URL in a new tab (without status checking)
@@ -2452,16 +2452,16 @@ async function generatePDF() {
 
 // Handle download button click
 async function handleDownloadClick() {
-    const downloadBtn = document.getElementById('download');
+    const downloadButton = document.getElementById('download');
 
-    if (!downloadBtn) {
+    if (!downloadButton) {
         console.error('Download button not found!');
         return;
     }
 
     // Disable the download button while processing
-    downloadBtn.disabled = true;
-    downloadBtn.textContent = 'Generating Files...';
+    downloadButton.disabled = true;
+    downloadButton.textContent = 'Generating Files...';
 
     try {
         // Download config.json
@@ -2476,8 +2476,8 @@ async function handleDownloadClick() {
         showNotification('Error', 'There was an error generating the files. Please try again.');
     } finally {
         // Re-enable the download button
-        downloadBtn.disabled = false;
-        downloadBtn.textContent = 'Download config.json';
+        downloadButton.disabled = false;
+        downloadButton.textContent = 'Download config.json';
     }
 }
 
