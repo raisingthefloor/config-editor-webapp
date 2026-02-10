@@ -40,7 +40,7 @@ function getAllCheckedButtons(excludeId = null) {
     const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
     predefinedButtons.forEach(id => {
         if (id !== excludeId) {
-            const cb = document.getElementById(`${id}.enabled`);
+            const cb = document.getElementById(`${id}Enabled`);
             if (cb && cb.checked) {
                 checkedButtons.push(id);
             }
@@ -51,7 +51,7 @@ function getAllCheckedButtons(excludeId = null) {
     for (let i = 1; i <= dynamicAppButtonCount; i++) {
         const buttonId = `customApp${i}`;
         if (buttonId !== excludeId) {
-            const cb = document.getElementById(`${buttonId}.enabled`);
+            const cb = document.getElementById(`${buttonId}Enabled`);
             if (cb && cb.checked) {
                 checkedButtons.push(buttonId);
             }
@@ -62,7 +62,7 @@ function getAllCheckedButtons(excludeId = null) {
     for (let i = 1; i <= dynamicUrlButtonCount; i++) {
         const buttonId = `customUrl${i}`;
         if (buttonId !== excludeId) {
-            const cb = document.getElementById(`${buttonId}.enabled`);
+            const cb = document.getElementById(`${buttonId}Enabled`);
             if (cb && cb.checked) {
                 checkedButtons.push(buttonId);
             }
@@ -74,42 +74,42 @@ function getAllCheckedButtons(excludeId = null) {
 
 // Helper: check if an application button is empty (no fields filled and not checked)
 function isAppButtonEmpty(buttonId) {
-    const checkbox = document.getElementById(`${buttonId}.enabled`);
-    const position = document.getElementById(`${buttonId}.position`);
-    const appId = document.getElementById(`${buttonId}.appId`);
-    const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
-    const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+    const checkbox = document.getElementById(`${buttonId}Enabled`);
+    const positionInput = document.getElementById(`${buttonId}Position`);
+    const appIdInput = document.getElementById(`${buttonId}AppId`);
+    const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+    const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
     
     // If checked, not empty
     if (checkbox && checkbox.checked) return false;
     
     // If any field has content, not empty
-    if (position && position.value && position.value.trim()) return false;
-    if (appId && appId.value && appId.value.trim()) return false;
-    if (tooltipHeader && tooltipHeader.value && tooltipHeader.value.trim()) return false;
-    if (tooltipText && tooltipText.value && tooltipText.value.trim()) return false;
+    if (positionInput && positionInput.value && positionInput.value.trim()) return false;
+    if (appIdInput && appIdInput.value && appIdInput.value.trim()) return false;
+    if (tooltipHeaderInput && tooltipHeaderInput.value && tooltipHeaderInput.value.trim()) return false;
+    if (tooltipTextInput && tooltipTextInput.value && tooltipTextInput.value.trim()) return false;
     
     return true;
 }
 
 // Helper: check if a URL button is empty (no fields filled and not checked)
 function isUrlButtonEmpty(buttonId) {
-    const checkbox = document.getElementById(`${buttonId}.enabled`);
-    const position = document.getElementById(`${buttonId}.position`);
-    const label = document.getElementById(`${buttonId}.label`);
-    const url = document.getElementById(`${buttonId}.url`);
-    const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
-    const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+    const checkbox = document.getElementById(`${buttonId}Enabled`);
+    const positionInput = document.getElementById(`${buttonId}Position`);
+    const labelInput = document.getElementById(`${buttonId}Label`);
+    const urlInput = document.getElementById(`${buttonId}Url`);
+    const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+    const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
     
     // If checked, not empty
     if (checkbox && checkbox.checked) return false;
     
     // If any field has content, not empty
-    if (position && position.value && position.value.trim()) return false;
-    if (label && label.value && label.value.trim()) return false;
-    if (url && url.value && url.value.trim()) return false;
-    if (tooltipHeader && tooltipHeader.value && tooltipHeader.value.trim()) return false;
-    if (tooltipText && tooltipText.value && tooltipText.value.trim()) return false;
+    if (positionInput && positionInput.value && positionInput.value.trim()) return false;
+    if (labelInput && labelInput.value && labelInput.value.trim()) return false;
+    if (urlInput && urlInput.value && urlInput.value.trim()) return false;
+    if (tooltipHeaderInput && tooltipHeaderInput.value && tooltipHeaderInput.value.trim()) return false;
+    if (tooltipTextInput && tooltipTextInput.value && tooltipTextInput.value.trim()) return false;
     
     return true;
 }
@@ -130,18 +130,18 @@ function createDynamicApplicationButton() {
         return;
     }
     
-    const newButton = template.cloneNode(true);
+    const newButtonContainer = template.cloneNode(true);
     
     // Update all IDs in the cloned element
-    updateElementIds(newButton, 'customApp1', buttonId);
+    updateElementIds(newButtonContainer, 'customApp1', buttonId);
     
     // Insert the new button after the last application button
-    const lastAppButton = document.getElementById(`customApp${dynamicAppButtonCount - 1}`);
-    if (lastAppButton) {
-        lastAppButton.insertAdjacentElement('afterend', newButton);
+    const lastAppButtonContainer = document.getElementById(`customApp${dynamicAppButtonCount - 1}`);
+    if (lastAppButtonContainer) {
+        lastAppButtonContainer.insertAdjacentElement('afterend', newButtonContainer);
     } else {
         // Fallback: insert after the template
-        template.insertAdjacentElement('afterend', newButton);
+        template.insertAdjacentElement('afterend', newButtonContainer);
     }
     
     // Set up event listeners for the new button
@@ -163,18 +163,18 @@ function createDynamicUrlButton() {
         return;
     }
     
-    const newButton = template.cloneNode(true);
+    const newButtonContainer = template.cloneNode(true);
     
     // Update all IDs in the cloned element
-    updateElementIds(newButton, 'customUrl1', buttonId);
+    updateElementIds(newButtonContainer, 'customUrl1', buttonId);
     
     // Insert the new button after the last URL button
-    const lastUrlButton = document.getElementById(`customUrl${dynamicUrlButtonCount - 1}`);
-    if (lastUrlButton) {
-        lastUrlButton.insertAdjacentElement('afterend', newButton);
+    const lastUrlButtonContainer = document.getElementById(`customUrl${dynamicUrlButtonCount - 1}`);
+    if (lastUrlButtonContainer) {
+        lastUrlButtonContainer.insertAdjacentElement('afterend', newButtonContainer);
     } else {
         // Fallback: insert after the template
-        template.insertAdjacentElement('afterend', newButton);
+        template.insertAdjacentElement('afterend', newButtonContainer);
     }
     
     // Set up event listeners for the new button (with a small delay to ensure DOM is updated)
@@ -254,11 +254,11 @@ function updateElementIds(container, oldId, newId) {
 
 // Function to set up event listeners for a dynamically created application button
 function setupApplicationButtonListeners(buttonId) {
-    const checkbox = document.getElementById(`${buttonId}.enabled`);
-    const positionContainer = document.getElementById(`${buttonId}.positionContainer`);
-    const inputs = document.getElementById(`${buttonId}.inputs`);
-    const positionSelect = document.getElementById(`${buttonId}.position`);
-    const appSelect = document.getElementById(`${buttonId}.appId`);
+    const checkbox = document.getElementById(`${buttonId}Enabled`);
+    const positionContainer = document.getElementById(`${buttonId}PositionContainer`);
+    const inputs = document.getElementById(`${buttonId}Inputs`);
+    const positionSelect = document.getElementById(`${buttonId}Position`);
+    const appSelect = document.getElementById(`${buttonId}AppId`);
     
     if (checkbox) {
         checkbox.addEventListener('change', function() {
@@ -267,7 +267,7 @@ function setupApplicationButtonListeners(buttonId) {
                 if (!canCheckButton(buttonId)) {
                     // Prevent checking if we already have 3 checked buttons
                     this.checked = false;
-                    alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                    showNotification('Maximum Buttons Reached', 'You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
                     return;
                 }
                 if (positionContainer) positionContainer.style.display = 'flex';
@@ -303,10 +303,9 @@ function setupApplicationButtonListeners(buttonId) {
 
 // Function to set up event listeners for a dynamically created URL button
 function setupUrlButtonListeners(buttonId) {
-    const checkbox = document.getElementById(`${buttonId}.enabled`);
+    const checkbox = document.getElementById(`${buttonId}Enabled`);
     const inputsContainer = document.querySelector(`#${buttonId} .button-config`);
-    const previewContainer = document.querySelector(`#${buttonId} .tooltip-preview`);
-    const positionSelector = document.getElementById(`${buttonId}.position`);
+    const positionSelector = document.getElementById(`${buttonId}Position`);
 
     if (checkbox && inputsContainer) {
         const applyState = () => {
@@ -326,7 +325,7 @@ function setupUrlButtonListeners(buttonId) {
                 if (!canCheckButton(buttonId)) {
                     // Prevent checking if we already have 3 checked buttons
                     this.checked = false;
-                    alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                    showNotification('Maximum Buttons Reached', 'You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
                     return;
                 }
             }
@@ -344,9 +343,9 @@ function setupUrlButtonListeners(buttonId) {
     }
     
     // Add event listeners for URL inputs
-    const labelInput = document.getElementById(`${buttonId}.label`);
-    const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
-    const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
+    const labelInput = document.getElementById(`${buttonId}Label`);
+    const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+    const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
 
     if (labelInput) {
         labelInput.addEventListener('input', () => {
@@ -375,17 +374,9 @@ function setupUrlButtonListeners(buttonId) {
     const testUrlBtn = document.getElementById(testUrlBtnId);
     const viewUrlBtn = document.getElementById(viewUrlBtnId);
     
-    console.log(`Setting up buttons for ${buttonId}:`, {
-        testUrlBtnId,
-        viewUrlBtnId,
-        testUrlBtn,
-        viewUrlBtn
-    });
-    
     if (testUrlBtn) {
         testUrlBtn.addEventListener('click', function() {
-            console.log(`Test URL clicked for ${buttonId}`);
-            testURLStatus(`${buttonId}.url`);
+            testURLStatus(`${buttonId}Url`);
         });
     } else {
         console.warn(`Test URL button not found: ${testUrlBtnId}`);
@@ -393,8 +384,7 @@ function setupUrlButtonListeners(buttonId) {
     
     if (viewUrlBtn) {
         viewUrlBtn.addEventListener('click', function() {
-            console.log(`View URL clicked for ${buttonId}`);
-            viewURL(`${buttonId}.url`);
+            viewURL(`${buttonId}Url`);
         });
     } else {
         console.warn(`View URL button not found: ${viewUrlBtnId}`);
@@ -405,9 +395,9 @@ function addApplicationButton() {
     // First, check if any visible application buttons are empty
     for (let i = 1; i <= dynamicAppButtonCount; i++) {
         const buttonId = `customApp${i}`;
-        const button = document.getElementById(buttonId);
-        if (button && isAppButtonEmpty(buttonId)) {
-            alert(`Please fill in the empty Application Button ${i} before adding a new one.`);
+        const buttonContainer = document.getElementById(buttonId);
+        if (buttonContainer && isAppButtonEmpty(buttonId)) {
+            showNotification('Incomplete Button', `Please fill in the empty Application Button ${i} before adding a new one.`);
             return;
         }
     }
@@ -420,9 +410,9 @@ function addUrlButton() {
     // First, check if any visible URL buttons are empty
     for (let i = 1; i <= dynamicUrlButtonCount; i++) {
         const buttonId = `customUrl${i}`;
-        const button = document.getElementById(buttonId);
-        if (button && isUrlButtonEmpty(buttonId)) {
-            alert(`Please fill in the empty URL Button ${i} before adding a new one.`);
+        const buttonContainer = document.getElementById(buttonId);
+        if (buttonContainer && isUrlButtonEmpty(buttonId)) {
+            showNotification('Incomplete Button', `Please fill in the empty URL Button ${i} before adding a new one.`);
             return;
         }
     }
@@ -434,10 +424,10 @@ function addUrlButton() {
 
 function updateAddButtonState() {
     // Add buttons are always enabled with the new logic
-    const addButton = document.getElementById('addAppButton');
-    if (addButton) {
-        addButton.disabled = false;
-        addButton.textContent = '+ Add Another Application Button';
+    const addAppBtn = document.getElementById('addAppButton');
+    if (addAppBtn) {
+        addAppBtn.disabled = false;
+        addAppBtn.textContent = '+ Add Another Application Button';
     }
 
     // URL add button is always enabled
@@ -460,10 +450,10 @@ function updateSettingsSummary() {
     function createSettingRow(label, value, stepNumber = null, elementId = null, position = null) {
         // Add edit button first (or empty div if no button)
         if (stepNumber && elementId) {
-            const editButton = document.createElement('button');
-            editButton.textContent = 'Edit';
-            editButton.className = 'edit-setting-btn';
-            editButton.style.cssText = `
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'Edit';
+            editBtn.className = 'edit-setting-btn';
+            editBtn.style.cssText = `
                 background-color: var(--primary-color);
                 color: white;
                 border: none;
@@ -474,16 +464,16 @@ function updateSettingsSummary() {
                 transition: background-color 0.2s ease;
                 white-space: nowrap;
             `;
-            editButton.addEventListener('mouseenter', function() {
+            editBtn.addEventListener('mouseenter', function() {
                 this.style.backgroundColor = '#2c5282';
             });
-            editButton.addEventListener('mouseleave', function() {
+            editBtn.addEventListener('mouseleave', function() {
                 this.style.backgroundColor = 'var(--primary-color)';
             });
-            editButton.addEventListener('click', function() {
+            editBtn.addEventListener('click', function() {
                 navigateToSetting(stepNumber, elementId);
             });
-            summaryContent.appendChild(editButton);
+            summaryContent.appendChild(editBtn);
         } else {
             // Add empty div to maintain grid alignment when no edit button
             const emptyDiv = document.createElement('div');
@@ -511,13 +501,13 @@ function updateSettingsSummary() {
 
     // Basic settings
     createSettingRow('Organization Name', document.getElementById('organizationName').value || 'Not set', 1, 'organizationName');
-    createSettingRow('Site ID', document.getElementById('telemetry.siteId').value || 'Not set', 1, 'telemetry.siteId');
+    createSettingRow('Site ID', document.getElementById('siteId').value || 'Not set', 1, 'siteId');
 
     // Features
     createSettingRow('Open Morphic Automatically at Login', 
-        document.getElementById('features.autorunAfterLogin.enabled').checked ? 'True' : 'False', 1, 'features.autorunAfterLogin.enabled');
+        document.getElementById('autorunEnabled').checked ? 'True' : 'False', 1, 'autorunEnabled');
     createSettingRow('See Which Accessibility Features are Helpful', 
-        document.getElementById('features.atUseCounter.enabled').checked ? 'True' : 'False', 1, 'features.atUseCounter.enabled');
+        document.getElementById('atUseCounterEnabled').checked ? 'True' : 'False', 1, 'atUseCounterEnabled');
     createSettingRow('Delay Showing Morphic to Compare Before & After', 
         document.getElementById('enableDelayMorphic').checked ? 'True' : 'False', 1, 'enableDelayMorphic');
     if (document.getElementById('enableDelayMorphic').checked) {
@@ -526,7 +516,7 @@ function updateSettingsSummary() {
     }
     // AT-on-Demand feature temporarily commented out
     // createSettingRow('Enable AT-on-Demand (Available for Windows Only)', 
-    //     document.getElementById('features.atOnDemand.enabled').checked ? 'True' : 'False', 1, 'features.atOnDemand.enabled');
+    //     document.getElementById('atOnDemandEnabled').checked ? 'True' : 'False', 1, 'atOnDemandEnabled');
     
     // Separator before Default Settings section
     const defaultSettingsSeparator = document.createElement('hr');
@@ -535,15 +525,15 @@ function updateSettingsSummary() {
     
     // Default Settings section
     createSettingRow('Enable Custom MorphicBars', 
-        document.getElementById('features.customMorphicBars.enabled').checked ? 'True' : 'False', 1, 'features.customMorphicBars.enabled');
+        document.getElementById('customMorphicBarsEnabled').checked ? 'True' : 'False', 1, 'customMorphicBarsEnabled');
     createSettingRow('Enable Check for Updates with each Launch', 
-        document.getElementById('features.checkForUpdates.enabled').checked ? 'True' : 'False', 1, 'features.checkForUpdates.enabled');
+        document.getElementById('checkForUpdatesEnabled').checked ? 'True' : 'False', 1, 'checkForUpdatesEnabled');
     createSettingRow('MorphicBar Visibility after Login', 
-        document.getElementById('morphicBar.visibilityAfterLogin').value, 1, 'morphicBar.visibilityAfterLogin');
+        document.getElementById('morphicBarVisibility').value, 1, 'morphicBarVisibility');
     createSettingRow('MorphicBar Default Location', 
-        document.getElementById('morphicBar.defaultLocation').value, 1, 'morphicBar.defaultLocation');
+        document.getElementById('morphicBarLocation').value, 1, 'morphicBarLocation');
     createSettingRow('Reset 5 Windows Settings to Default', 
-        document.getElementById('features.resetSettings.enabled').checked ? 'True' : 'False', 1, 'features.resetSettings.enabled');
+        document.getElementById('resetSettingsEnabled').checked ? 'True' : 'False', 1, 'resetSettingsEnabled');
 
     // Custom buttons (for summary display - keep position info)
     const customButtons = collectPredefinedButtonsForSummary();
@@ -571,13 +561,13 @@ function updateSettingsSummary() {
         
         // Map button features to display names and element IDs
         const buttonMapping = {
-            'usbopeneject': { name: 'USB Open/Eject', elementId: 'usb.enabled' },
-            'volume': { name: 'Volume Control', elementId: 'volume.enabled' },
-            'voice': { name: 'Voice Control', elementId: 'voice.enabled' },
-            'signout': { name: 'Sign Out', elementId: 'signOut.enabled' }
+            'usbopeneject': { name: 'USB Open/Eject', elementId: 'usbEnabled' },
+            'volume': { name: 'Volume Control', elementId: 'volumeEnabled' },
+            'voice': { name: 'Voice Control', elementId: 'voiceEnabled' },
+            'signout': { name: 'Sign Out', elementId: 'signOutEnabled' }
         };
         
-        const mapping = buttonMapping[button.feature] || { name: button.feature, elementId: `${button.feature}.enabled` };
+        const mapping = buttonMapping[button.feature] || { name: button.feature, elementId: `${button.feature}Enabled` };
         createSettingRow(`${mapping.name}`, 'Enabled', 2, mapping.elementId, button.position);
     });
 
@@ -590,7 +580,7 @@ function updateSettingsSummary() {
             summaryContent.appendChild(hr);
         }
         
-        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set', 2, `customApp${index + 1}.enabled`, button.position);
+        createSettingRow(`Custom Application ${index + 1}`, button.label || 'Not set', 2, `customApp${index + 1}Enabled`, button.position);
     });
 
     // Display URL buttons
@@ -603,13 +593,13 @@ function updateSettingsSummary() {
         }
         
         // Edit button first
-        const editButton = document.createElement('button');
-        editButton.textContent = 'Edit';
-        editButton.className = 'edit-setting-btn';
-        editButton.addEventListener('click', function() {
-            navigateToSetting(2, `customUrl${index + 1}.enabled`);
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Edit';
+        editBtn.className = 'edit-setting-btn';
+        editBtn.addEventListener('click', function() {
+            navigateToSetting(2, `customUrl${index + 1}Enabled`);
         });
-        summaryContent.appendChild(editButton);
+        summaryContent.appendChild(editBtn);
         
         // Create header with position
         const headerDiv = document.createElement('div');
@@ -714,7 +704,6 @@ function showStep(stepNumber) {
         if (downloadBtn && !downloadBtn.hasAttribute('data-listener-attached')) {
             downloadBtn.addEventListener('click', handleDownloadClick);
             downloadBtn.setAttribute('data-listener-attached', 'true');
-            console.log('Download button event listener attached when step 3 shown');
         }
     }
 
@@ -755,21 +744,22 @@ function prevStep() {
 }
 
 // Default values for form fields
+// All keys use logical UI names (not JSON paths) for better readability and maintainability
 const defaultValues = {
     step1: {
         'organizationName': '',
-        'telemetry.siteId': '',
-        'features.autorunAfterLogin.enabled': true,
-        'features.autorunAfterLogin.scope': 'allLocalUsers',
-        'features.atUseCounter.enabled': true,
+        'siteId': '',
+        'autorunEnabled': true,
+        'autorunScope': 'allLocalUsers',
+        'atUseCounterEnabled': true,
         'enableDelayMorphic': false,
         'hideMorphicAfterLoginUntil': '',
-        // 'features.atOnDemand.enabled': false, // AT-on-Demand feature temporarily commented out
-        'features.customMorphicBars.enabled': true,
-        'features.checkForUpdates.enabled': false,
-        'morphicBar.visibilityAfterLogin': 'show',
-        'morphicBar.defaultLocation': 'bottomTrailing',
-        'features.resetSettings.enabled': false
+        // 'atOnDemandEnabled': false, // AT-on-Demand feature temporarily commented out
+        'customMorphicBarsEnabled': true,
+        'checkForUpdatesEnabled': false,
+        'morphicBarVisibility': 'show',
+        'morphicBarLocation': 'bottomTrailing',
+        'resetSettingsEnabled': false
     }
 };
 
@@ -789,34 +779,55 @@ function hideClearModal() {
     }
 }
 
+// Show notification modal
+function showNotification(title, message) {
+    const modal = document.getElementById('notificationModal');
+    const titleEl = document.getElementById('notificationTitle');
+    const messageEl = document.getElementById('notificationMessage');
+    
+    if (modal && titleEl && messageEl) {
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        modal.classList.add('show');
+    }
+}
+
+// Hide notification modal
+function hideNotificationModal() {
+    const modal = document.getElementById('notificationModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
 // Clear step 1 - Configure
 function clearStep1() {
     const defaults = defaultValues.step1;
 
     // Clear text inputs
     document.getElementById('organizationName').value = defaults['organizationName'];
-    document.getElementById('telemetry.siteId').value = defaults['telemetry.siteId'];
+    document.getElementById('siteId').value = defaults['siteId'];
     document.getElementById('hideMorphicAfterLoginUntil').value = defaults['hideMorphicAfterLoginUntil'];
 
     // Reset checkboxes
-    document.getElementById('features.autorunAfterLogin.enabled').checked = defaults['features.autorunAfterLogin.enabled'];
-    document.getElementById('features.atUseCounter.enabled').checked = defaults['features.atUseCounter.enabled'];
+    document.getElementById('autorunEnabled').checked = defaults['autorunEnabled'];
+    document.getElementById('atUseCounterEnabled').checked = defaults['atUseCounterEnabled'];
     document.getElementById('enableDelayMorphic').checked = defaults['enableDelayMorphic'];
-    // document.getElementById('features.atOnDemand.enabled').checked = defaults['features.atOnDemand.enabled']; // AT-on-Demand feature temporarily commented out
-    document.getElementById('features.customMorphicBars.enabled').checked = defaults['features.customMorphicBars.enabled'];
-    document.getElementById('features.checkForUpdates.enabled').checked = defaults['features.checkForUpdates.enabled'];
-    document.getElementById('features.resetSettings.enabled').checked = defaults['features.resetSettings.enabled'];
+    // document.getElementById('atOnDemandEnabled').checked = defaults['atOnDemandEnabled']; // AT-on-Demand feature temporarily commented out
+    document.getElementById('customMorphicBarsEnabled').checked = defaults['customMorphicBarsEnabled'];
+    document.getElementById('checkForUpdatesEnabled').checked = defaults['checkForUpdatesEnabled'];
+    document.getElementById('resetSettingsEnabled').checked = defaults['resetSettingsEnabled'];
 
     // Reset selects
-    document.getElementById('features.autorunAfterLogin.scope').value = defaults['features.autorunAfterLogin.scope'];
-    document.getElementById('morphicBar.visibilityAfterLogin').value = defaults['morphicBar.visibilityAfterLogin'];
-    document.getElementById('morphicBar.defaultLocation').value = defaults['morphicBar.defaultLocation'];
+    document.getElementById('autorunScope').value = defaults['autorunScope'];
+    document.getElementById('morphicBarVisibility').value = defaults['morphicBarVisibility'];
+    document.getElementById('morphicBarLocation').value = defaults['morphicBarLocation'];
 
     // Clear error messages
     document.getElementById('organizationNameError').style.display = 'none';
     document.getElementById('siteIdError').style.display = 'none';
     document.getElementById('organizationName').classList.remove('error');
-    document.getElementById('telemetry.siteId').classList.remove('error');
+    document.getElementById('siteId').classList.remove('error');
 
     // Trigger dependent field updates
     toggleScopeAccess();
@@ -828,16 +839,16 @@ function clearStep2() {
     // Uncheck all predefined buttons
     const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
     predefinedButtons.forEach(id => {
-        const checkbox = document.getElementById(`${id}.enabled`);
+        const checkbox = document.getElementById(`${id}Enabled`);
         if (checkbox) {
             checkbox.checked = false;
             // Hide position selector
-            const posContainer = document.getElementById(`${id}.positionContainer`);
+            const posContainer = document.getElementById(`${id}PositionContainer`);
             if (posContainer) {
                 posContainer.style.display = 'none';
             }
             // Reset position
-            const posSelect = document.getElementById(`${id}.position`);
+            const posSelect = document.getElementById(`${id}Position`);
             if (posSelect) {
                 posSelect.value = '';
             }
@@ -847,10 +858,10 @@ function clearStep2() {
     // Clear custom application buttons
     for (let i = 1; i <= dynamicAppButtonCount; i++) {
         const buttonId = `customApp${i}`;
-        const checkbox = document.getElementById(`${buttonId}.enabled`);
-        const position = document.getElementById(`${buttonId}.position`);
-        const appId = document.getElementById(`${buttonId}.appId`);
-        const inputs = document.getElementById(`${buttonId}.inputs`);
+        const checkbox = document.getElementById(`${buttonId}Enabled`);
+        const position = document.getElementById(`${buttonId}Position`);
+        const appId = document.getElementById(`${buttonId}AppId`);
+        const inputs = document.getElementById(`${buttonId}Inputs`);
 
         if (checkbox) checkbox.checked = false;
         if (position) position.value = '';
@@ -868,12 +879,12 @@ function clearStep2() {
     // Clear custom URL buttons
     for (let i = 1; i <= dynamicUrlButtonCount; i++) {
         const buttonId = `customUrl${i}`;
-        const checkbox = document.getElementById(`${buttonId}.enabled`);
-        const position = document.getElementById(`${buttonId}.position`);
-        const label = document.getElementById(`${buttonId}.label`);
-        const url = document.getElementById(`${buttonId}.url`);
-        const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
-        const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+        const checkbox = document.getElementById(`${buttonId}Enabled`);
+        const positionInput = document.getElementById(`${buttonId}Position`);
+        const labelInput = document.getElementById(`${buttonId}Label`);
+        const urlInput = document.getElementById(`${buttonId}Url`);
+        const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+        const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
 
         if (checkbox) {
             checkbox.checked = false;
@@ -881,11 +892,11 @@ function clearStep2() {
             const tooltipPreview = checkbox.closest('.predefined-button')?.querySelector('.tooltip-preview');
             if (tooltipPreview) tooltipPreview.style.display = 'none';
         }
-        if (position) position.value = '';
-        if (label) label.value = '';
-        if (url) url.value = '';
-        if (tooltipHeader) tooltipHeader.value = '';
-        if (tooltipText) tooltipText.value = '';
+        if (positionInput) positionInput.value = '';
+        if (labelInput) labelInput.value = '';
+        if (urlInput) urlInput.value = '';
+        if (tooltipHeaderInput) tooltipHeaderInput.value = '';
+        if (tooltipTextInput) tooltipTextInput.value = '';
 
         // Clear URL status indicator
         const statusIndicator = document.getElementById(`${buttonId}Status`);
@@ -919,8 +930,6 @@ function clearStep() {
 
 // Execute clear based on current step
 function executeClear() {
-    console.log('Clearing step:', currentStep);
-
     switch(currentStep) {
         case 1:
             clearStep1();
@@ -930,10 +939,10 @@ function executeClear() {
             break;
         case 3:
             // Step 3 is download/summary, no clear needed
-            console.log('Step 3 has no clearable fields');
             break;
         default:
-            console.log('Unknown step');
+            // Unknown step
+            break;
     }
 
     hideClearModal();
@@ -952,7 +961,7 @@ function initStepNavigation() {
 // Initialize event listeners based on current page
 document.addEventListener('DOMContentLoaded', function() {
     // Common file handling setup
-    const isConfigBuilder = window.location.pathname.includes('config-builder.html');
+    const isConfigBuilder = window.location.pathname.includes('/editor');
     
     if (isConfigBuilder) {
         // Initialize step navigation
@@ -972,13 +981,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Config Builder page setup
         document.getElementById('upload')?.addEventListener('change', handleFileUpload);
         
-        // Debug: Check if download button exists when page loads
+        // Attach download button event listener
         const downloadBtn = document.getElementById('download');
-        console.log('Download button found on page load:', downloadBtn);
-        
         if (downloadBtn) {
             downloadBtn.addEventListener('click', handleDownloadClick);
-            console.log('Download button event listener attached');
         } else {
             console.error('Download button not found on page load!');
         }
@@ -1050,10 +1056,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+
+        // Setup notification modal event listeners
+        const notificationModal = document.getElementById('notificationModal');
+        const notificationOkBtn = document.getElementById('notificationOkBtn');
+
+        if (notificationOkBtn) {
+            notificationOkBtn.addEventListener('click', hideNotificationModal);
+        }
+
+        // Close notification modal when clicking outside of it
+        if (notificationModal) {
+            notificationModal.addEventListener('click', function(event) {
+                if (event.target === notificationModal) {
+                    hideNotificationModal();
+                }
+            });
+        }
     } else {
         // Index page setup
         document.getElementById('createNewBtn')?.addEventListener('click', function() {
-            window.location.href = 'config-builder.html';
+            window.location.href = 'editor/index.html';
         });
         
         document.getElementById('importSettingsBtn')?.addEventListener('click', function() {
@@ -1072,10 +1095,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Store the config in localStorage
                     localStorage.setItem('pendingConfig', JSON.stringify(config));
                     // Navigate to config builder page
-                    window.location.href = 'config-builder.html';
+                    window.location.href = 'editor/index.html';
                 } catch (error) {
                     console.error('JSON Parse Error:', error);
-                    alert(`Invalid JSON file: ${error.message}\n\nPlease check that your file contains valid JSON format.`);
+                    showNotification('Invalid JSON File', `${error.message}\n\nPlease check that your file contains valid JSON format.`);
                 }
             };
             reader.readAsText(file);
@@ -1116,12 +1139,12 @@ document.getElementById('viewUrl1Btn')?.addEventListener('click', function() {
 });
 
 // AT-on-Demand feature temporarily commented out
-// const checkbox = document.getElementById('features.atOnDemand.enabled');
+// const checkbox = document.getElementById('atOnDemandEnabled');
 // checkbox.indeterminate = true;
 
 
 // This controls the access to dependent options (scope and reset settings)
-document.getElementById('features.autorunAfterLogin.enabled').addEventListener('change', toggleScopeAccess);
+document.getElementById('autorunEnabled').addEventListener('change', toggleScopeAccess);
 
 // This controls the access to the delay morphic date field
 document.getElementById('enableDelayMorphic').addEventListener('change', toggleDelayMorphicAccess);
@@ -1129,9 +1152,9 @@ document.getElementById('enableDelayMorphic').addEventListener('change', toggleD
 
 // Function to enable/disable the scope dropdown and reset settings
 function toggleScopeAccess() {
-    const autorunEnabled = document.getElementById('features.autorunAfterLogin.enabled').checked;
-    const scopeSelect = document.getElementById('features.autorunAfterLogin.scope');
-    const scopeLabel = document.getElementById('features.autorunAfterLogin.scope.label');
+    const autorunEnabled = document.getElementById('autorunEnabled').checked;
+    const scopeSelect = document.getElementById('autorunScope');
+    const scopeLabel = document.getElementById('autorunScopeLabel');
 
     if (autorunEnabled) {
         // Enable dependent options when autorun is enabled
@@ -1161,7 +1184,7 @@ function toggleDelayMorphicAccess() {
     const delayEnabled = document.getElementById('enableDelayMorphic').checked;
     const dateInput = document.getElementById('hideMorphicAfterLoginUntil');
     const dateLabel = document.getElementById('delayMorphicDateLabel');
-    const telemetryCheckbox = document.getElementById('features.atUseCounter.enabled');
+    const telemetryCheckbox = document.getElementById('atUseCounterEnabled');
 
     if (delayEnabled) {
         // Enable date input when delay is enabled
@@ -1206,7 +1229,7 @@ function preventUnchecking(event) {
 
     // Optional: Show a message explaining why it can't be unchecked
     const message = "Telemetry is required when 'Delay Morphic Appearance' is enabled.";
-    alert(message);
+    showNotification('Validation Errors', message);
 }
 
 // Function to toggle description visibility (for "see more" functionality)
@@ -1258,14 +1281,14 @@ window.addEventListener('load', function () {
 });
 
 // Dynamically validate Site ID as user types
-document.getElementById('telemetry.siteId').addEventListener('input', validateSiteId);
+document.getElementById('siteId').addEventListener('input', validateSiteId);
 
 // Dynamically validate Organization Name as user types
 document.getElementById('organizationName').addEventListener('input', validateOrganizationName);
 
     // Add event listeners for position dropdowns to update preview
     document.addEventListener('DOMContentLoaded', function () {
-        const positionSelects = ['usb.position', 'volume.position', 'voice.position', 'customUrl1.position', 'customApp1.position', 'signOut.position'];
+        const positionSelects = ['usbPosition', 'volumePosition', 'voicePosition', 'customUrl1Position', 'customApp1Position', 'signOutPosition'];
 
         positionSelects.forEach(selectId => {
             const select = document.getElementById(selectId);
@@ -1278,8 +1301,8 @@ document.getElementById('organizationName').addEventListener('input', validateOr
         // Add event listeners for predefined button checkboxes
         const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
         predefinedButtons.forEach(buttonId => {
-            const checkbox = document.getElementById(`${buttonId}.enabled`);
-            const positionContainer = document.getElementById(`${buttonId}.positionContainer`);
+            const checkbox = document.getElementById(`${buttonId}Enabled`);
+            const positionContainer = document.getElementById(`${buttonId}PositionContainer`);
             
             if (checkbox && positionContainer) {
                 checkbox.addEventListener('change', function() {
@@ -1288,7 +1311,7 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                         if (!canCheckButton(buttonId)) {
                             // Prevent checking if we already have 3 checked buttons
                             this.checked = false;
-                            alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                            showNotification('Maximum Buttons Reached', 'You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
                             return;
                         }
                         positionContainer.style.display = 'flex';
@@ -1297,7 +1320,7 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                     } else {
                         positionContainer.style.display = 'none';
                         // Reset position selection when unchecked
-                        const positionSelect = document.getElementById(`${buttonId}.position`);
+                        const positionSelect = document.getElementById(`${buttonId}Position`);
                         if (positionSelect) {
                             positionSelect.value = '';
                             updatePositionPreview();
@@ -1313,26 +1336,26 @@ document.getElementById('organizationName').addEventListener('input', validateOr
         // Add event listeners for application button checkboxes
         const appButtonIds = ['customApp1'];
         const addButtonContainer = document.getElementById('addAppButtonContainer');
-        const addButton = document.getElementById('addAppButton');
+        const addAppBtn = document.getElementById('addAppButton');
 
         
         appButtonIds.forEach(buttonId => {
-            const checkbox = document.getElementById(`${buttonId}.enabled`);
-            const positionContainer = document.getElementById(`${buttonId}.positionContainer`);
-            const inputs = document.getElementById(`${buttonId}.inputs`);
-            const positionSelect = document.getElementById(`${buttonId}.position`);
-            const appSelect = document.getElementById(`${buttonId}.appId`);
+            const checkbox = document.getElementById(`${buttonId}Enabled`);
+            const positionContainer = document.getElementById(`${buttonId}PositionContainer`);
+            const inputsContainer = document.getElementById(`${buttonId}Inputs`);
+            const positionSelect = document.getElementById(`${buttonId}Position`);
+            const appSelect = document.getElementById(`${buttonId}AppId`);
             
             if (checkbox) {
                 // Set initial visibility based on current state
                 (function initAppButtonVisibility() {
                     if (checkbox.checked) {
                         if (positionContainer) positionContainer.style.display = 'flex';
-                        if (inputs) inputs.style.display = 'flex';
+                        if (inputsContainer) inputsContainer.style.display = 'flex';
                         updateAddAppVisibility();
                     } else {
                         if (positionContainer) positionContainer.style.display = 'none';
-                        if (inputs) inputs.style.display = 'none';
+                        if (inputsContainer) inputsContainer.style.display = 'none';
                         updateAddAppVisibility();
                     }
                 })();
@@ -1343,16 +1366,16 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                         if (!canCheckButton(buttonId)) {
                             // Prevent checking if we already have 3 checked buttons
                             this.checked = false;
-                            alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                            showNotification('Maximum Buttons Reached', 'You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
                             return;
                         }
                         if (positionContainer) positionContainer.style.display = 'flex';
-                        if (inputs) inputs.style.display = 'flex';
+                        if (inputsContainer) inputsContainer.style.display = 'flex';
                         updateAddAppVisibility();
                         updateAddUrlVisibility();
                     } else {
                         if (positionContainer) positionContainer.style.display = 'none';
-                        if (inputs) inputs.style.display = 'none';
+                        if (inputsContainer) inputsContainer.style.display = 'none';
                         // Reset position selection when unchecked
                         if (positionSelect) {
                             positionSelect.value = '';
@@ -1396,24 +1419,23 @@ document.getElementById('organizationName').addEventListener('input', validateOr
         updateAddUrlVisibility();
 
         // Add button functionality
-        if (addButton) {
-            addButton.addEventListener('click', addApplicationButton);
+        if (addAppBtn) {
+            addAppBtn.addEventListener('click', addApplicationButton);
         }
 
         // URL buttons add functionality
-        const addUrlButtonElement = document.getElementById('addUrlButton');
-        if (addUrlButtonElement) {
-            addUrlButtonElement.addEventListener('click', addUrlButton);
+        const addUrlBtn = document.getElementById('addUrlButton');
+        if (addUrlBtn) {
+            addUrlBtn.addEventListener('click', addUrlButton);
         }
 
         // Add event listeners for URL button enable checkboxes (toggle inputs/preview only)
         const urlButtonIds = ['customUrl1'];
         const addUrlButtonContainer = document.getElementById('addUrlButtonContainer');
         urlButtonIds.forEach(buttonId => {
-            const checkbox = document.getElementById(`${buttonId}.enabled`);
+            const checkbox = document.getElementById(`${buttonId}Enabled`);
             const inputsContainer = document.querySelector(`#${buttonId} .button-config`);
-            const previewContainer = document.querySelector(`#${buttonId} .tooltip-preview`);
-            const positionSelector = document.getElementById(`${buttonId}.position`);
+            const positionSelector = document.getElementById(`${buttonId}Position`);
 
             if (checkbox && inputsContainer) {
                 // Initial state: unchecked => hide inputs, keep heading/description visible
@@ -1434,7 +1456,7 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                         if (!canCheckButton(buttonId)) {
                             // Prevent checking if we already have 3 checked buttons
                             this.checked = false;
-                            alert('You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
+                            showNotification('Maximum Buttons Reached', 'You can only have a maximum of 3 buttons checked at once. Please uncheck another button first.');
                             return;
                         }
                     }
@@ -1456,13 +1478,13 @@ document.getElementById('organizationName').addEventListener('input', validateOr
                 
                 if (testUrlBtn) {
                     testUrlBtn.addEventListener('click', function() {
-                        testURLStatus(`${buttonId}.url`);
+                        testURLStatus(`${buttonId}Url`);
                     });
                 }
                 
                 if (viewUrlBtn) {
                     viewUrlBtn.addEventListener('click', function() {
-                        viewURL(`${buttonId}.url`);
+                        viewURL(`${buttonId}Url`);
                     });
                 }
             }
@@ -1471,9 +1493,9 @@ document.getElementById('organizationName').addEventListener('input', validateOr
     // Add event listeners for custom URL inputs to update preview
     const customUrlIds = ['customUrl1'];
     customUrlIds.forEach(buttonId => {
-        const labelInput = document.getElementById(`${buttonId}.label`);
-        const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
-        const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
+        const labelInput = document.getElementById(`${buttonId}Label`);
+        const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+        const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
 
         if (labelInput) {
             labelInput.addEventListener('input', () => {
@@ -1495,9 +1517,9 @@ document.getElementById('organizationName').addEventListener('input', validateOr
     // Add event listeners for custom application inputs to update preview
     const customAppIds = ['customApp1'];
     customAppIds.forEach(buttonId => {
-        const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
-        const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
-        const appIdInput = document.getElementById(`${buttonId}.appId`);
+        const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+        const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
+        const appIdInput = document.getElementById(`${buttonId}AppId`);
 
         if (tooltipHeaderInput) {
             tooltipHeaderInput.addEventListener('input', () => {
@@ -1519,7 +1541,7 @@ document.getElementById('organizationName').addEventListener('input', validateOr
 
 //Validates that the Site ID contains only ASCII letters and numbers
 function validateSiteId() {
-    const siteIdInput = document.getElementById('telemetry.siteId');
+    const siteIdInput = document.getElementById('siteId');
     const siteIdError = document.getElementById('siteIdError');
     const siteId = siteIdInput.value.trim();
 
@@ -1587,7 +1609,7 @@ async function testURLStatus(inputId) {
 
     const url = urlInput.value.trim();
     if (!url) {
-        alert('Please enter a URL first');
+        showNotification('URL Required', 'Please enter a URL first');
         urlInput.focus();
         return;
     }
@@ -1637,7 +1659,7 @@ async function testURLStatus(inputId) {
         new URL(finalUrl);
     } catch (_) {
         setStatus('error');
-        alert('Invalid URL format. Please check and try again.');
+        showNotification('Invalid URL', 'Invalid URL format. Please check and try again.');
         urlInput.focus();
         return;
     }
@@ -1725,7 +1747,7 @@ async function testURLStatus(inputId) {
     } else {
         setStatus('error');
         if (errorMessage) {
-            alert(errorMessage);
+            showNotification('URL Test Failed', errorMessage);
         }
     }
 
@@ -1743,7 +1765,7 @@ function viewURL(inputId) {
 
     const url = urlInput.value.trim();
     if (!url) {
-        alert('Please enter a URL first');
+        showNotification('URL Required', 'Please enter a URL first');
         urlInput.focus();
         return;
     }
@@ -1761,7 +1783,7 @@ function viewURL(inputId) {
         // eslint-disable-next-line no-new
         new URL(finalUrl);
     } catch (_) {
-        alert('Invalid URL format. Please check and try again.');
+        showNotification('Invalid URL', 'Invalid URL format. Please check and try again.');
         urlInput.focus();
         return;
     }
@@ -1770,11 +1792,11 @@ function viewURL(inputId) {
     try {
         const newWindow = window.open(finalUrl, '_blank');
         if (!newWindow) {
-            alert('Popup blocked. Please allow popups for this site to view URLs, or manually copy and test the URL: ' + finalUrl);
+            showNotification('Popup Blocked', 'Please allow popups for this site to view URLs, or manually copy and test the URL: ' + finalUrl);
         }
     } catch (error) {
         console.error('Error opening URL:', error);
-        alert('Unable to open URL. It may be unreachable or blocked.');
+        showNotification('Unable to Open URL', 'Unable to open URL. It may be unreachable or blocked.');
     }
 }
 
@@ -1784,17 +1806,17 @@ function populatePredefinedButtons(extraItems) {
     // Reset all buttons to "Not Used" first
     const buttonIds = ['usb', 'volume', 'voice', 'signOut', 'customUrl1', 'customApp1'];
     buttonIds.forEach(buttonId => {
-        const positionSelect = document.getElementById(`${buttonId}.position`);
+        const positionSelect = document.getElementById(`${buttonId}Position`);
         if (positionSelect) {
             positionSelect.value = '';
         }
 
         // Clear URL button fields
         if (buttonId.includes('customUrl')) {
-            const labelInput = document.getElementById(`${buttonId}.label`);
-            const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
-            const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
-            const urlInput = document.getElementById(`${buttonId}.url`);
+            const labelInput = document.getElementById(`${buttonId}Label`);
+            const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+            const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
+            const urlInput = document.getElementById(`${buttonId}Url`);
 
             if (labelInput) labelInput.value = '';
             if (tooltipHeaderInput) tooltipHeaderInput.value = '';
@@ -1804,9 +1826,9 @@ function populatePredefinedButtons(extraItems) {
 
         // Clear Application button fields
         if (buttonId.includes('customApp')) {
-            const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
-            const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
-            const appIdInput = document.getElementById(`${buttonId}.appId`);
+            const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+            const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
+            const appIdInput = document.getElementById(`${buttonId}AppId`);
 
             if (tooltipHeaderInput) tooltipHeaderInput.value = '';
             if (tooltipTextInput) tooltipTextInput.value = '';
@@ -1826,7 +1848,7 @@ function populatePredefinedButtons(extraItems) {
 
             const buttonId = featureMap[item.feature];
             if (buttonId) {
-                const positionSelect = document.getElementById(`${buttonId}.position`);
+                const positionSelect = document.getElementById(`${buttonId}Position`);
                 if (positionSelect) {
                     positionSelect.value = (index + 1).toString();
                 }
@@ -1839,7 +1861,7 @@ function populatePredefinedButtons(extraItems) {
 
             const buttonId = featureMap[item.feature];
             if (buttonId) {
-                const positionSelect = document.getElementById(`${buttonId}.position`);
+                const positionSelect = document.getElementById(`${buttonId}Position`);
                 if (positionSelect) {
                     positionSelect.value = (index + 1).toString();
                 }
@@ -1848,16 +1870,16 @@ function populatePredefinedButtons(extraItems) {
             // Find the first available custom URL button
             const customButtons = ['customUrl1'];
             for (const buttonId of customButtons) {
-                const positionSelect = document.getElementById(`${buttonId}.position`);
+                const positionSelect = document.getElementById(`${buttonId}Position`);
                 if (positionSelect && positionSelect.value === '') {
                     // This custom button is available
                     positionSelect.value = (index + 1).toString();
 
                     // Populate the URL button fields
-                    const labelInput = document.getElementById(`${buttonId}.label`);
-                    const tooltipHeaderInput = document.getElementById(`${buttonId}.tooltipHeader`);
-                    const tooltipTextInput = document.getElementById(`${buttonId}.tooltipText`);
-                    const urlInput = document.getElementById(`${buttonId}.url`);
+                    const labelInput = document.getElementById(`${buttonId}Label`);
+                    const tooltipHeaderInput = document.getElementById(`${buttonId}TooltipHeader`);
+                    const tooltipTextInput = document.getElementById(`${buttonId}TooltipText`);
+                    const urlInput = document.getElementById(`${buttonId}Url`);
 
                     if (labelInput) labelInput.value = item.label || '';
                     if (tooltipHeaderInput) tooltipHeaderInput.value = item.tooltipHeader || '';
@@ -1873,22 +1895,22 @@ function populatePredefinedButtons(extraItems) {
             // Find the first available custom application button
             const customAppButtons = ['customApp1'];
             for (const buttonId of customAppButtons) {
-                const positionSelect = document.getElementById(`${buttonId}.position`);
+                const positionSelect = document.getElementById(`${buttonId}Position`);
                 if (positionSelect && positionSelect.value === '') {
                     // This custom button is available
                     positionSelect.value = (index + 1).toString();
 
                     // Populate the Application button fields
-                    const appIdInput = document.getElementById(`${buttonId}.appId`);
+                    const appIdInput = document.getElementById(`${buttonId}AppId`);
                     if (appIdInput) appIdInput.value = item.appId || '';
 
                     // Update the preview
                     updateAppButtonPreview(buttonId);
 
                     // Ensure the preview button gets the application class for proper styling
-                    const previewButton = document.getElementById(`${buttonId}Preview`);
-                    if (previewButton) {
-                        previewButton.classList.add('application-button');
+                    const previewButtonElement = document.getElementById(`${buttonId}Preview`);
+                    if (previewButtonElement) {
+                        previewButtonElement.classList.add('application-button');
                     }
                     break;
                 }
@@ -1927,10 +1949,10 @@ function collectPredefinedButtonsForSummary() {
 
     buttonConfigs.forEach(config => {
         // For all buttons, check if they're enabled first
-        const enabledCheckbox = document.getElementById(`${config.id}.enabled`);
+        const enabledCheckbox = document.getElementById(`${config.id}Enabled`);
         const isEnabled = enabledCheckbox && enabledCheckbox.checked;
         
-        const positionSelect = document.getElementById(`${config.id}.position`);
+        const positionSelect = document.getElementById(`${config.id}Position`);
         if (isEnabled && positionSelect && positionSelect.value && positionSelect.value !== '') {
             const position = parseInt(positionSelect.value);
             const buttonData = {
@@ -1949,12 +1971,12 @@ function collectPredefinedButtonsForSummary() {
                     buttonData.function = "signOut";
                 }
             } else if (config.type === 'link') {
-                buttonData.label = document.getElementById(`${config.id}.label`).value || '';
-                buttonData.tooltipHeader = document.getElementById(`${config.id}.tooltipHeader`).value || '';
-                buttonData.tooltipText = document.getElementById(`${config.id}.tooltipText`).value || '';
-                buttonData.url = document.getElementById(`${config.id}.url`).value || '';
+                buttonData.label = document.getElementById(`${config.id}LabelInput`).value || '';
+                buttonData.tooltipHeader = document.getElementById(`${config.id}TooltipHeaderInput`).value || '';
+                buttonData.tooltipText = document.getElementById(`${config.id}TooltipTextInput`).value || '';
+                buttonData.url = document.getElementById(`${config.id}UrlInput`).value || '';
             } else if (config.type === 'application') {
-                const appId = document.getElementById(`${config.id}.appId`).value || '';
+                const appId = document.getElementById(`${config.id}AppId`).value || '';
                 buttonData.appId = appId;
                 const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
                 buttonData.label = appName;
@@ -1999,10 +2021,10 @@ function collectPredefinedButtons() {
 
     buttonConfigs.forEach(config => {
         // For all buttons, check if they're enabled first
-            const enabledCheckbox = document.getElementById(`${config.id}.enabled`);
+            const enabledCheckbox = document.getElementById(`${config.id}Enabled`);
         const isEnabled = enabledCheckbox && enabledCheckbox.checked;
         
-        const positionSelect = document.getElementById(`${config.id}.position`);
+        const positionSelect = document.getElementById(`${config.id}Position`);
         if (isEnabled && positionSelect && positionSelect.value && positionSelect.value !== '') {
             const position = parseInt(positionSelect.value);
             const buttonData = {
@@ -2021,12 +2043,12 @@ function collectPredefinedButtons() {
                     buttonData.function = "signOut";
                 }
             } else if (config.type === 'link') {
-                buttonData.label = document.getElementById(`${config.id}.label`).value || '';
-                buttonData.tooltipHeader = document.getElementById(`${config.id}.tooltipHeader`).value || '';
-                buttonData.tooltipText = document.getElementById(`${config.id}.tooltipText`).value || '';
-                buttonData.url = document.getElementById(`${config.id}.url`).value || '';
+                buttonData.label = document.getElementById(`${config.id}LabelInput`).value || '';
+                buttonData.tooltipHeader = document.getElementById(`${config.id}TooltipHeaderInput`).value || '';
+                buttonData.tooltipText = document.getElementById(`${config.id}TooltipTextInput`).value || '';
+                buttonData.url = document.getElementById(`${config.id}UrlInput`).value || '';
             } else if (config.type === 'application') {
-                const appId = document.getElementById(`${config.id}.appId`).value || '';
+                const appId = document.getElementById(`${config.id}AppId`).value || '';
                 buttonData.appId = appId;
                 const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
                 buttonData.label = appName;
@@ -2054,11 +2076,10 @@ function handleFileUpload(event) {
         try {
             // Attempt to parse the uploaded file as JSON
             const config = JSON.parse(e.target.result);
-            //console.log('Parsed config:', config);
 
             // Populate the entire UI with the loaded configuration
             populateUI(config);
-            alert("Config file loaded successfully!");
+            showNotification('Success', 'Config file loaded successfully!');
         } catch (error) {
             // Handle invalid JSON files gracefully
             console.error('JSON Parse Error:', error);
@@ -2074,25 +2095,25 @@ function populateUI(config) {
     document.getElementById('organizationName').value = config.organizationName ?? "";
 
     // Features section - handle nested structure
-    // document.getElementById('features.atOnDemand.enabled').checked =
+    // document.getElementById('atOnDemandEnabled').checked =
     //     config.features?.atOnDemand?.enabled ?? false; // AT-on-Demand feature temporarily commented out
-    document.getElementById('features.atUseCounter.enabled').checked =
+    document.getElementById('atUseCounterEnabled').checked =
         config.features?.atUseCounter?.enabled ?? true;
-    document.getElementById('features.autorunAfterLogin.enabled').checked =
+    document.getElementById('autorunEnabled').checked =
         config.features?.autorunAfterLogin?.enabled ?? true;
-    document.getElementById('features.autorunAfterLogin.scope').value =
+    document.getElementById('autorunScope').value =
         config.features?.autorunAfterLogin?.scope ?? "allLocalUsers";
-    document.getElementById('features.checkForUpdates.enabled').checked = config.features?.checkForUpdates?.enabled ?? false;
-    document.getElementById('features.customMorphicBars.enabled').checked = config.features?.customMorphicBars?.enabled ?? true;
-    document.getElementById('features.resetSettings.enabled').checked = config.features?.resetSettings?.enabled ?? false;
+    document.getElementById('checkForUpdatesEnabled').checked = config.features?.checkForUpdates?.enabled ?? false;
+    document.getElementById('customMorphicBarsEnabled').checked = config.features?.customMorphicBars?.enabled ?? true;
+    document.getElementById('resetSettingsEnabled').checked = config.features?.resetSettings?.enabled ?? false;
     // signIn is now automatically controlled by customMorphicBars setting, so no UI element to populate
 
     // MorphicBar section - handle nested structure
-    document.getElementById('morphicBar.defaultLocation').value = config.morphicBar?.defaultLocation ?? "bottomTrailing";
-    document.getElementById('morphicBar.visibilityAfterLogin').value = config.morphicBar?.visibilityAfterLogin ?? "show";
+    document.getElementById('morphicBarLocation').value = config.morphicBar?.defaultLocation ?? "bottomTrailing";
+    document.getElementById('morphicBarVisibility').value = config.morphicBar?.visibilityAfterLogin ?? "show";
 
     // Advanced settings - some nested, some top-level
-    document.getElementById('telemetry.siteId').value = config.telemetry?.siteId ?? "";
+    document.getElementById('siteId').value = config.telemetry?.siteId ?? "";
     document.getElementById('hideMorphicAfterLoginUntil').value = config.hideMorphicAfterLoginUntil ?? "";
 
 
@@ -2214,7 +2235,6 @@ async function generatePDF() {
 
         // Ensure the element is visible and has dimensions
         const rect = elementToCapture.getBoundingClientRect();
-        console.log('Element dimensions:', rect);
 
         if (rect.width === 0 || rect.height === 0) {
             console.error('Element has no dimensions:', rect);
@@ -2232,8 +2252,6 @@ async function generatePDF() {
             height: rect.height
         });
 
-        console.log('Canvas created:', { width: canvas.width, height: canvas.height });
-
         // Validate canvas dimensions
         if (!canvas || canvas.width === 0 || canvas.height === 0) {
             console.error('Invalid canvas dimensions');
@@ -2246,8 +2264,6 @@ async function generatePDF() {
         // Calculate dimensions with validation
         const imgWidth = contentWidth;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        console.log('Image dimensions:', { imgWidth, imgHeight });
 
         // Validate calculated dimensions
         if (!imgWidth || !imgHeight || imgWidth <= 0 || imgHeight <= 0 || !isFinite(imgWidth) || !isFinite(imgHeight)) {
@@ -2429,16 +2445,14 @@ async function generatePDF() {
         return true;
     } catch (error) {
         console.error('Error generating PDF:', error);
-        alert('There was an error generating the PDF. Please try again.');
+        showNotification('Error', 'There was an error generating the PDF. Please try again.');
         return false;
     }
 }
 
 // Handle download button click
 async function handleDownloadClick() {
-    console.log('Download button clicked!');
     const downloadBtn = document.getElementById('download');
-    console.log('Download button found:', downloadBtn);
 
     if (!downloadBtn) {
         console.error('Download button not found!');
@@ -2450,19 +2464,16 @@ async function handleDownloadClick() {
     downloadBtn.textContent = 'Generating Files...';
 
     try {
-        console.log('Starting download process...');
         // Download config.json
         downloadConfig();
-        console.log('Config downloaded, generating PDF...');
         
         // Generate and download PDF
         await generatePDF();
-        console.log('PDF generated successfully');
         
-        alert('Configuration files have been downloaded successfully!');
+        showNotification('Success', 'Configuration files have been downloaded successfully!');
     } catch (error) {
         console.error('Error during file generation:', error);
-        alert('There was an error generating the files. Please try again.');
+        showNotification('Error', 'There was an error generating the files. Please try again.');
     } finally {
         // Re-enable the download button
         downloadBtn.disabled = false;
@@ -2493,7 +2504,7 @@ function checkStepErrors(stepNumber) {
         }
 
         // Validate Site ID is filled in
-        const siteId = document.getElementById('telemetry.siteId').value.trim();
+        const siteId = document.getElementById('siteId').value.trim();
         if (!siteId) {
             errors.push('Site ID is required.');
         }
@@ -2530,8 +2541,8 @@ function checkStepErrors(stepNumber) {
         // Validate predefined buttons have position assigned if they are enabled (checked)
         const predefinedButtons = ['usb', 'volume', 'voice', 'signOut'];
         predefinedButtons.forEach(buttonId => {
-            const checkbox = document.getElementById(`${buttonId}.enabled`);
-            const position = document.getElementById(`${buttonId}.position`);
+            const checkbox = document.getElementById(`${buttonId}Enabled`);
+            const position = document.getElementById(`${buttonId}Position`);
             if (checkbox && checkbox.checked && position && !position.value) {
                 const buttonNames = {
                     'usb': 'USB Open/Eject',
@@ -2546,13 +2557,13 @@ function checkStepErrors(stepNumber) {
         // Validate custom URL buttons have all required fields if they are enabled (checked)
         for (let i = 1; i <= dynamicUrlButtonCount; i++) {
             const buttonId = `customUrl${i}`;
-            const checkbox = document.getElementById(`${buttonId}.enabled`);
-            const position = document.getElementById(`${buttonId}.position`);
+            const checkbox = document.getElementById(`${buttonId}Enabled`);
+            const position = document.getElementById(`${buttonId}Position`);
             if (checkbox && checkbox.checked && position) {
-                const label = document.getElementById(`${buttonId}.label`);
-                const url = document.getElementById(`${buttonId}.url`);
-                const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`);
-                const tooltipText = document.getElementById(`${buttonId}.tooltipText`);
+                const label = document.getElementById(`${buttonId}Label`);
+                const url = document.getElementById(`${buttonId}Url`);
+                const tooltipHeader = document.getElementById(`${buttonId}TooltipHeader`);
+                const tooltipText = document.getElementById(`${buttonId}TooltipText`);
 
                 const labelValue = label ? label.value.trim() : '';
                 const urlValue = url ? url.value.trim() : '';
@@ -2586,10 +2597,10 @@ function checkStepErrors(stepNumber) {
         // Validate custom application buttons have all required fields if they are enabled (checked)
         for (let i = 1; i <= dynamicAppButtonCount; i++) {
             const buttonId = `customApp${i}`;
-            const checkbox = document.getElementById(`${buttonId}.enabled`);
-            const position = document.getElementById(`${buttonId}.position`);
+            const checkbox = document.getElementById(`${buttonId}Enabled`);
+            const position = document.getElementById(`${buttonId}Position`);
             if (checkbox && checkbox.checked && position) {
-                const appId = document.getElementById(`${buttonId}.appId`);
+                const appId = document.getElementById(`${buttonId}AppId`);
 
                 const appIdValue = appId ? appId.value.trim() : '';
                 const positionValue = position.value;
@@ -2669,7 +2680,7 @@ function displayStepErrors(stepNumber, errors) {
 function downloadConfig() {
     // Generate config.json file for download
 
-    const isAutoRunEnabled = document.getElementById('features.autorunAfterLogin.enabled').checked;
+    const isAutoRunEnabled = document.getElementById('autorunEnabled').checked;
 
     // Build the config
     const config = {
@@ -2678,41 +2689,41 @@ function downloadConfig() {
 
         "features": {
             // "atOnDemand": { // AT-on-Demand feature temporarily commented out
-            //     "enabled": document.getElementById('features.atOnDemand.enabled').checked
+            //     "enabled": document.getElementById('atOnDemandEnabled').checked
             // },
             "atUseCounter": {
-                "enabled": document.getElementById('features.atUseCounter.enabled').checked
+                "enabled": document.getElementById('atUseCounterEnabled').checked
             },
             "autorunAfterLogin": {
                 "enabled": isAutoRunEnabled,
                 // Default to allLocalUsers if auto run is disabled
-                "scope": isAutoRunEnabled ? document.getElementById('features.autorunAfterLogin.scope').value : "allLocalUsers"
+                "scope": isAutoRunEnabled ? document.getElementById('autorunScope').value : "allLocalUsers"
             },
             "checkForUpdates": {
-                "enabled": document.getElementById('features.checkForUpdates.enabled').checked
+                "enabled": document.getElementById('checkForUpdatesEnabled').checked
             },
             "customMorphicBars": {
-                "enabled": document.getElementById('features.customMorphicBars.enabled').checked
+                "enabled": document.getElementById('customMorphicBarsEnabled').checked
             },
             "resetSettings": {
                 // Default to false for Reset Settings when auto run is disabled
-                "enabled": isAutoRunEnabled ? document.getElementById('features.resetSettings.enabled').checked : false
+                "enabled": isAutoRunEnabled ? document.getElementById('resetSettingsEnabled').checked : false
             },
             "signIn": {
                 // Automatically enabled when customMorphicBars is enabled
-                "enabled": document.getElementById('features.customMorphicBars.enabled').checked
+                "enabled": document.getElementById('customMorphicBarsEnabled').checked
             }
         },
 
         "morphicBar": {
-            "defaultLocation": document.getElementById('morphicBar.defaultLocation').value,
-            "visibilityAfterLogin": document.getElementById('morphicBar.visibilityAfterLogin').value,
+            "defaultLocation": document.getElementById('morphicBarLocation').value,
+            "visibilityAfterLogin": document.getElementById('morphicBarVisibility').value,
             "extraItems": collectPredefinedButtons()
         }
     };
 
     // Add optional fields only if they have values
-    const siteId = document.getElementById('telemetry.siteId').value.trim();
+    const siteId = document.getElementById('siteId').value.trim();
     if (siteId) {
         config.telemetry = {
             "siteId": siteId
@@ -2737,9 +2748,9 @@ function downloadConfig() {
 
 // Function to update URL button preview dynamically
 function updateUrlButtonPreview(buttonId) {
-    const label = document.getElementById(`${buttonId}.label`).value || 'Button\nText';
-    const tooltipHeader = document.getElementById(`${buttonId}.tooltipHeader`).value || 'Header text';
-    const tooltipText = document.getElementById(`${buttonId}.tooltipText`).value || 'Description text';
+    const label = document.getElementById(`${buttonId}Label`).value || 'Button\nText';
+    const tooltipHeader = document.getElementById(`${buttonId}TooltipHeader`).value || 'Header text';
+    const tooltipText = document.getElementById(`${buttonId}TooltipText`).value || 'Description text';
 
     // Update preview button label - convert \n to line breaks
     const labelElement = document.getElementById(`${buttonId}Label`);
@@ -2776,15 +2787,15 @@ function updateUrlButtonPreview(buttonId) {
     }
 
     // Update button title attribute for browser tooltip
-    const previewButton = document.getElementById(`${buttonId}Preview`);
-    if (previewButton) {
-        previewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
+    const previewButtonElement = document.getElementById(`${buttonId}Preview`);
+    if (previewButtonElement) {
+        previewButtonElement.title = `${tooltipHeader}\n\n${tooltipText}`;
     }
 
     // Update config preview button title
-    const configPreviewButton = document.getElementById(`${buttonId}ConfigPreview`);
-    if (configPreviewButton) {
-        configPreviewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
+    const configPreviewButtonElement = document.getElementById(`${buttonId}ConfigPreview`);
+    if (configPreviewButtonElement) {
+        configPreviewButtonElement.title = `${tooltipHeader}\n\n${tooltipText}`;
     }
 
     // Update tooltip preview area - keep this for URL buttons
@@ -2805,18 +2816,18 @@ function updateUrlButtonPreview(buttonId) {
 
 // Function to update URL button visibility based on checkbox state
 function updateUrlButtonVisibility(buttonId) {
-    const checkbox = document.getElementById(`${buttonId}.enabled`);
-    const originalButton = document.getElementById(`${buttonId}Preview`);
+    const checkbox = document.getElementById(`${buttonId}Enabled`);
+    const previewButtonElement = document.getElementById(`${buttonId}Preview`);
     const tooltipPreview = document.querySelector(`#${buttonId} .tooltip-preview`);
     
-    if (checkbox && originalButton && tooltipPreview) {
+    if (checkbox && previewButtonElement && tooltipPreview) {
         if (checkbox.checked) {
             // When checked: hide original button, show preview section
-            originalButton.style.display = 'none';
+            previewButtonElement.style.display = 'none';
             tooltipPreview.style.display = 'flex';
         } else {
             // When unchecked: show original button, hide preview section
-            originalButton.style.display = 'flex';
+            previewButtonElement.style.display = 'flex';
             tooltipPreview.style.display = 'none';
         }
     }
@@ -2841,7 +2852,7 @@ const applicationNames = {
 
 // Function to update Application button preview dynamically
 function updateAppButtonPreview(buttonId) {
-    const appId = document.getElementById(`${buttonId}.appId`).value;
+    const appId = document.getElementById(`${buttonId}AppId`).value;
     const label = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
 
     // Auto-generate tooltip header and text based on application name
@@ -2865,9 +2876,9 @@ function updateAppButtonPreview(buttonId) {
     }
 
     // Update button title attribute for browser tooltip and add application class
-    const previewButton = document.getElementById(`${buttonId}Preview`);
-    if (previewButton) {
-        previewButton.title = `${tooltipHeader}\n\n${tooltipText}`;
+    const previewButtonElement = document.getElementById(`${buttonId}Preview`);
+    if (previewButtonElement) {
+        previewButtonElement.title = `${tooltipHeader}\n\n${tooltipText}`;
         // Add class to identify this as an application button for CSS styling
         previewButton.classList.add('application-button');
     }
@@ -2881,20 +2892,20 @@ function updateAppButtonPreview(buttonId) {
 // Updated function to validate unique positions for all buttons (including dynamic ones)
 function validateUniquePositions() {
     const positionSelects = [
-        'usb.position',
-        'volume.position',
-        'voice.position',
-        'signOut.position'
+        'usbPosition',
+        'volumePosition',
+        'voicePosition',
+        'signOutPosition'
     ];
     
     // Add all custom URL button positions
     for (let i = 1; i <= dynamicUrlButtonCount; i++) {
-        positionSelects.push(`customUrl${i}.position`);
+        positionSelects.push(`customUrl${i}Position`);
     }
     
     // Add all custom Application button positions
     for (let i = 1; i <= dynamicAppButtonCount; i++) {
-        positionSelects.push(`customApp${i}.position`);
+        positionSelects.push(`customApp${i}Position`);
     }
 
     const usedPositions = new Map(); // Map position to button ID that uses it
@@ -2905,12 +2916,12 @@ function validateUniquePositions() {
         const select = document.getElementById(selectId);
         if (select && select.value && select.value !== '') {
             // For predefined buttons, check if they're enabled
-            const isPredefinedButton = ['usb.position', 'volume.position', 'voice.position', 'signOut.position'].includes(selectId);
+            const isPredefinedButton = ['usbPosition', 'volumePosition', 'voicePosition', 'signOutPosition'].includes(selectId);
             let isEnabled = true;
             
             if (isPredefinedButton) {
-                const buttonId = selectId.replace('.position', '');
-                const enabledCheckbox = document.getElementById(`${buttonId}.enabled`);
+                const buttonId = selectId.replace('Position', '');
+                const enabledCheckbox = document.getElementById(`${buttonId}Enabled`);
                 isEnabled = enabledCheckbox && enabledCheckbox.checked;
             }
             
@@ -2931,12 +2942,12 @@ function validateUniquePositions() {
         const select = document.getElementById(selectId);
         if (select) {
             // For predefined buttons, check if they're enabled
-            const isPredefinedButton = ['usb.position', 'volume.position', 'voice.position', 'signOut.position'].includes(selectId);
+            const isPredefinedButton = ['usbPosition', 'volumePosition', 'voicePosition', 'signOutPosition'].includes(selectId);
             let isEnabled = true;
             
             if (isPredefinedButton) {
-                const buttonId = selectId.replace('.position', '');
-                const enabledCheckbox = document.getElementById(`${buttonId}.enabled`);
+                const buttonId = selectId.replace('Position', '');
+                const enabledCheckbox = document.getElementById(`${buttonId}Enabled`);
                 isEnabled = enabledCheckbox && enabledCheckbox.checked;
             }
             
@@ -3042,7 +3053,7 @@ function updatePositionPreview() {
             name: `Custom URL Button ${i}`,
             type: 'url',
             displayText: () => {
-                const labelElement = document.getElementById(`${buttonId}.label`);
+                const labelElement = document.getElementById(`${buttonId}Label`);
                 return labelElement ? labelElement.value || 'Custom Button' : 'Custom Button';
             }
         });
@@ -3056,7 +3067,7 @@ function updatePositionPreview() {
             name: `Custom Application Button ${i}`,
             type: 'application',
             displayText: () => {
-                const appIdElement = document.getElementById(`${buttonId}.appId`);
+                const appIdElement = document.getElementById(`${buttonId}AppId`);
                 const appId = appIdElement ? appIdElement.value : '';
                 return appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
             }
@@ -3069,7 +3080,7 @@ function updatePositionPreview() {
 
     // Collect position assignments
     buttonConfigs.forEach(config => {
-        const select = document.getElementById(`${config.id}.position`);
+        const select = document.getElementById(`${config.id}Position`);
         if (select && select.value && select.value !== '') {
             const position = parseInt(select.value);
             if (!positionAssignments.has(position)) {
@@ -3121,7 +3132,7 @@ function updatePositionPreview() {
                 return newButton;
             }
             if (button.type === 'url') {
-                const labelInput = document.getElementById(`${button.id}.label`);
+                const labelInput = document.getElementById(`${button.id}Label`);
                 const labelValue = labelInput ? labelInput.value : 'Custom Button';
                 const newButton = document.createElement('div');
                 newButton.className = 'preview-button url-button';
@@ -3140,7 +3151,7 @@ function updatePositionPreview() {
                 return newButton;
             }
             if (button.type === 'application') {
-                const appIdElement = document.getElementById(`${button.id}.appId`);
+                const appIdElement = document.getElementById(`${button.id}AppId`);
                 const appId = appIdElement ? appIdElement.value : '';
                 const appName = appId ? applicationNames[appId] || 'Custom App' : 'Custom App';
                 const newButton = document.createElement('div');
@@ -3208,10 +3219,6 @@ function updatePositionPreview() {
 
         return container;
     };
-
-    // Update both button sources containers
-    //if (topButtonSources) topButtonSources.innerHTML = generateSourcesHTML();
-    //if (bottomButtonSources) bottomButtonSources.innerHTML = generateSourcesHTML();
 
     if (topButtonSources) topButtonSources.replaceChildren(generateSourcesHTML());
     if (bottomButtonSources) bottomButtonSources.replaceChildren(generateSourcesHTML());

@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Config Builder</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 
 <body>
-    <div class="container">
-        <div class="back-button-container">
-            <a class="back-button" href="index.html">← Back to <b>Home</b></a>
+    <main class="container">
+        <nav class="back-button-container">
+            <a class="back-button" href="../">← Back to <b>Home</b></a>
             <hr>
-        </div>
+        </nav>
 
         <!-- Step Progress Indicator -->
         <div class="step-progress">
@@ -35,10 +35,10 @@
 
         <!-- Step 1: Configure -->
         <span id="configure"></span>
-        <div class="step-content" id="step1" style="display: block;">
+        <section class="step-content" id="step1" style="display: block;">
 
 
-            <div class="section two-column-layout">
+            <section class="section two-column-layout">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <h1>Configure config.json Settings</h1>
                     <button type="button" id="toggleHelpText" class="toggle-help-btn">Hide help text</button>
@@ -50,7 +50,7 @@
                     config.json file or PCs or Macs.</span>
                 <br><br>
                 <hr>
-                <label>
+                <label for="organizationName">
                     <div class="label-text">
                         Organization Name
                         <small class="required">Required</small>
@@ -66,14 +66,14 @@
                          </div>
                     </div>
                     <div class="control-container">
-                        <input type="text" id="organizationName" placeholder="organization name">
-                        <div id="organizationNameError">
+                        <input type="text" id="organizationName" placeholder="organization name" aria-describedby="organizationNameError">
+                        <div id="organizationNameError" role="alert" aria-live="assertive" aria-atomic="true">
                             Organization Name cannot contain double quotes (") or backslash (\)
                         </div>
                     </div>
                 </label>
                 <hr>
-                <label>
+                <label for="telemetry.siteId">
                     <div class="label-text">
                         Site ID
                         <span class="required">Required</span>
@@ -86,16 +86,16 @@
                             areas.</span>
                     </div>
                     <div class="control-container">
-                        <input type="text" id="telemetry.siteId" pattern="[A-Za-z0-9]*" placeholder="e.g. umd">
-                        <div id="siteIdError">
+                        <input type="text" id="siteId" pattern="[A-Za-z0-9]*" placeholder="e.g. umd" aria-describedby="siteIdError">
+                        <div id="siteIdError" role="alert" aria-live="assertive" aria-atomic="true">
                             Site ID cannot include symbols or spaces
                         </div>
                     </div>
                 </label>
                 <hr>
-                <label>
+                <label for="features.autorunAfterLogin.enabled">
                     <div class="label-text">
-                        Automatically Run Mophic on System Log In.
+                        Automatically Run Morphic on System Log In.
                         <span class="big-text">Causes Morphic to start up automatically when the OS is booted.</span>
                         <div class="inline-help">
                             <span class="small-text">This only causes the small icon in the system tray to appear. There
@@ -109,39 +109,39 @@
 
                     </div>
                     <div class="control-container">
-                        <input type="checkbox" id="features.autorunAfterLogin.enabled" checked>
+                        <input type="checkbox" id="autorunEnabled" checked>
                     </div>
                 </label>
-                <label id="features.autorunAfterLogin.scope.label" class="dependent-option">
+                <label for="autorunScope" id="autorunScopeLabel" class="dependent-option">
                     <div class="label-text">
                         Scope of AutoStart
                         <span class="big-text">Usually “All Local Users” for shared-use or public computers.</span>
                     </div>
                     <div class="control-container">
-                        <select name="features.autorunAfterLogin.scope" id="features.autorunAfterLogin.scope">
+                        <select name="autorunScope" id="autorunScope">
                             <option value="allLocalUsers">All Local Users</option>
                             <option value="currentUser">Currently Logged In User</option>
                         </select>
                     </div>
                 </label>
                 <hr>
-                <label>
+                <label for="features.atUseCounter.enabled">
                     <div class="label-text">
                         Enable AT Use Counter
-                        <span class="big-text">Allows collection of anonymous use of accessibility features to better
+                                    <span class="big-text">Allows collection of anonymous use of accessibility features to better
                             understand which features are of
-                            use at institution. NO user information is gathered.<span>
+                            use at institution. NO user information is gathered.</span>
                                 <span class="small-text">In fact, no information is gathered on even which computer was
                                     used. Only gathers cumulative counts for the entire
                                     enterprise site – like a doormat with a counter built in.</span>
                                 <span class="red-text">Strongly recommend keeping this enabled.</span>
                     </div>
                     <div class="control-container">
-                        <input type="checkbox" id="features.atUseCounter.enabled" checked>
+                        <input type="checkbox" id="atUseCounterEnabled" checked>
                     </div>
                 </label>
                 <hr>
-                <label>
+                <label for="enableDelayMorphic">
                     <div class="label-text">
                         Delay Morphic Appearance to gather Baseline Data
                         <span class="big-text">This causes the MorphicBar to not show up when Morphic is installed, but
@@ -166,7 +166,7 @@
                         <input type="checkbox" id="enableDelayMorphic">
                     </div>
                 </label>
-                <label id="delayMorphicDateLabel" class="dependent-option">
+                <label for="hideMorphicAfterLoginUntil" id="delayMorphicDateLabel" class="dependent-option">
                     <div class="label-text">
                         Date to show MorphicBar
                         <span class="big-text">Select a date for the MorphicBar to appear. Usually, 21 to 28 days
@@ -203,19 +203,19 @@
                         </small>
                     </div>
                     <div class="control-container">
-                        <input type="checkbox" id="features.atOnDemand.enabled" disabled>
+                        <input type="checkbox" id="atOnDemandEnabled" disabled>
                     </div>
                 </label>
                 -->
                 
-            </div>
+            </section>
 
-            <div class="section two-column-layout">
+            <section class="section two-column-layout">
                 <h1>Default Settings</h1>
                 <span>These settings are not usually changed but are included here for completeness.</span>
                 <br><br>
                 <hr>
-                <label>
+                <label for="features.customMorphicBars.enabled">
                     <div class="label-text">
                         Enable Custom MorphicBars
                         <span class="big-text">It is possible for users to have their own custom MorphicBars that they
@@ -232,12 +232,12 @@
                         </span>
                     </div>
                     <div class="control-container">
-                        <input type="checkbox" id="features.customMorphicBars.enabled" checked>
+                        <input type="checkbox" id="customMorphicBarsEnabled" checked>
                     </div>
                 </label>
                 <hr>
 
-                <label>
+                <label for="features.checkForUpdates.enabled">
                     <div class="label-text">
                         Enable Check for Updates with each Launch
                         <small><b id="checkForUpdatesWarning">This option is in beta testing and is not generally
@@ -253,11 +253,11 @@
                         </small>
                     </div>
                     <div class="control-container">
-                        <input type="checkbox" id="features.checkForUpdates.enabled">
+                        <input type="checkbox" id="checkForUpdatesEnabled">
                     </div>
                 </label>
                 <hr>
-                <label>
+                <label for="morphicBar.visibilityAfterLogin">
                     <div class="label-text">
                         MorphicBar Visibility after Login
                         <span class="big-text">There are three settings for this.<br> <b>SHOW</b> causes the MorphicBar to
@@ -271,7 +271,7 @@
                             extremely low, with few discovering or using it.</span>
                     </div>
                     <div class="control-container">
-                        <select name="morphicBar.visibilityAfterLogin" id="morphicBar.visibilityAfterLogin">
+                        <select name="morphicBarVisibility" id="morphicBarVisibility">
                             <option value="show" selected>Show</option>
                             <option value="restore">Restore</option>
                             <option value="hide">Hide</option>
@@ -279,7 +279,7 @@
                     </div>
                 </label>
                 <hr>
-                <label>
+                <label for="morphicBar.defaultLocation">
                     <div class="label-text">
                         MorphicBar Default Location
                         <span class="big-text">Users can move the MorphicBar themselves to any corner of any screen they
@@ -293,7 +293,7 @@
                         <span class="red-text">Default is bottom-trailing</span>
                     </div>
                     <div class="control-container">
-                        <select name="morphicBar.defaultLocation" id="morphicBar.defaultLocation">
+                        <select name="morphicBarLocation" id="morphicBarLocation">
                             <option value="bottomTrailing" selected>Bottom Trailing</option>
                             <option value="topLeft">Top Left</option>
                             <option value="topRight">Top Right</option>
@@ -306,7 +306,7 @@
                     </div>
                 </label>
                 <hr>
-                <label id="features.resetSettings.label">
+                <label for="resetSettingsEnabled" id="resetSettingsLabel">
                     <div class="label-text">
                         Reset 5 Windows Settings to Default
                         <span class="big-text">This was a special setting created by request from a location that wanted
@@ -318,7 +318,7 @@
                             another method - but can be used if it is needed. <b>Default is “OFF”.</b></span>
                     </div>
                     <div class="control-container">
-                        <input type="checkbox" id="features.resetSettings.enabled">
+                        <input type="checkbox" id="resetSettingsEnabled">
                     </div>
                 </label>
                 <!-- Step Navigation -->
@@ -327,14 +327,14 @@
                     <button type="button" class="nav-btn clear-btn">Clear</button>
                     <button type="button" class="nav-btn next-btn">Next</button>
                 </div>
-            </div>
-        </div>
+            </section>
+        </section>
 
         <!-- Step 2: Customize -->
         <span id="customize-buttons"></span>
-        <div class="step-content" id="step2" style="display: none;">
+        <section class="step-content" id="step2" style="display: none;">
 
-            <div class="section two-column-layout">
+            <section class="section two-column-layout">
                 <h1>Customize Your MorphicBar</h1>
                 <span>Enterprises can customize the MorphicBar with up to three additional buttons via the config file.
                     You can use the same set of custom buttons across all your computers or you can create location-
@@ -355,7 +355,7 @@
 
                 <!-- Predefined Buttons Section -->
                 <div class="application-buttons-section">
-                    <h5>Predefined Button Options</h5>
+                    <h2>Predefined Button Options</h2>
 
                     <div class="button-container">
                         <!-- Predefined Buttons Grid (2x2) -->
@@ -364,15 +364,15 @@
                             <div class="predefined-button" id="usbButton">
                                 <div class="button-header">
                                     <div class="checkbox-container">
-                                        <input type="checkbox" id="usb.enabled" name="usb.enabled">
+                                        <input type="checkbox" id="usbEnabled" name="usbEnabled">
                                     </div>
                                     <div class="button-info">
-                                        <h5>USB Open/Eject</h5>
+                                        <h3>USB Open/Eject</h3>
                                         <small>Allows a user to easily open or eject all USB drives plugged into a computer</small>
-                                        <div class="position-selector-container" id="usb.positionContainer"
+                                        <div class="position-selector-container" id="usbPositionContainer"
                                             style="display: none;">
-                                            <label for="usb.position">Position:</label>
-                                            <select name="usb.position" id="usb.position">
+                                            <label for="usbPosition">Position:</label>
+                                            <select name="usbPosition" id="usbPosition">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -396,15 +396,15 @@
                             <div class="predefined-button" id="volumeButton">
                                 <div class="button-header">
                                     <div class="checkbox-container">
-                                        <input type="checkbox" id="volume.enabled" name="volume.enabled">
+                                        <input type="checkbox" id="volumeEnabled" name="volumeEnabled">
                                     </div>
                                     <div class="button-info">
-                                        <h5>Volume</h5>
+                                        <h3>Volume</h3>
                                         <small>Allows a user to easily change the volume and mute (but not the microphone volume)</small>
-                                        <div class="position-selector-container" id="volume.positionContainer"
+                                        <div class="position-selector-container" id="volumePositionContainer"
                                             style="display: none;">
-                                            <label for="volume.position">Position:</label>
-                                            <select name="volume.position" id="volume.position">
+                                            <label for="volumePosition">Position:</label>
+                                            <select name="volumePosition" id="volumePosition">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -429,15 +429,15 @@
                             <div class="predefined-button" id="voiceButton">
                                 <div class="button-header">
                                     <div class="checkbox-container">
-                                        <input type="checkbox" id="voice.enabled" name="voice.enabled">
+                                        <input type="checkbox" id="voiceEnabled" name="voiceEnabled">
                                     </div>
                                     <div class="button-info">
-                                        <h5>Voice Control (Windows Only)</h5>
+                                        <h3>Voice Control (Windows Only)</h3>
                                         <small>Turns on Voice Access in Windows</small>
-                                        <div class="position-selector-container" id="voice.positionContainer"
+                                        <div class="position-selector-container" id="voicePositionContainer"
                                             style="display: none;">
-                                            <label for="voice.position">Position:</label>
-                                            <select name="voice.position" id="voice.position">
+                                            <label for="voicePosition">Position:</label>
+                                            <select name="voicePosition" id="voicePosition">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -461,15 +461,15 @@
                             <div class="predefined-button" id="signOutButton">
                                 <div class="button-header">
                                     <div class="checkbox-container">
-                                        <input type="checkbox" id="signOut.enabled" name="signOut.enabled">
+                                        <input type="checkbox" id="signOutEnabled" name="signOutEnabled">
                                     </div>
                                     <div class="button-info">
-                                        <h5>Sign Out (Windows Only)</h5>
+                                        <h3>Sign Out (Windows Only)</h3>
                                         <small>Signs out the current user out of Windows in one click</small>
-                                        <div class="position-selector-container" id="signOut.positionContainer"
+                                        <div class="position-selector-container" id="signOutPositionContainer"
                                             style="display: none;">
-                                            <label for="signOut.position">Position:</label>
-                                            <select name="signOut.position" id="signOut.position">
+                                            <label for="signOutPosition">Position:</label>
+                                            <select name="signOutPosition" id="signOutPosition">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -492,10 +492,10 @@
                         <div class="predefined-button" id="customApp1">
                             <div class="button-header">
                                 <div class="checkbox-container">
-                                    <input type="checkbox" id="customApp1.enabled" name="customApp1.enabled">
+                                    <input type="checkbox" id="customApp1Enabled" name="customApp1Enabled">
                                 </div>
                                 <div class="button-info">
-                                    <h5>Predefined Application Button</h5>
+                                    <h3>Predefined Application Button</h3>
                                     <small>You can add a button that will launch one of a select number of applications with one click</small>
 
                                 </div>
@@ -505,9 +505,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="url-inputs" id="customApp1.inputs" style="display: none;">
+                            <div class="url-inputs" id="customApp1Inputs" style="display: none;">
                                 <label><b>Position:</b>
-                                    <select name="customApp1.position" id="customApp1.position">
+                                    <select name="customApp1Position" id="customApp1Position">
                                         <option value="">-</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -515,7 +515,7 @@
                                     </select>
                                 </label>
                                 <label><b>Application:</b>
-                                    <select id="customApp1.appId">
+                                    <select id="customApp1AppId">
                                         <option value="">Select Application</option>
                                         <option value="calculator">Calculator</option>
                                         <option value="firefox">Firefox</option>
@@ -547,16 +547,16 @@
 
                     <!-- Custom URL Buttons Section -->
                     <div class="url-buttons-section">
-                        <h5>Custom Button Options</h5>
+                        <h2>Custom Button Options</h2>
 
                         <!-- Custom URL Button 1 -->
                         <div class="predefined-button" id="customUrl1">
                             <div class="button-header">
                                 <div class="checkbox-container">
-                                    <input type="checkbox" id="customUrl1.enabled" name="customUrl1.enabled">
+                                    <input type="checkbox" id="customUrl1Enabled" name="customUrl1Enabled">
                                 </div>
                                 <div class="button-info">
-                                    <h5>Custom URL Button</h5>
+                                    <h3>Custom URL Button</h3>
                                     <small>Create your own Custom buttons to open any web page (local or internet) with one click</small>
                                 </div>
                                 <div class="button-preview-container">
@@ -569,7 +569,7 @@
                                 <div class="url-inputs-container">
                                     <div class="url-inputs">
                                         <label><b>Position:</b>
-                                            <select name="customUrl1.position" id="customUrl1.position">
+                                            <select name="customUrl1Position" id="customUrl1Position">
                                                 <option value="">-</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -577,19 +577,19 @@
                                             </select>
                                         </label>
                                         <label><b>Button Text:</b>
-                                            <input type="text" id="customUrl1.label"
+                                            <input type="text" id="customUrl1Label"
                                                 placeholder="Button Text (use \n for line breaks)">
                                         </label>
                                         <label><b>Tooltip Header:</b>
-                                            <input type="text" id="customUrl1.tooltipHeader" placeholder="Header text">
+                                            <input type="text" id="customUrl1TooltipHeader" placeholder="Header text">
                                         </label>
                                         <label><b>Tooltip Text:</b>
-                                            <input type="text" id="customUrl1.tooltipText"
+                                            <input type="text" id="customUrl1TooltipText"
                                                 placeholder="Description text">
                                         </label>
                                         <label><b>URL:</b>
                                             <div class="url-input-wrapper">
-                                                <input type="url" id="customUrl1.url" placeholder="https://example.com">
+                                                <input type="url" id="customUrl1Url" placeholder="https://example.com">
                                                 <span class="url-status-indicator" id="customUrl1Status"></span>
                                                 <button type="button" class="test-url-btn" id="testUrl1Btn"
                                                     title="Test URL status">Test URL</button>
@@ -628,13 +628,13 @@
 
                 <!-- MorphicBar Preview Section -->
                 <div class="morphic-bar-preview-section">
-                    <h5>MorphicBar Preview</h5>
+                    <h2>MorphicBar Preview</h2>
                     <small>See what your MorphicBar will look like –as you build it</small>
 
                     <div class="morphic-bar-preview">
                         <div class="morphic-bar-container">
                             <!-- Custom buttons will be inserted here -->
-                            <div class="custom-buttons-container" id="customButtonsContainer">
+                            <div class="custom-buttons-container" id="customButtonsContainer" aria-live="polite" aria-label="Custom morphic bar buttons">
                                 <!-- Buttons will be dynamically added here -->
                             </div>
                             <div class="spacer"></div>
@@ -689,7 +689,7 @@
                         </div>
 
                         <!-- Button source information and conflicts-->
-                        <div class="button-sources" id="buttonSources">
+                        <div class="button-sources" id="buttonSources" aria-live="polite" aria-atomic="true">
                             <!-- Button source info and conflicts will be shown here -->
                         </div>
                     </div>
@@ -701,18 +701,18 @@
                     <button type="button" class="nav-btn clear-btn">Clear</button>
                     <button type="button" class="nav-btn next-btn">Next</button>
                 </div>
-            </div>
-        </div>
+            </section>
+        </section>
 
         <!-- Step 3: Download -->
         <span id="review-and-download"></span>
-        <div class="step-content" id="step3" style="display: none;">
+        <section class="step-content" id="step3" style="display: none;">
 
 
-            <div class="section">
+            <section class="section">
                 <!-- Settings Summary Section -->
                 <div class="settings-summary">
-                    <h4>Settings Summary</h4>
+                    <h2>Settings Summary</h2>
                     <div class="summary-content" id="settingsSummary">
                         <!-- Settings will be populated here via JavaScript -->
                     </div>
@@ -720,13 +720,13 @@
 
                 <!-- MorphicBar Preview Section -->
                 <div class="morphic-bar-preview-section">
-                    <h5>MorphicBar Preview</h5>
-                    <small>This is what your Morphi`cBar will look like</small>
+                    <h3>MorphicBar Preview</h3>
+                    <small>This is what your MorphicBar will look like</small>
 
                     <div class="morphic-bar-preview">
                         <div class="morphic-bar-container">
                             <!-- Custom buttons will be inserted here -->
-                            <div class="custom-buttons-container" id="topCustomButtonsContainer">
+                            <div class="custom-buttons-container" id="topCustomButtonsContainer" aria-live="polite" aria-label="Custom morphic bar buttons preview">
                                 <!-- Buttons will be dynamically added here -->
                             </div>
                             <div class="spacer"></div>
@@ -794,13 +794,13 @@
                     <span></span>
                     <button id="download" class="nav-btn download-btn">Download config.json</button>
                 </div>
-            </div>
-        </div>
-        <!-- Add jsPDF and html2canvas libraries -->
+            </section>
+        </section>
+        <!-- PDF generation libraries - required for download functionality -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-        <script src="script.js"></script>
-    </div>
+        <script src="../script.js"></script>
+    </main>
 
     <!-- Clear Confirmation Modal -->
     <div id="clearModal" class="modal">
@@ -811,6 +811,17 @@
             <div class="modal-buttons">
                 <button type="button" class="modal-btn modal-btn-cancel">Cancel</button>
                 <button type="button" class="modal-btn modal-btn-confirm">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <h3 id="notificationTitle">Notification</h3>
+            <p id="notificationMessage"></p>
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn modal-btn-confirm" id="notificationOkBtn">OK</button>
             </div>
         </div>
     </div>

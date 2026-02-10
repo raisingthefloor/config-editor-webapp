@@ -1,3 +1,15 @@
+:root {
+    --checkbox-size: 1em;
+    --checkbox-border: 2px;
+    --checkbox-border-color-light: black;
+    --checkbox-border-color-dark: white;
+    --checkbox-fill-color-light: black;
+    --checkbox-fill-color-dark: white;
+    --checkbox-background-light: white;
+    --checkbox-background-dark: #222;
+    --primary-color: #486284;
+}
+
 /* Settings Summary Styles */
 .settings-summary {
     background-color: #f8fafc;
@@ -105,19 +117,7 @@
     box-sizing: border-box;
 }
 
-:root {
-    --checkbox-size: 1em;
-    --checkbox-border: 2px;
-    --checkbox-border-color-light: black;
-    --checkbox-border-color-dark: white;
-    --checkbox-fill-color-light: black;
-    --checkbox-fill-color-dark: white;
-    --checkbox-background-light: white;
-    --checkbox-background-dark: #222;
-    --primary-color: #486284;
-  }
-
-   /* Welcome page specific styles - these can be added to styles.css later */
+/* Welcome page specific styles */
    .welcome-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -424,6 +424,12 @@ h2 {
     gap: 0.5rem;
 }
 
+.step-text span {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--primary-color);
+}
+
 .step-arrow {
     font-size: 2.5rem;
     color: var(--primary-color);
@@ -434,6 +440,28 @@ h2 {
     min-width: 2rem;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     filter: drop-shadow(0 0 3px rgba(72, 98, 132, 0.3));
+}
+
+@media (max-width: 1024px) {
+    .steps-container {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .step-arrow {
+        transform: rotate(90deg);
+        font-size: 2rem;
+        font-weight: 900;
+        margin: 0.5rem 0;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        filter: drop-shadow(0 0 3px rgba(72, 98, 132, 0.3));
+    }
+    
+    .step-box {
+        width: 80%;
+        max-width: 300px;
+        flex: none;
+    }
 }
   
 body {
@@ -451,6 +479,13 @@ body {
     border-radius: 0.75rem;
     max-width: 70rem;
     margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
 }
 
 .required {
@@ -828,6 +863,26 @@ small {
     min-width: 10rem;
 }
 
+@media (max-width: 1024px) {
+    .two-column-layout {
+        padding: 1rem;
+    }
+    
+    .two-column-layout label {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .two-column-layout label .label-text {
+        max-width: 100%;
+    }
+    
+    .two-column-layout label .control-container {
+        min-width: auto;
+        align-self: flex-start;
+        width: 100%;
+    }
+}
 
 #customButtonsSection {
     padding-left: 1.875rem;
@@ -1163,11 +1218,13 @@ button#download:disabled {
     flex: 1;
 }
 
-.button-info h5 {
+.button-info h3 {
     margin: 0 0 0.125rem 0;
     color: #000;
     font-size: 1rem;
     font-weight: 600;
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .button-preview-container {
@@ -1335,6 +1392,46 @@ button#download:disabled {
     text-align: center;
 }
 
+@media (max-width: 1024px) {
+    .url-inputs-container {
+        gap: 1rem;
+    }
+    
+    .tooltip-preview {
+        padding: 0.75rem;
+    }
+    
+    .tooltip-preview-box {
+        max-width: 100%;
+    }
+    
+    .tooltip-header {
+        font-size: 1rem;
+    }
+    
+    .tooltip-text {
+        font-size: 0.875rem;
+        max-height: 2.25rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .url-inputs-container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .tooltip-preview {
+        order: -1;
+        padding: 0.75rem;
+    }
+    
+    .tooltip-preview-box {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+}
+
 /* Dropdown sizing in extra button sections */
 .extra-button select {
     width: 15rem;
@@ -1342,7 +1439,7 @@ button#download:disabled {
     min-width: 15rem;
 }
 
-.extra-button h5 {
+.extra-button h3 {
     margin: 0 0 1rem 0;
     color: #1a202c;
     font-size: 1rem;
@@ -1550,135 +1647,12 @@ button#download:disabled {
     padding: 0.5rem 1rem;
 }
 
-
-
-
-/* Tablet and smaller */
-@media (max-width: 1024px) {
-    .url-inputs-container {
-        gap: 1rem;
-    }
-    
-    .tooltip-preview {
-        padding: 0.75rem;
-    }
-    
-    .tooltip-preview-box {
-        max-width: 100%;
-    }
-    
-    .tooltip-header {
-        font-size: 1rem;
-    }
-    
-    .tooltip-text {
-        font-size: 0.875rem;
-        max-height: 2.25rem;
-    }
-}
-
-/* Tablet and smaller */
-@media (max-width: 900px) {
-    .url-inputs-container {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .tooltip-preview {
-        order: -1; /* Move preview to top on smaller screens */
-        padding: 0.75rem;
-    }
-    
-    .tooltip-preview-box {
-        max-width: 100%;
-        margin: 0 auto;
-    }
-}
-
 /* Responsive adjustments for mobile */
 @media (max-width: 1024px) {
-    .steps-container {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    
-    .step-arrow {
-        transform: rotate(90deg);
-        font-size: 2rem;
-        font-weight: 900;
-        margin: 0.5rem 0;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        filter: drop-shadow(0 0 3px rgba(72, 98, 132, 0.3));
-    }
-    
-    .step-box {
-        width: 80%;
-        max-width: 300px;
-        flex: none;
-    }
-    
-    .container {
-        padding: 1rem;
-        margin: 0.5rem;
-    }
-    
-    .two-column-layout {
-        padding: 1rem;
-    }
-    
-    .two-column-layout label {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .two-column-layout label .label-text {
-        max-width: 100%;
-    }
-    
-    .two-column-layout label .control-container {
-        min-width: auto;
-        align-self: flex-start;
-        width: 100%;
-    }
-    
     .custom-buttons-container {
         margin-right: 0;
         justify-content: center;
         flex-wrap: wrap;
-    }
-    
-    .url-inputs-container {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .tooltip-preview {
-        padding: 0.5rem;
-        order: -1;
-        width: 100%;
-        align-items: center;
-    }   
-    
-    .tooltip-preview h6 {
-        font-size: 0.8125rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .tooltip-preview-box {
-        max-width: 100%;
-        min-width: auto;
-        width: 100%;
-        padding: 0.75rem;
-    }
-    
-    .tooltip-header {
-        font-size: 1rem;
-        margin-bottom: 0.25rem;
-    }
-    
-    .tooltip-text {
-        font-size: 0.875rem;
-        max-height: 2.125rem;
     }
 
     /* Improve input fields on mobile */
@@ -2269,7 +2243,7 @@ select:focus-visible {
     margin-bottom: 2rem;
 }
 
-.application-buttons-section > h5 {
+.application-buttons-section > h2 {
     margin-bottom: 0.5rem;
     color: var(--primary-color);
     font-size: 1.125rem;
@@ -2315,7 +2289,7 @@ select:focus-visible {
     margin-bottom: 2rem;
 }
 
-.url-buttons-section > h5 {
+.url-buttons-section > h2 {
     margin-bottom: 0.5rem;
     color: var(--primary-color);
     font-size: 1.125rem;
@@ -2334,7 +2308,8 @@ select:focus-visible {
     margin-bottom: 2rem;
 }
 
-.morphic-bar-preview-section > h5 {
+.morphic-bar-preview-section > h2,
+.morphic-bar-preview-section > h3 {
     margin-bottom: 0.5rem;
     color: var(--primary-color);
     font-size: 1.125rem;

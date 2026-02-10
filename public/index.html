@@ -8,18 +8,19 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="welcome-container">
-        <div class="welcome-header">
+    <main class="welcome-container">
+        <header class="welcome-header">
             <h1>Morphic Config.json Builder</h1>
             <p>Create and manage configuration files for Morphic installations on computers at your organization</p>
-        </div>
+        </header>
     
+        <section>
             <h2>in 3 easy steps</h2>
             
             <div class="steps-container">
                 <div class="step-box">
                     <div class="step-layout">
-                        <div class="step-text"><h2>Step</h2></div>
+                        <div class="step-text"><span>Step</span></div>
                         <div class="step-number">1</div>
                     </div>
                     <h3>Configure Settings</h3>
@@ -29,7 +30,7 @@
                 
                 <div class="step-box">
                     <div class="step-layout">
-                        <div class="step-text"><h2>Step</h2></div>
+                        <div class="step-text"><span>Step</span></div>
                         <div class="step-number">2</div>
                     </div>
                     <h3>Add Custom Buttons</h3>
@@ -39,7 +40,7 @@
                 
                 <div class="step-box">
                     <div class="step-layout">
-                        <div class="step-text"><h2>Step</h2></div>
+                        <div class="step-text"><span>Step</span></div>
                         <div class="step-number">3</div>
                     </div>
                     <h3>Review & Download File</h3>
@@ -51,6 +52,7 @@
                 <button class="btn-primary" id="createNewBtn">Create New File</button>
                 <input type="file" id="configFileInput" accept=".json" style="display: none;">
             </div>
-    </div>
+        </section>
+    </main>
 </body>
 </html>
