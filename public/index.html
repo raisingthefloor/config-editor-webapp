@@ -1,58 +1,1508 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Morphic Config Editor</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./config-file.js"></script>
+<script src="./support.js"></script>
 </head>
 <body>
-    <main class="welcome-container">
-        <header class="welcome-header">
-            <h1>Morphic Config.json Builder</h1>
-            <p>Create and manage configuration files for Morphic installations on computers at your organization</p>
-        </header>
-    
-        <section>
-            <h2>in 3 easy steps</h2>
-            
-            <div class="steps-container">
-                <div class="step-box">
-                    <div class="step-layout">
-                        <div class="step-text"><span>Step</span></div>
-                        <div class="step-number">1</div>
-                    </div>
-                    <h3>Configure Settings</h3>
-                </div>
-                
-                <div class="step-arrow">→</div>
-                
-                <div class="step-box">
-                    <div class="step-layout">
-                        <div class="step-text"><span>Step</span></div>
-                        <div class="step-number">2</div>
-                    </div>
-                    <h3>Add Custom Buttons</h3>
-                </div>
-                
-                <div class="step-arrow">→</div>
-                
-                <div class="step-box">
-                    <div class="step-layout">
-                        <div class="step-text"><span>Step</span></div>
-                        <div class="step-number">3</div>
-                    </div>
-                    <h3>Review & Download File</h3>
-                </div>
-            </div>
-            
-            <div class="button-container-welcome">
-                <button class="btn-secondary" id="importSettingsButton">Import Settings</button>
-                <button class="btn-primary" id="createNewButton">Create New File</button>
-                <input type="file" id="configFileInput" accept=".json" style="display: none;">
-            </div>
-        </section>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#f2f4f2;color:#24313f;font-family:'Open Sans','Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.5}
+  a{color:#136a32}
+  a:hover{color:#0e5526}
+  :focus-visible{outline:3px solid #1a7d3f;outline-offset:2px}
+  input,select,button{font-family:inherit}
+  input::placeholder,textarea::placeholder{color:#6b7280;opacity:1}
+  input,select,textarea,button,a,summary,[tabindex]{scroll-margin-top:120px}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</helmet>
+
+<div style="--card:#ffffff;--ink:#1c2c54;--ink-soft:#5c6674;--slate:#1a7d3f;--slate-deep:#1c2c54;--line:#dbdee4;--line-soft:#eceff3;--field:#6b7280;--green:#1a7d3f;--green-deep:#136a32;--navy:#1c2c54;--error:#c0392b;min-height:100vh;padding:24px 20px 80px">
+<div style="max-width:820px;margin:0 auto">
+
+  <sc-if value="{{ showChrome }}">
+  <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px">
+    <button onClick="{{ requestHome }}" aria-label="Morphic for Organizations home" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;padding:0;font:inherit">
+      <img src="assets/morphic-logo.png" alt="Morphic" style="width:38px;height:38px;display:block">
+      <span style="font-weight:700;font-size:20px;color:var(--slate-deep)">Morphic for Organizations</span>
+    </button>
+    <a href="https://morphic.org" target="_blank" rel="noopener" style="margin-left:auto;color:var(--slate-deep);font-size:13px;font-weight:700">morphic.org ↗</a>
+    <a href="mailto:support@morphic.org" style="color:var(--slate-deep);font-size:13px;font-weight:700">Contact support</a>
+  </div>
+  <div style="margin:-6px 0 18px">
+    <button onClick="{{ requestHome }}" style="font:inherit;background:none;border:none;color:var(--slate-deep);font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">← Back to home</button>
+  </div>
+  <sc-if value="{{ confirmHome }}">
+    <div onClick="{{ cancelHome }}" style="position:fixed;inset:0;background:rgba(28,44,84,.45);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px">
+      <div role="alertdialog" aria-modal="true" aria-labelledby="leave-title" aria-describedby="leave-desc" onClick="{{ stopProp }}" onKeyDown="{{ onDialogKey }}" style="background:#fff;border-radius:14px;padding:26px 28px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(28,44,84,.3)">
+        <h2 id="leave-title" style="font-size:18px;margin:0 0 8px;color:var(--slate-deep)">Leave for now?</h2>
+        <p id="leave-desc" style="margin:0 0 22px;color:var(--ink);font-size:15px;line-height:1.5">You haven't downloaded this config file yet. Your entries are saved on this computer, and you can continue from the home page later.</p>
+        <div style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap">
+          <button ref="{{ stayRef }}" onClick="{{ cancelHome }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:10px 24px;cursor:pointer;background:#fff;border:1.5px solid var(--slate);color:var(--slate-deep)" style-hover="background:#eef4ef">Stay</button>
+          <button onClick="{{ confirmHomeYes }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:10px 24px;cursor:pointer;background:var(--green);border:1.5px solid var(--green);color:#fff">Leave</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <nav aria-label="Progress" style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:nowrap;margin-bottom:20px">
+    <div aria-current="{{ st0.ariaCurrent }}" role="{{ st0.role }}" tabindex="{{ st0.tabIndex }}" onClick="{{ st0.onClick }}" onKeyDown="{{ st0.onKeyDown }}" style="{{ st0.boxStyle }}"><div style="{{ st0.dotStyle }}">{{ st0.mark }}</div><div style="{{ st0.labelStyle }}">Organization</div></div>
+    <div style="{{ rule0 }}"></div>
+    <div aria-current="{{ st1.ariaCurrent }}" role="{{ st1.role }}" tabindex="{{ st1.tabIndex }}" onClick="{{ st1.onClick }}" onKeyDown="{{ st1.onKeyDown }}" style="{{ st1.boxStyle }}"><div style="{{ st1.dotStyle }}">{{ st1.mark }}</div><div style="{{ st1.labelStyle }}">Customize</div></div>
+    <div style="{{ rule1 }}"></div>
+    <div aria-current="{{ st2.ariaCurrent }}" role="{{ st2.role }}" tabindex="{{ st2.tabIndex }}" onClick="{{ st2.onClick }}" onKeyDown="{{ st2.onKeyDown }}" style="{{ st2.boxStyle }}"><div style="{{ st2.dotStyle }}">{{ st2.mark }}</div><div style="{{ st2.labelStyle }}">Settings</div></div>
+    <div style="{{ rule2 }}"></div>
+    <div aria-current="{{ st3.ariaCurrent }}" role="{{ st3.role }}" tabindex="{{ st3.tabIndex }}" onClick="{{ st3.onClick }}" onKeyDown="{{ st3.onKeyDown }}" style="{{ st3.boxStyle }}"><div style="{{ st3.dotStyle }}">{{ st3.mark }}</div><div style="{{ st3.labelStyle }}">Download</div></div>
+  </nav>
+  </sc-if>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+      <button onClick="{{ goHome }}" aria-label="Morphic for Organizations home" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;padding:0;font:inherit">
+        <img src="assets/morphic-logo.png" alt="Morphic" style="width:38px;height:38px;display:block">
+        <span style="font-weight:700;font-size:20px;color:var(--slate-deep)">Morphic for Organizations</span>
+      </button>
+      <a href="https://morphic.org" target="_blank" rel="noopener" style="margin-left:auto;color:var(--slate-deep);font-size:13px;font-weight:700">morphic.org ↗</a>
+      <a href="mailto:support@morphic.org" style="color:var(--slate-deep);font-size:13px;font-weight:700">Contact support</a>
+    </div>
+
+    <main style="background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05);padding:28px clamp(16px,3.5vw,32px);max-width:720px;margin:0 auto">
+      <h1 style="font-size:22px;line-height:1.25;margin:0 0 8px;color:var(--slate-deep)">Set up Morphic for your organization</h1>
+      <p style="color:var(--ink);margin:0 0 10px;font-size:16px;line-height:1.6;text-wrap:pretty">Build the <b style="color: var(--ink);">config file</b> that controls how the MorphicBar looks and behaves on every computer you deploy it to. Then download the installer and deployment instructions.</p>
+      <p style="color:var(--ink);margin:0 0 26px;font-size:16px;line-height:1.6;text-wrap:pretty">Make one config file for your whole organization, or one for each group of computers that needs different buttons.</p>
+
+      <div style="font-weight:700;color:var(--slate-deep);font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin:0 0 12px">Here's how it works</div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:44px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--green);flex:none;margin-top:9px"></span>
+          <div><div style="font-weight:700;color:var(--slate-deep);font-size:15px">Organization details</div><div style="color:var(--ink-soft);font-size:15px;margin-top:1px">Enter your organization's name, a contact email, and an optional location name.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--green);flex:none;margin-top:9px"></span>
+          <div><div style="font-weight:700;color:var(--slate-deep);font-size:15px">Customize the MorphicBar</div><div style="color:var(--ink-soft);font-size:15px;margin-top:1px">Add up to three extra buttons: pre-made ones, or custom buttons that open an app or a website.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--green);flex:none;margin-top:9px"></span>
+          <div><div style="font-weight:700;color:var(--slate-deep);font-size:15px">Settings</div><div style="color:var(--ink-soft);font-size:15px;margin-top:1px">Review how Morphic starts, where the bar appears on screen, and how you'll see its impact. Recommended values are already set.</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--green);flex:none;margin-top:9px"></span>
+          <div><div style="font-weight:700;color:var(--slate-deep);font-size:15px">Download</div><div style="color:var(--ink-soft);font-size:15px;margin-top:1px">Download your config file, the installer, and deployment instructions.</div></div>
+        </div>
+      </div>
+
+      <sc-if value="{{ hasDraft }}">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;background:#eef7f0;border:1px solid #bfe0cc;border-radius:10px;padding:12px 16px;margin-bottom:14px">
+          <div style="font-size:15px;color:var(--ink)"><b style="color:var(--slate-deep)">You have an unfinished config file</b><span style="color:var(--ink-soft)"> — {{ draftLabel }}</span></div>
+          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+            <button onClick="{{ discardDraft }}" style="font:inherit;font-size:15px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Discard</button>
+            <button onClick="{{ resumeDraft }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:9px 20px;cursor:pointer;background:var(--green);border:1.5px solid var(--green);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Continue where you left off</button>
+          </div>
+        </div>
+      </sc-if>
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between">
+        <label role="button" tabindex="0" onKeyDown="{{ onFileLabelKey }}" style="{{ fileLabelStyle }}" style-hover="background:#eef7f0">Edit an existing config file<input type="file" accept=".json,application/json" onChange="{{ onFileChosen }}" tabindex="-1" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden"></label>
+        <button onClick="{{ goConfigure }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:12px 32px;cursor:pointer;background:var(--green);border:1.5px solid var(--green);color:#fff;text-align:center;flex:1 1 260px" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Start a new config file</button>
+      </div>
+      <sc-if value="{{ hasLoadErr }}"><div role="alert" style="margin-top:12px;display:flex;gap:8px;align-items:flex-start;color:var(--error);font-size:13px;font-weight:700"><span aria-hidden="true">⚠</span>{{ loadErr }}</div></sc-if>
+
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line-soft);font-size:13px;color:var(--ink-soft)">Already downloaded a config file? <button onClick="{{ goDownloads }}" style="font:inherit;font-size:13px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;cursor:pointer;padding:0">Get the installer and deployment instructions →</button></div>
     </main>
+
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isDownloads }}">
+  <div>
+    <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+      <button onClick="{{ goHome }}" aria-label="Morphic for Organizations home" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;padding:0;font:inherit">
+        <img src="assets/morphic-logo.png" alt="Morphic" style="width:38px;height:38px;display:block">
+        <span style="font-weight:700;font-size:20px;color:var(--slate-deep)">Morphic for Organizations</span>
+      </button>
+      <a href="https://morphic.org" target="_blank" rel="noopener" style="margin-left:auto;color:var(--slate-deep);font-size:13px;font-weight:700">morphic.org ↗</a>
+      <a href="mailto:support@morphic.org" style="color:var(--slate-deep);font-size:13px;font-weight:700">Contact support</a>
+    </div>
+
+    <main style="background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05);padding:28px clamp(16px,3.5vw,32px);max-width:900px;margin:0 auto">
+      <button onClick="{{ goHome }}" style="font:inherit;background:none;border:none;color:var(--slate-deep);font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0;margin:0 0 12px">← Back to home</button>
+      <h1 style="font-size:22px;margin:0 0 10px;color:var(--slate-deep)">Installer and deployment instructions</h1>
+
+      <sc-if value="{{ gateClosed }}" hint-placeholder-val="{{ true }}">
+        <p style="color:var(--ink);margin:0 0 18px;line-height:1.55;font-size:16px;text-wrap:pretty">Morphic for Organizations needs a <b style="color:var(--ink)">config file</b> to set up correctly. To get the installer and instructions for your deployment, choose the config file you downloaded.</p>
+        <label role="button" tabindex="0" onKeyDown="{{ onGateLabelKey }}" onDragOver="{{ onGateDragOver }}" onDragLeave="{{ onGateDragLeave }}" onDrop="{{ onGateDrop }}" style="{{ gateDropStyle }}">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--green-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="M7 9l5-5 5 5"></path><path d="M4 20h16"></path></svg>
+          <span style="font-size:15px;color:var(--ink)">Drop your <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code> here, or</span>
+          <span style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:10px 26px;background:#fff;border:1.5px solid var(--green);color:var(--green-deep)">Choose file</span>
+          <input type="file" accept=".json,application/json" onChange="{{ onGateFileChosen }}" tabindex="-1" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">
+        </label>
+        <sc-if value="{{ hasGateErr }}"><div role="alert" style="margin-top:12px;display:flex;gap:8px;align-items:flex-start;color:var(--error);font-size:13px;font-weight:700"><span aria-hidden="true">⚠</span><span>{{ gateErr }}</span></div></sc-if>
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft);font-size:15px;color:var(--ink-soft)">Don't have a config file yet? <button onClick="{{ goConfigure }}" style="font:inherit;font-size:15px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Build it first →</button> It takes a few minutes.</div>
+      </sc-if>
+
+      <sc-if value="{{ gateOpen }}">
+        <div style="display:flex;gap:12px;align-items:flex-start;background:#eef7f0;border:1px solid #bfe0cc;border-radius:12px;padding:14px 16px;margin-bottom:22px;flex-wrap:wrap">
+          <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none">✓</span>
+          <div style="font-size:15px;line-height:1.5;color:var(--ink);flex:1;min-width:200px">
+            <div style="font-weight:700;color:var(--slate-deep)">Config for {{ gateOrg }} <span style="font-weight:400;color:var(--ink-soft)">({{ gateLocation }})</span></div>
+            <div style="color:var(--ink-soft);font-size:13px;margin-top:2px">{{ gateFileName }} · {{ gateButtonsText }} · <button onClick="{{ gateEdit }}" style="font:inherit;font-size:13px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Edit this config →</button></div>
+          </div>
+          <button onClick="{{ gateReset }}" style="font:inherit;font-size:13px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0;flex:none">Choose a different file</button>
+        </div>
+        <h2 style="font-size:16px;color:var(--slate-deep);margin:0 0 10px">Deploy Morphic</h2>
+      <div style="border:1px solid var(--line);border-radius:12px;overflow:hidden">
+        <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px">
+          <div style="color:var(--ink-soft);font-size:13px;line-height:1.5">Using your deployment tools, push <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code> to your computers first, then install Morphic. The deployment instructions cover where the file goes, the install, and firewall settings.</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+            <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Deployment instructions</div>
+            <div style="display:flex;gap:18px"><a href="{{ winGuideHref }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px"><span>Windows</span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a><a href="{{ macGuideHref }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px"><span>macOS</span><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a></div>
+          </div>
+          <div style="height:1px;background:var(--line-soft)"></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+            <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Installer (Morphic for Organizations)</div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="{{ winHref }}" style="display:inline-flex;align-items:center;gap:7px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M12 3v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 20h16"></path></svg><span>Windows (x64)</span></a><a href="{{ winArmHref }}" style="display:inline-flex;align-items:center;gap:7px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M12 3v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 20h16"></path></svg><span>Windows (ARM64)</span></a><a href="{{ macHref }}" style="display:inline-flex;align-items:center;gap:7px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M12 3v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 20h16"></path></svg><span>macOS</span></a></div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+    </main>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isConfigure }}">
+  <main style="background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05);padding:26px clamp(16px,3.5vw,30px)">
+    <h1 style="font-size:22px;margin:0 0 6px;color:var(--slate-deep)">Organization details</h1>
+    <sc-if value="{{ hasLoadedName }}"><div style="display:flex;gap:8px;align-items:center;background:#eef7f0;border:1px solid #bfe0cc;border-radius:10px;padding:9px 14px;margin:0 0 14px;color:var(--green-deep);font-size:13px;font-weight:700"><span aria-hidden="true">✓</span> Loaded from {{ loadedName }} — review and edit below.</div></sc-if>
+    <sc-if value="{{ hasLoadNotes }}"><div role="alert" style="display:flex;gap:8px;align-items:flex-start;background:#fff4e0;border:1.5px solid #c77700;border-radius:10px;padding:9px 14px;margin:-6px 0 14px;color:var(--ink);font-size:13px;font-weight:700;line-height:1.45"><span aria-hidden="true" style="color:#8a5300;font-size:15px;line-height:1.2">⚠</span><span>{{ loadNoteText }}</span></div></sc-if>
+    <p style="color:var(--ink);margin:0 0 4px;max-width:82ch;line-height:1.55;font-size:16px">These details are saved in your config file and let us reach you if there's a problem with your deployment.</p>
+
+    <div style="padding:20px 0;border-top:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 28px;align-items:start">
+      <div>
+        <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Organization name</div>
+        <div style="color:var(--ink-soft);font-size:15px;margin-top:5px;max-width:52ch">Any name that identifies your organization. Any characters except <b style="color:var(--ink)">"</b> and <b style="color:var(--ink)">\</b>.</div>
+      </div>
+      <div>
+        <input type="text" value="{{ orgName }}" onInput="{{ onOrg }}" placeholder="Organization name" aria-label="Organization name" aria-invalid="{{ errOrg }}" aria-describedby="{{ orgErrId }}" style="{{ orgInputStyle }}">
+        <sc-if value="{{ errOrg }}"><div id="org-err" style="color:var(--error);font-size:13px;margin-top:7px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>Enter an organization name.</div></sc-if>
+      </div>
+    </div>
+
+    <div style="padding:20px 0;border-top:1px solid var(--line-soft);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 28px;align-items:start">
+      <div>
+        <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Contact email</div>
+        <div style="color:var(--ink-soft);font-size:15px;margin-top:5px;max-width:52ch">Used only if we need to contact you about this deployment.</div>
+      </div>
+      <div>
+        <input type="email" value="{{ email }}" onInput="{{ onEmail }}" placeholder="you@organization.org" aria-label="Contact email" aria-invalid="{{ errEmail }}" aria-describedby="{{ emailErrId }}" style="{{ emailInputStyle }}">
+        <sc-if value="{{ errEmail }}"><div id="email-err" style="color:var(--error);font-size:13px;margin-top:7px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>{{ emailErrMsg }}</div></sc-if>
+      </div>
+    </div>
+
+    <div style="padding:20px 0;border-top:1px solid var(--line-soft);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 28px;align-items:start">
+      <div>
+        <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Location <span style="font-size:15px;font-weight:400;color:var(--ink-soft)">(optional)</span></div>
+        <div style="color:var(--ink-soft);font-size:15px;margin-top:5px;max-width:52ch">
+          <div style="margin-bottom:10px">A name for the group of computers this config goes on, e.g. Library, Lab 2, Staff.</div>
+          <div>Leave as <b style="color:var(--ink)">main</b> if one config file covers everything. Use a different name if a group of computers needs different buttons.</div>
+        </div>
+      </div>
+      <div>
+        <input type="text" value="{{ location }}" onInput="{{ onLocation }}" placeholder="main" aria-label="Location" style="{{ siteInputStyle }}">
+        <sc-if value="{{ hasSiteId }}"><div style="font-size:13px;color:var(--ink-soft);margin-top:7px">We'll use this as your site ID: <b style="color:var(--slate-deep)">{{ siteId }}</b>.</div></sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{ step1Ready }}">
+      <div role="status" style="margin-top:22px;display:flex;align-items:center;gap:10px;background:#eaf6ef;border:1px solid #bfe0cc;border-radius:10px;padding:13px 16px;color:var(--green-deep);font-weight:700"><span style="font-size:15px">✓</span> Required details complete — continue to add buttons.</div>
+    </sc-if>
+    <div style="display:flex;justify-content:flex-end;align-items:center;margin-top:22px;padding-top:22px;border-top:1px solid var(--line-soft)">
+      <button onClick="{{ next1 }}" style="font:inherit;font-weight:700;border-radius:999px;padding:11px 28px;cursor:pointer;font-size:15px;background:var(--slate);border:1.5px solid var(--slate);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Next</button>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isAdvanced }}">
+  <main style="background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05);padding:26px clamp(16px,3.5vw,30px)">
+    <h1 style="font-size:22px;margin:0 0 6px;color:var(--slate-deep)">Settings</h1>
+    <p style="color:var(--ink);margin:0 0 20px;max-width:82ch;line-height:1.55;font-size:16px">These settings are <b style="color: var(--ink);">already set to recommended values</b> used by most organizations. Review them if you like, then click&nbsp;<b style="color: var(--ink);">Next</b>.</p>
+
+    <section aria-labelledby="measureH" style="border:1.5px solid var(--slate);border-radius:10px;padding:18px 20px;background:#f5f8f5">
+      <h2 id="measureH" style="margin:0 0 4px;font-size:16px;color:var(--slate-deep)">See your impact</h2>
+      <div style="color:var(--ink-soft);font-size:15px;margin:0 0 14px;line-height:1.55">
+        <p style="margin:0 0 10px">Morphic can stay hidden until a date you choose while it counts how often the built-in accessibility features are used, so you can compare use <b style="color:var(--ink)">before</b> and <b style="color:var(--ink)">after</b> the MorphicBar appears.</p>
+        <ul style="margin:0;padding-left:20px;line-height:1.5">
+          <li style="margin-bottom:6px">Shows how much Morphic increases feature use — useful for justifying its value in reports.</li>
+          <li style="margin-bottom:6px">Organizations that measured saw feature use jump <b style="color:var(--slate-deep)">7× or more</b>.</li>
+          <li>Counts are <b style="color:var(--ink)">anonymous and cumulative</b> for this location — no individual-use data is gathered.</li>
+        </ul>
+      </div>
+
+      <label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;cursor:pointer" style-hover="background:#eef4ef">
+        <input type="radio" name="measure" checked="{{ measure }}" onChange="{{ measureYes }}" style="margin-top:4px;accent-color:var(--slate);width:17px;height:17px">
+        <span style="font-size:15px"><b style="color:var(--slate-deep)">Yes, measure it</b> — keep the MorphicBar hidden at first, then show it on a date I choose <span style="color:var(--ink-soft)">(recommended)</span></span>
+      </label>
+      <div style="{{ dateRowStyle }}">
+        <label for="showDate" style="font-size:15px;font-weight:700;color:var(--slate-deep);flex:none">Show the MorphicBar on</label>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <input type="date" id="showDate" value="{{ showDate }}" min="{{ todayISO }}" onInput="{{ onShowDate }}" aria-invalid="{{ errDate }}" aria-describedby="{{ showDateDescribedBy }}" style="{{ showDateStyle }}">
+          <sc-if value="{{ errDate }}"><div id="showDate-err" style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>Choose a date, today or later.</div></sc-if>
+          <div id="showDate-hint" style="font-size:13px;color:var(--ink-soft)">Pick a date 3–4 weeks after your planned rollout.</div>
+        </div>
+      </div>
+      <label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;cursor:pointer" style-hover="background:#eef4ef">
+        <input type="radio" name="measure" checked="{{ measureNoChecked }}" onChange="{{ measureNo }}" style="margin-top:4px;accent-color:var(--slate);width:17px;height:17px">
+        <span style="font-size:15px"><b style="color:var(--slate-deep)">No</b> — show the MorphicBar right away</span>
+      </label>
+    </section>
+
+    <h2 style="font-size:16px;color:var(--slate-deep);margin:28px 0 6px">Other settings</h2>
+    <p style="color:var(--ink-soft);margin:0 0 10px;max-width:82ch;line-height:1.55;font-size:16px">Auto-start, updates, bar position, and more. Click&nbsp;<b style="color:var(--ink)">Next</b>&nbsp;to keep the recommended values.</p>
+    <sc-if value="{{ advHidden }}">
+      <button onClick="{{ toggleAdvShown }}" aria-expanded="false" style="font:inherit;font-weight:700;font-size:15px;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:7px">Show other settings <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M6 9l6 6 6-6"></path></svg></button>
+    </sc-if>
+    <sc-if value="{{ advShown }}">
+    <div style="margin-top:4px">
+      <div style="margin-bottom:6px"><button onClick="{{ toggleAdvShown }}" aria-expanded="true" style="font:inherit;font-weight:700;font-size:15px;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:7px">Hide other settings <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M6 15l6-6 6 6"></path></svg></button></div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;padding:12px 0;border-top:none;align-items:center">
+          <div style="font-weight:700;color:var(--ink);font-size:15px">Start Morphic automatically at login</div>
+          <div style="grid-row:span 2;display:flex;align-items:center">
+            <span style="position:relative;display:inline-block">
+              <input type="checkbox" checked="{{ autostart }}" onChange="{{ onAutostart }}" aria-label="Start Morphic automatically at login" style="position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2">
+              <span style="{{ autostartSw.track }}"></span><span style="{{ autostartSw.knob }}"></span>
+            </span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink-soft);width:26px;margin-left:8px">{{ autostartState }}</span>
+          </div>
+          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Launches Morphic in the system tray at login. Recommended; users rarely find Morphic otherwise.</div>
+          <div style="grid-column:1 / -1;margin:8px 0 2px 0;padding-left:14px;border-left:2px solid var(--line);display:flex;align-items:center;gap:12px">
+            <label for="scope" style="font-size:13px;color:var(--ink-soft)">Applies to</label>
+            <select id="scope" value="{{ scope }}" onChange="{{ onScope }}" disabled="{{ autostartOff }}" style="font:inherit;padding:8px 10px;border:1.5px solid var(--field);border-radius:8px;background:#fbfcfb;min-width:200px;width:auto;max-width:100%">
+              <option value="All local users">All users (recommended)</option><option value="Current user only">Current user only</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;padding:12px 0;border-top:1px solid var(--line-soft);align-items:center">
+          <div style="font-weight:700;color:var(--ink);font-size:15px">Let users load their own saved MorphicBars</div>
+          <div style="display:flex;align-items:center">
+            <span style="position:relative;display:inline-block">
+              <input type="checkbox" checked="{{ loadOwn }}" onChange="{{ onLoadOwn }}" aria-label="Let users load their own saved MorphicBars" style="position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2">
+              <span style="{{ loadOwnSw.track }}"></span><span style="{{ loadOwnSw.knob }}"></span>
+            </span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink-soft);width:26px;margin-left:8px">{{ loadOwnState }}</span>
+          </div>
+          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Users with Morphic accounts can load their own bar. Your standard bar returns at sign-out.</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;padding:12px 0;border-top:1px solid var(--line-soft);align-items:center">
+          <div style="font-weight:700;color:var(--ink);font-size:15px">Check for Morphic updates automatically</div>
+          <div style="display:flex;align-items:center">
+            <span style="position:relative;display:inline-block">
+              <input type="checkbox" checked="{{ checkForUpdates }}" onChange="{{ onCheckUpdates }}" aria-label="Check for Morphic updates automatically" style="position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2">
+              <span style="{{ checkUpdatesSw.track }}"></span><span style="{{ checkUpdatesSw.knob }}"></span>
+            </span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink-soft);width:26px;margin-left:8px">{{ checkUpdatesState }}</span>
+          </div>
+          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Alerts users when a Morphic update is available. Turn off if you push updates through your own deployment tools (SCCM, Intune, Jamf).</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;padding:12px 0;border-top:1px solid var(--line-soft);align-items:center">
+          <div style="font-weight:700;color:var(--ink);font-size:15px">MorphicBar visibility after login</div>
+          <div style="display:flex;align-items:center">
+            <select value="{{ visibility }}" onChange="{{ onVisibility }}" aria-label="MorphicBar visibility after login" style="font:inherit;padding:8px 10px;border:1.5px solid var(--field);border-radius:8px;background:#fbfcfb;width:200px;max-width:100%">
+              <option>Show</option><option>Hide</option><option>Restore last state</option>
+            </select>
+          </div>
+          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch;display:flex;flex-direction:column;gap:3px">
+            <div><b style="color:var(--ink)">Show</b> — the bar appears at every login.</div>
+            <div><b style="color:var(--ink)">Hide</b> — the bar stays hidden until the user opens it.</div>
+            <div><b style="color:var(--ink)">Restore last state</b> — the bar returns however the user last left it.</div>
+            <div style="margin-top:3px">We recommend leaving this setting as <b>Show</b>. If the bar is set to <b>Hide</b>, almost no one discovers it.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;padding:12px 0;border-top:1px solid var(--line-soft);align-items:center">
+          <div style="font-weight:700;color:var(--ink);font-size:15px">Where the MorphicBar appears</div>
+          <div style="display:flex;align-items:center">
+            <select value="{{ position }}" onChange="{{ onPosition }}" aria-label="Where the MorphicBar appears" style="font:inherit;padding:8px 10px;border:1.5px solid var(--field);border-radius:8px;background:#fbfcfb;width:200px;max-width:100%">
+              <option>Bottom right corner</option><option>Bottom left corner</option><option>Top right corner</option><option>Top left corner</option>
+            </select>
+          </div>
+          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Change this only if that corner is used by sign-in or session-timer software.</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;padding:12px 0;border-top:1px solid var(--line-soft);align-items:center">
+          <div style="font-weight:700;color:var(--ink);font-size:15px">Reset display settings when a user signs out</div>
+          <div style="display:flex;align-items:center">
+            <span style="position:relative;display:inline-block">
+              <input type="checkbox" checked="{{ resetOnSignout }}" onChange="{{ onReset }}" aria-label="Reset display settings when a user signs out" style="position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2">
+              <span style="{{ resetSw.track }}"></span><span style="{{ resetSw.knob }}"></span>
+            </span>
+            <span style="font-size:13px;font-weight:700;color:var(--ink-soft);width:26px;margin-left:8px">{{ resetState }}</span>
+          </div>
+          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Returns text size, contrast, color, and dark/night mode to defaults. Recommended for shared or public computers. Not needed if you use Deep Freeze or similar.</div>
+        </div>
+
+    </div>
+    </sc-if>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:34px;padding-top:22px;border-top:1px solid var(--line-soft)">
+      <button onClick="{{ goCustomize }}" style="font:inherit;font-weight:700;font-size:15px;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 2px">← Previous</button>
+      <button onClick="{{ goDownload }}" style="font:inherit;font-weight:700;border-radius:999px;padding:11px 28px;cursor:pointer;font-size:15px;background:var(--slate);border:1.5px solid var(--slate);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Next</button>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isCustomize }}">
+  <main style="background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05);padding:26px clamp(16px,3.5vw,30px)">
+    <h1 style="font-size:22px;margin:0 0 4px;color:var(--slate-deep)">Customize your MorphicBar</h1>
+    <p style="color:var(--ink);margin:0 0 2px;max-width:82ch;line-height:1.5;font-size:16px">Add up to <b style="color: var(--ink);">three extra buttons</b> on top of Morphic's built-in features. They appear on every computer this config file is deployed to. The live preview updates as you go.</p>
+
+    <div style="position:sticky;top:0;z-index:2;background:var(--card);padding:8px 0 12px;margin:10px 0 2px">
+      <div style="display:flex;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+        <h2 style="font-weight:700;color:var(--slate-deep);font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin:0">Your MorphicBar — live preview</h2>
+      </div>
+      <div style="border:2px solid var(--slate);border-radius:12px;padding:6px 14px;background:#f5f8f5;box-shadow:0 8px 20px rgba(36,49,63,.10);width:max-content;max-width:100%">
+        <div ref="{{ barOuter }}" style="overflow:hidden">
+        <div ref="{{ barInner }}" style="{{ barScaleStyle }}">
+          <div style="display:flex;gap:12px;padding-right:16px;border-right:1px solid #d3d8d4">
+            <sc-for list="{{ slots }}" as="slot" hint-placeholder-count="3">
+              <div style="display:flex;align-items:flex-end">
+                <sc-if value="{{ slot.isEmpty }}"><div style="min-width:58px;height:44px;padding:0 10px;border:2px dashed #7c848b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#5c6674;font-weight:700;font-size:13px">{{ slot.emptyText }}</div></sc-if>
+                <sc-if value="{{ slot.isUsb }}"><div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">USB Drives (All)</span><div style="display:flex;gap:2px"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 11px;border-radius:6px 0 0 6px">Open</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 11px;border-radius:0 6px 6px 0">Eject</span></div></div></sc-if>
+                <sc-if value="{{ slot.isVolume }}"><div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">Volume</span><div style="display:flex;gap:2px"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 9px;border-radius:6px 0 0 6px">+</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 9px">−</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 9px;border-radius:0 6px 6px 0">Mute</span></div></div></sc-if>
+                <sc-if value="{{ slot.isVoice }}"><div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">Voice Control</span><div style="display:flex;gap:2px"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 11px;border-radius:6px 0 0 6px">On</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 11px;border-radius:0 6px 6px 0">Off</span></div></div></sc-if>
+                <sc-if value="{{ slot.isSignout }}"><span style="background:var(--navy);color:#fff;font-weight:700;font-size:13px;padding:6px 12px;border-radius:8px;text-align:center;line-height:1.15">Sign<br>Out</span></sc-if>
+                <sc-if value="{{ slot.isChip }}"><span style="background:var(--navy);color:#fff;font-weight:700;font-size:13px;min-width:52px;min-height:44px;max-width:130px;padding:6px 12px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:pre-line;overflow-wrap:anywhere;line-height:1.15">{{ slot.label }}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">Text Size</span><div style="display:flex;gap:2px"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 10px;border-radius:6px 0 0 6px">+</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 10px;border-radius:0 6px 6px 0">−</span></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">Magnifier</span><div style="display:flex;gap:2px"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 10px;border-radius:6px 0 0 6px">Show</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 10px;border-radius:0 6px 6px 0">Hide</span></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">Snip</span><div style="display:flex"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 12px;border-radius:6px">Copy</span></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">Read Selected</span><div style="display:flex;gap:2px"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 11px;border-radius:6px 0 0 6px">▶</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 11px;border-radius:0 6px 6px 0">■</span></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:15px;color:#000;font-weight:700">Contrast &amp; color</span><div style="display:flex;gap:2px"><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 9px;border-radius:6px 0 0 6px">Contrast</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 9px">Color</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 9px">Dark</span><span style="background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:5px 9px;border-radius:0 6px 6px 0">Night</span></div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:18px;align-items:start;margin-top:14px">
+      <div>
+
+    <h2 style="font-weight:700;color:var(--slate-deep);font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin:0 0 4px">Pre-made buttons</h2>
+    <div style="color:var(--ink-soft);font-size:13px;margin:0 0 10px">Buttons marked Windows only are hidden on macOS.</div>
+    <div style="display:grid;grid-template-columns:1fr;gap:10px">
+
+      <button onClick="{{ onUsb }}" disabled="{{ usbDis }}" style="{{ usbCardStyle }}">
+        <span style="display:block;flex:1;min-width:0"><span style="display:block;font-weight:700;color:var(--ink)">USB Open/Eject</span><span style="display:block;color:var(--ink-soft);font-size:13px;margin-top:3px">Open or safely eject any USB drives plugged into the computer.</span></span>
+        <span style="{{ usbAddStyle }}">{{ usbAddLabel }}</span>
+      </button>
+
+      <button onClick="{{ onVolume }}" disabled="{{ volumeDis }}" style="{{ volumeCardStyle }}">
+        <span style="display:block;flex:1;min-width:0"><span style="display:block;font-weight:700;color:var(--ink)">Volume</span><span style="display:block;color:var(--ink-soft);font-size:13px;margin-top:3px">Turn the volume up or down and mute (not the microphone).</span></span>
+        <span style="{{ volumeAddStyle }}">{{ volumeAddLabel }}</span>
+      </button>
+
+      <button onClick="{{ onVoice }}" disabled="{{ voiceDis }}" style="{{ voiceCardStyle }}">
+        <span style="display:block;flex:1;min-width:0"><span style="display:block;font-weight:700;color:var(--ink)">Voice Control <span style="color:var(--ink-soft);font-weight:400;font-size:13px">(Windows only)</span></span><span style="display:block;color:var(--ink-soft);font-size:13px;margin-top:3px">Turns on Windows Voice Access.</span></span>
+        <span style="{{ voiceAddStyle }}">{{ voiceAddLabel }}</span>
+      </button>
+
+      <button onClick="{{ onSignout }}" disabled="{{ signoutDis }}" style="{{ signoutCardStyle }}">
+        <span style="display:block;flex:1;min-width:0"><span style="display:block;font-weight:700;color:var(--ink)">Sign Out <span style="color:var(--ink-soft);font-weight:400;font-size:13px">(Windows only)</span></span><span style="display:block;color:var(--ink-soft);font-size:13px;margin-top:3px">Signs the current Windows user out.</span></span>
+        <span style="{{ signoutAddStyle }}">{{ signoutAddLabel }}</span>
+      </button>
+
+      <div>
+        <sc-if value="{{ appNotAdded }}">
+          <button onClick="{{ addApp }}" disabled="{{ full }}" style="{{ appAddCardStyle }}">
+            <span style="display:block;flex:1;min-width:0"><span style="display:block;font-weight:700;color:var(--ink)">Application</span><span style="display:block;color:var(--ink-soft);font-size:13px;margin-top:3px">Opens an installed app from a fixed list.</span></span>
+            <span style="{{ appAddStyle }}">{{ customAddLabel }}</span>
+          </button>
+        </sc-if>
+        <sc-if value="{{ appAdded }}">
+          <div style="{{ addedCardStyle }}">
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;color:var(--ink)">Application</div>
+              <div style="color:var(--ink-soft);font-size:13px;margin-top:3px">Opens an installed app from a fixed list.</div>
+              <sc-if value="{{ notFull }}"><button onClick="{{ addApp }}" style="{{ addAnotherStyle }}">+ Add another</button></sc-if><sc-if value="{{ full }}"><div style="{{ fullTextStyle }}">Full</div></sc-if>
+            </div>
+            <button onClick="{{ removeApp }}" aria-label="Remove Application button" title="Remove" style="{{ addedPillStyle }}">✓ Added</button>
+          </div>
+        </sc-if>
+      </div>
+
+    </div>
+
+    <h2 style="font-weight:700;color:var(--slate-deep);font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin:16px 0 8px">Make your own buttons</h2>
+    <div style="display:grid;grid-template-columns:1fr;gap:10px">
+
+      <div>
+        <sc-if value="{{ urlNotAdded }}">
+          <button onClick="{{ addUrl }}" disabled="{{ full }}" style="{{ urlAddCardStyle }}">
+            <span style="display:block;flex:1;min-width:0"><span style="display:block;font-weight:700;color:var(--ink)">Website</span><span style="display:block;color:var(--ink-soft);font-size:13px;margin-top:3px">Opens a web page or web tool with one click.</span></span>
+            <span style="{{ urlAddStyle }}">{{ customAddLabel }}</span>
+          </button>
+        </sc-if>
+        <sc-if value="{{ urlAdded }}">
+          <div style="{{ addedCardStyle }}">
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;color:var(--ink)">Website</div>
+              <div style="color:var(--ink-soft);font-size:13px;margin-top:3px">Opens a web page or web tool with one click.</div>
+              <sc-if value="{{ notFull }}"><button onClick="{{ addUrl }}" style="{{ addAnotherStyle }}">+ Add another</button></sc-if><sc-if value="{{ full }}"><div style="{{ fullTextStyle }}">Full</div></sc-if>
+            </div>
+            <button onClick="{{ removeUrl }}" aria-label="Remove Website button" title="Remove" style="{{ addedPillStyle }}">✓ Added</button>
+          </div>
+        </sc-if>
+      </div>
+
+    </div>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px">
+          <h2 style="font-weight:700;color:var(--slate-deep);font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin:0">Your extra buttons</h2>
+          <sc-if value="{{ hasButtons }}"><sc-if value="{{ confirmClear }}"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;color:var(--ink);font-weight:700">Remove all?</span><button onClick="{{ clearStep2 }}" style="background:var(--error);border:1px solid var(--error);color:#fff;border-radius:999px;font:inherit;font-size:13px;font-weight:700;padding:4px 12px;cursor:pointer">Yes, clear all</button><button onClick="{{ cancelClear }}" style="background:#fff;border:1px solid var(--field);color:var(--ink);border-radius:999px;font:inherit;font-size:13px;font-weight:700;padding:4px 12px;cursor:pointer">Cancel</button></span></sc-if><sc-if value="{{ notConfirmClear }}"><button onClick="{{ askClear }}" style="background:none;border:none;color:var(--ink-soft);text-decoration:underline;font:inherit;cursor:pointer;font-size:13px">Clear all</button></sc-if></sc-if>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="display:flex;gap:6px">
+            <sc-for list="{{ slots }}" as="slot" hint-placeholder-count="3">
+              <span style="{{ slot.pipStyle }}"></span>
+            </sc-for>
+          </div>
+          <span style="{{ slotStatusStyle }}">{{ slotStatus }}</span>
+        </div>
+        <sc-if value="{{ hasMultiple }}"><div style="color:var(--ink-soft);font-size:15px;margin-bottom:12px">Drag a button up or down — or use the arrow buttons — to change the order it appears on the bar.</div></sc-if>
+
+        <sc-if value="{{ hasButtons }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ items }}" as="item" hint-placeholder-count="1">
+            <div draggable="true" onDragStart="{{ item.onDragStart }}" onDragOver="{{ item.onDragOver }}" onDragEnter="{{ item.onDragEnter }}" onDragEnd="{{ item.onDragEnd }}" style="{{ item.cardStyle }}">
+              <button onClick="{{ item.onRemove }}" aria-label="{{ item.removeLabel }}" title="{{ item.removeLabel }}" style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:var(--error);color:#fff;border:2px solid #f1f9f4;font-size:15px;line-height:1;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:3">×</button>
+              <div style="display:flex;align-items:stretch;gap:10px">
+                <span aria-hidden="true" title="Drag to reorder" style="color:var(--slate-deep);font-size:16px;line-height:.7;letter-spacing:1px;cursor:grab;flex:none;font-weight:700;align-self:center">⋮⋮</span>
+                <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;flex:none;align-self:center">
+                  <button onClick="{{ item.onUp }}" disabled="{{ item.upDisabled }}" aria-label="Move up" style="{{ item.upStyle }}">▲</button>
+                  <span style="width:22px;height:22px;border-radius:6px;background:var(--navy);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center">{{ item.slotNum }}</span>
+                  <button onClick="{{ item.onDown }}" disabled="{{ item.downDisabled }}" aria-label="Move down" style="{{ item.downStyle }}">▼</button>
+                </div>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center">
+                  <div style="font-weight:700;color:var(--ink)">{{ item.name }}</div>
+                  <div style="color:var(--ink-soft);font-size:13px">{{ item.typeLabel }}</div>
+                  <sc-if value="{{ item.showCollapsedError }}"><div style="margin-top:4px;color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true">⚠</span>Incomplete — click Edit to finish this button.</div></sc-if>
+                </div>
+                <sc-if value="{{ item.showEditBtn }}"><button onClick="{{ item.onToggle }}" style="margin-left:auto;background:#eef4ef;border:1.5px solid var(--slate);color:var(--slate-deep);cursor:pointer;font:inherit;font-size:13px;font-weight:700;border-radius:999px;padding:6px 18px;flex:none;align-self:center">Edit</button></sc-if>
+              </div>
+              <sc-if value="{{ item.hasEditor }}">
+              <div style="flex:1;min-width:0">
+                <sc-if value="{{ item.isApp }}">
+                  <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <label for="{{ item.idApp }}" style="font-size:13px;color:var(--ink);font-weight:700;flex:none">Opens</label>
+                    <select id="{{ item.idApp }}" value="{{ item.app }}" onChange="{{ item.onApp }}" aria-label="Application" style="{{ item.appSelectStyle }}">
+                      <option value="">Select an application</option><option>Calculator</option><option>Firefox</option><option>Google Chrome</option><option>Microsoft Access (Windows only)</option><option>Microsoft Edge</option><option>Microsoft Excel</option><option>Microsoft OneNote</option><option>Microsoft Outlook</option><option>Microsoft PowerPoint</option><option>Microsoft Quick Assist (Windows only)</option><option>Microsoft Teams</option><option>Microsoft Word</option><option>Opera</option>
+                    </select>
+                  </div>
+                  <sc-if value="{{ item.errApp }}"><div style="margin-top:6px;color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true">⚠</span>Choose an application.</div></sc-if>
+                </sc-if>
+                <sc-if value="{{ item.isUrl }}">
+                  <div style="margin-top:10px;display:flex;flex-direction:column;gap:18px">
+
+                    <div style="display:flex;flex-direction:column;gap:10px">
+                      <div style="display:flex;flex-direction:column;gap:4px">
+                        <label style="font-size:13px;color:var(--ink);font-weight:700">Button text</label>
+                        <div style="font-size:13px;color:var(--ink-soft);line-height:1.4">Label shown on the button. Keep it short. Press Enter to split a longer label onto two lines, like “Library” over “catalog”.</div>
+                        <div style="display:flex;gap:14px;align-items:flex-start">
+                          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+                            <textarea id="{{ item.idLabel }}" value="{{ item.label }}" onInput="{{ item.onLabel }}" onKeyDown="{{ item.onLabelKeyDown }}" rows="2" placeholder="e.g. Homework" aria-label="Button text" style="{{ item.labelStyle }}"></textarea>
+                            <sc-if value="{{ item.errLabel }}"><div style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true">⚠</span>Enter button text.</div></sc-if>
+                          </div>
+                          <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:5px">
+                            <span style="font-size:12px;font-weight:700;color:var(--slate-deep);text-transform:uppercase;letter-spacing:.4px">Preview</span>
+                            <div style="display:inline-flex;align-items:center;justify-content:center;text-align:center;background:var(--navy);color:#fff;font-weight:700;font-size:13px;min-width:52px;min-height:44px;max-width:120px;padding:6px 14px;border-radius:8px;white-space:pre-line;overflow-wrap:anywhere;line-height:1.15">{{ item.pvLabel }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:4px">
+                        <label style="font-size:13px;color:var(--ink);font-weight:700">Web address</label>
+                        <div style="font-size:13px;color:var(--ink-soft);line-height:1.4">The page this button opens. Use “Open URL” to check it goes where you expect.</div>
+                        <div style="display:flex;gap:8px;align-items:center">
+                          <input type="text" id="{{ item.idUrl }}" value="{{ item.url }}" onInput="{{ item.onUrl }}" placeholder="https://…" aria-label="Web address" style="{{ item.urlStyle }}">
+                          <button onClick="{{ item.onTest }}" disabled="{{ item.testDisabled }}" aria-label="Open this web address" style="{{ item.testStyle }}">Open URL</button>
+                        </div>
+                        <sc-if value="{{ item.errUrl }}"><div style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true">⚠</span>{{ item.errUrlMsg }}</div></sc-if>
+                      </div>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:10px">
+                      <div style="display:flex;flex-direction:column;gap:4px">
+                        <label style="font-size:13px;color:var(--ink);font-weight:700">Tooltip title <span style="font-weight:400;color:var(--ink-soft)">(optional)</span></label>
+                        <div style="font-size:13px;color:var(--ink-soft);line-height:1.4">Shown in bold when a user hovers over the button.</div>
+                        <input type="text" id="{{ item.idTipHeader }}" value="{{ item.tipHeader }}" onInput="{{ item.onTipHeader }}" placeholder="Short title, e.g. Homework" aria-label="Tooltip title (optional)" style="{{ item.tipHeaderStyle }}">
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:4px">
+                        <label style="font-size:13px;color:var(--ink);font-weight:700">Tooltip description <span style="font-weight:400;color:var(--ink-soft)">(optional)</span></label>
+                        <div style="font-size:13px;color:var(--ink-soft);line-height:1.4">One sentence under the title explaining what the button does.</div>
+                        <input type="text" id="{{ item.idTipDesc }}" value="{{ item.tipDesc }}" onInput="{{ item.onTipDesc }}" placeholder="What the button does" aria-label="Tooltip description (optional)" style="{{ item.tipDescStyle }}">
+                      </div>
+                      <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">
+                        <span style="font-size:12px;font-weight:700;color:var(--slate-deep);text-transform:uppercase;letter-spacing:.4px;padding-top:4px">Preview</span>
+                        <div style="background:#000;color:#fff;border-radius:6px;padding:12px 14px;max-width:260px">
+                          <div style="font-weight:700;font-size:15px;line-height:1.2">{{ item.pvHeader }}</div>
+                          <div style="font-size:13px;margin-top:3px;line-height:1.4">{{ item.pvDesc }}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </sc-if>
+                <sc-if value="{{ item.isUrl }}">
+                <div style="margin-top:14px;display:flex;justify-content:flex-end;align-items:center;gap:12px;flex-wrap:wrap">
+                  <sc-if value="{{ item.showDoneHint }}"><span role="status" style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true">⚠</span>{{ item.doneHintMsg }}</span></sc-if>
+                  <button onClick="{{ item.onDone }}" aria-disabled="{{ item.doneDisabled }}" style="{{ item.doneStyle }}" style-hover="background:#eef4ef">Done</button>
+                </div>
+                </sc-if>
+              </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+        <sc-if value="{{ noButtons }}">
+          <div style="border:2px dashed var(--line);border-radius:10px;padding:30px 22px;text-align:center;color:var(--ink-soft);font-size:15px">No buttons added yet. Choose a button on the left and it appears here. You can add up to <b>three</b>.</div>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{ step2Ready }}">
+      <div role="status" style="margin-top:22px;display:flex;align-items:center;gap:10px;background:#eaf6ef;border:1px solid #bfe0cc;border-radius:10px;padding:13px 16px;color:var(--green-deep);font-weight:700"><span style="font-size:15px">✓</span> Your buttons are ready — continue to settings.</div>
+    </sc-if>
+    <sc-if value="{{ btnError }}">
+      <div role="alert" style="margin-top:22px;display:flex;gap:10px;align-items:flex-start;background:#fdecea;border:1px solid #f3b8b2;border-radius:10px;padding:13px 16px;color:var(--error);font-weight:700"><span aria-hidden="true">⚠</span><span>{{ btnErrorMsg }}</span></div>
+    </sc-if>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px;padding-top:22px;border-top:1px solid var(--line-soft)">
+      <button onClick="{{ goOrganization }}" style="font:inherit;font-weight:700;font-size:15px;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 2px">← Previous</button>
+      <button onClick="{{ next2 }}" style="font:inherit;font-weight:700;border-radius:999px;padding:11px 28px;cursor:pointer;font-size:15px;background:var(--slate);border:1.5px solid var(--slate);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Next</button>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isDownload }}">
+  <main style="background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05);padding:26px clamp(16px,3.5vw,30px)">
+    <h1 style="font-size:22px;margin:0 0 6px;color:var(--slate-deep)">Download</h1>
+    <p style="color:var(--ink);margin:0 0 24px;max-width:82ch;line-height:1.55;font-size:16px">Review your entries, then <b style="color: var(--ink);">download</b> your config file below.</p>
+
+    <details open="{{ reviewOpen }}" style="margin-bottom:20px">
+      <summary onClick="{{ onReviewToggle }}" style="display:flex;align-items:center;gap:12px;font-weight:700;color:var(--slate-deep);font-size:15px;cursor:pointer;list-style:none;background:#fff;border:1.5px solid var(--slate);border-radius:10px;padding:14px 18px">
+        <span>Review your entries <span style="color:var(--ink-soft);font-weight:400;font-size:13px">— organization, buttons &amp; settings</span></span>
+        <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;color:var(--slate-deep);font-weight:700;font-size:15px;text-decoration:underline;text-underline-offset:3px;flex:none">{{ reviewLabel }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{ reviewChevron }}"><path d="M6 9l6 6 6-6"></path></svg></span>
+      </summary>
+      <div style="margin-top:14px">
+    <div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:24px">
+      <div style="background:#f6f8f6;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-weight:700;color:var(--slate-deep);font-size:18px">Organization</span><button onClick="{{ goOrganization }}" style="font:inherit;font-size:13px;font-weight:700;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Edit</button></div>
+      <div style="padding:6px 20px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:6px 20px;padding:12px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Organization name</div><div style="font-weight:700">{{ sumOrg }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:6px 20px;padding:12px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Contact email</div><div style="font-weight:700">{{ sumEmail }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:6px 20px;padding:12px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Location</div><div style="font-weight:700">{{ sumLocation }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:6px 20px;padding:12px 0"><div style="color:var(--ink-soft)">Site ID</div><div style="font-weight:700">{{ sumSite }}</div></div>
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:24px">
+      <div style="background:#f6f8f6;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-weight:700;color:var(--slate-deep);font-size:15px">Extra buttons ({{ slotsUsed }} of 3)</span><button onClick="{{ goCustomize }}" style="font:inherit;font-size:13px;font-weight:700;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Edit</button></div>
+      <div style="padding:14px 20px">
+        <sc-if value="{{ hasButtons }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ buttonSummary }}" as="b" hint-placeholder-count="1">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="width:26px;height:26px;border-radius:6px;background:var(--slate);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none">{{ b.pos }}</span>
+                <span style="font-weight:700">{{ b.label }}</span>
+                <span style="color:var(--ink-soft);font-size:13px">{{ b.typeLabel }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noButtons }}"><div style="color:var(--ink-soft)">No extra buttons added — the standard MorphicBar features will still appear.</div></sc-if>
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:24px">
+      <div style="background:#f6f8f6;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-weight:700;color:var(--slate-deep);font-size:18px">Settings</span><button onClick="{{ editAdvanced }}" style="font:inherit;font-size:13px;font-weight:700;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Edit</button></div>
+      <div style="padding:6px 20px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Measure impact</div><div style="font-weight:700">{{ sumMeasure }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Start automatically at login</div><div style="font-weight:700">{{ sumAutostart }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Let users load their own bars</div><div style="font-weight:700">{{ sumLoadOwn }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Check for updates automatically</div><div style="font-weight:700">{{ sumCheckUpdates }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Visibility after login</div><div style="font-weight:700">{{ sumVisibility }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Where the bar appears</div><div style="font-weight:700">{{ sumPosition }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0"><div style="color:var(--ink-soft)">Reset display on sign-out</div><div style="font-weight:700">{{ sumReset }}</div></div>
+      </div>
+    </div>
+
+      </div>
+    </details>
+    <details open="{{ jsonOpen }}" style="border:1.5px solid var(--slate);border-radius:10px;overflow:hidden;margin-bottom:20px">
+      <summary onClick="{{ onJsonToggle }}" style="display:flex;align-items:center;gap:12px;font-weight:700;color:var(--slate-deep);font-size:15px;cursor:pointer;list-style:none;background:#fff;padding:14px 18px"><span>View config.json</span><span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;color:var(--slate-deep);font-weight:700;font-size:15px;text-decoration:underline;text-underline-offset:3px;flex:none">{{ jsonLabel }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{ jsonChevron }}"><path d="M6 9l6 6 6-6"></path></svg></span></summary>
+      <pre style="margin:0;padding:18px 20px;background:#1f2b38;color:#dfe7ef;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:13px;line-height:1.55;overflow:auto">{{ json }}</pre>
+    </details>
+    <div style="border:1.5px solid var(--green);border-radius:12px;padding:18px 20px;margin-bottom:20px;background:#f5faf6">
+      <h2 style="font-weight:700;color:var(--slate-deep);font-size:15px;margin:0 0 6px">Download your config file</h2>
+      <div style="color:var(--ink-soft);font-size:15px;line-height:1.5;margin:0 0 14px;display:flex;flex-direction:column;gap:8px"><div>Downloads as <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">{{ zipName }}</code>. The name includes your organization and location so you can tell config files apart if you make more than one. Unzip it to get <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code>.</div></div>
+      <div style="border-top:1px solid #cfe3d6;padding-top:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px">
+        <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:15px;color:var(--ink);line-height:1.5">
+          <input type="checkbox" checked="{{ emailCopy }}" onChange="{{ onEmailCopy }}" style="width:18px;height:18px;margin:4px 0 0;accent-color:var(--green);flex:none">
+          <span>Email a copy of this config and the deployment instructions to <b style="color:var(--slate-deep)">{{ sumEmail }}</b></span>
+        </label>
+        <sc-if value="{{ emailCopy }}">
+          <div style="padding-left:28px;display:flex;flex-direction:column;gap:8px">
+            <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:15px;color:var(--ink-soft);line-height:1.5">
+              <input type="checkbox" checked="{{ ccOn }}" onChange="{{ onCcToggle }}" style="width:18px;height:18px;margin:3px 0 0;accent-color:var(--green);flex:none">
+              <span>Also send to whoever runs the deployment</span>
+            </label>
+            <sc-if value="{{ ccOn }}">
+              <input type="email" value="{{ cc }}" onInput="{{ onCc }}" placeholder="colleague@example.org" aria-label="Also send to" aria-invalid="{{ errCc }}" style="{{ ccInputStyle }}">
+              <sc-if value="{{ errCc }}"><div style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true">⚠</span>Enter a valid email address, or untick the box.</div></sc-if>
+            </sc-if>
+            <button onClick="{{ previewEmail }}" style="font:inherit;font-size:13px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0;align-self:flex-start">Preview the email →</button>
+          </div>
+        </sc-if>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:15px;color:var(--ink);line-height:1.5"><b style="color:var(--slate-deep)">Raising the Floor,<span style="font-weight: normal;"> the organization that makes Morphic</span>, will also receive your config file and contact details.</b> This tells us which organizations are deploying Morphic and how it's set up, so we can help if something goes wrong.</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end"><button onClick="{{ download }}" style="font:inherit;font-weight:700;border-radius:999px;padding:12px 28px;cursor:pointer;font-size:15px;background:var(--green);border:1.5px solid var(--green);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)"><span style="display:inline-flex;align-items:center;gap:9px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M12 3v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 20h16"></path></svg>Download config file</span></button></div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-start;align-items:center;margin-top:22px;padding-top:22px;border-top:1px solid var(--line-soft)">
+      <button onClick="{{ goAdvanced }}" style="font:inherit;font-weight:700;font-size:15px;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 2px">← Previous</button>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isDone }}">
+  <main style="background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05);padding:26px clamp(16px,3.5vw,30px)">
+    <div style="border:1.5px solid var(--green);border-radius:12px;padding:20px 22px;background:#f5faf6;margin-bottom:8px">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span aria-hidden="true" style="width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;flex:none">✓</span>
+        <div style="flex:1;min-width:0">
+          <h1 style="font-weight:700;color:var(--slate-deep);font-size:22px;margin:0 0 6px">Your config file is ready</h1>
+          <div style="color:var(--ink);font-size:15px;line-height:1.5">Saved as <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">{{ dlName }}</code> in your downloads folder. Unzip it to get <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code>.</div>
+          <div style="color:var(--ink);font-size:15px;line-height:1.5;margin-top:10px;text-wrap:pretty"><b style="color:var(--slate-deep)">Next:</b> push <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code> to your computers with your deployment tools, then install Morphic.</div>
+          <div style="color:var(--ink);font-size:15px;line-height:1.5;margin-top:6px;text-wrap:pretty">The deployment instructions walk through all the steps and include the installer links.</div>
+          <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+            <a href="{{ dlUrl }}" download="{{ dlName }}" style="font-size:13px;color:var(--ink-soft)">Didn't download? <b style="color:var(--slate-deep)">Download it again</b></a>
+            <a href="{{ winGuide }}" target="_blank" rel="noopener" style="font:inherit;font-weight:700;border-radius:999px;padding:11px 24px;font-size:15px;background:var(--green);border:1.5px solid var(--green);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Deployment instructions <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
+          </div>
+          <sc-if value="{{ emailSent }}">
+            <div style="margin-top:14px;padding-top:12px;border-top:1px solid #cfe3d6;font-size:13px;color:var(--ink-soft);line-height:1.5">A copy was emailed to <b style="color:var(--slate-deep)">{{ emailRecipients }}</b>. <button onClick="{{ previewEmail }}" style="font:inherit;font-size:13px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">View the email</button></div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:34px;padding-top:18px;border-top:1px solid var(--line-soft);font-size:15px;color:var(--ink);line-height:1.6;text-wrap:pretty">Need different buttons for some of your computers? <button onClick="{{ duplicateConfig }}" style="font:inherit;font-size:15px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Duplicate this config</button> and change the location, or <button onClick="{{ startAnother }}" style="font:inherit;font-size:15px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">start fresh</button>.</div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isEmail }}">
+  <main style="max-width:760px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <button onClick="{{ closeEmail }}" style="font:inherit;background:none;border:none;color:var(--slate-deep);font-weight:700;font-size:13px;cursor:pointer;padding:0">← Back</button>
+      <div style="font-size:13px;color:var(--ink-soft)">{{ emailPreviewNote }}</div>
+    </div>
+
+    <div style="background:#fff;border:1.5px solid var(--slate);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05)">
+      <div style="padding:14px 22px;border-bottom:1px solid var(--line-soft);font-size:13px;color:var(--ink-soft);display:grid;grid-template-columns:max-content 1fr;gap:4px 14px">
+        <span>From</span><span style="color:var(--ink)">Morphic for Organizations &lt;support@morphic.org&gt;</span>
+        <span>To</span><span style="color:var(--ink)">{{ emailRecipients }}</span>
+        <span>Subject</span><span style="color:var(--ink);font-weight:700">Your Morphic config for {{ sumOrg }} ({{ sumLocation }})</span>
+        <span>Attached</span><span style="color:var(--ink)"><span style="display:inline-flex;align-items:center;gap:6px;background:#e0e8f0;border-radius:6px;padding:2px 9px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12l-8 8a5 5 0 0 1-7-7l9-9a3 3 0 0 1 4 4l-9 9a1 1 0 0 1-2-2l8-8"></path></svg>{{ zipName }}</span></span>
+      </div>
+
+      <div style="padding:28px 22px 30px;font-size:15px;line-height:1.55;color:var(--ink);display:flex;flex-direction:column;gap:22px">
+        <div style="display:flex;align-items:center;gap:11px">
+          <img src="assets/morphic-logo.png" alt="Morphic" style="width:34px;height:34px;display:block">
+          <span style="font-weight:700;font-size:15px;color:var(--slate-deep)">Morphic for Organizations</span>
+        </div>
+
+        <div>
+          <h1 style="font-size:22px;margin:0 0 8px;color:var(--slate-deep)">Your config file for {{ sumOrg }}</h1>
+          <p style="margin:0">Here's a record of the MorphicBar you set up on {{ emailDate }}. The config file is attached. Keep this email. If you need to change the buttons later, open the attached file in the Config Builder and edit it there.</p>
+        </div>
+
+        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+          <div style="background:#f6f8f6;padding:9px 16px;font-weight:700;color:var(--slate-deep);font-size:15px">Organization</div>
+          <div style="padding:4px 16px;font-size:15px">
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Organization</span><span style="font-weight:700">{{ sumOrg }}</span></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Location</span><span style="font-weight:700">{{ sumLocation }}</span></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Site ID</span><code style="background:#e0e8f0;padding:1px 6px;border-radius:5px;justify-self:start">{{ sumSite }}</code></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0"><span style="color:var(--ink-soft)">Contact</span><span style="font-weight:700">{{ sumEmail }}</span></div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+          <div style="background:#f6f8f6;padding:9px 16px;font-weight:700;color:var(--slate-deep);font-size:15px">MorphicBar buttons</div>
+          <div style="padding:4px 16px;font-size:15px">
+            <sc-if value="{{ noButtons }}"><div style="padding:9px 0;color:var(--ink-soft)">No extra buttons. The standard MorphicBar will be shown.</div></sc-if>
+            <sc-for list="{{ buttonSummary }}" as="b" hint-placeholder-count="2">
+              <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Button {{ b.pos }}</span><span><b>{{ b.label }}</b> <span style="color:var(--ink-soft)">· {{ b.typeLabel }}</span></span></div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+          <div style="background:#f6f8f6;padding:9px 16px;font-weight:700;color:var(--slate-deep);font-size:15px">Settings</div>
+          <div style="padding:4px 16px;font-size:15px">
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Measure impact</span><span>{{ sumMeasure }}</span></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Auto-start</span><span>{{ sumAutostart }}</span></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Check for updates</span><span>{{ sumCheckUpdates }}</span></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Visibility after login</span><span>{{ sumVisibility }}</span></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Bar position</span><span>{{ sumPosition }}</span></div>
+            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0"><span style="color:var(--ink-soft)">Reset on sign-out</span><span>{{ sumReset }}</span></div>
+          </div>
+        </div>
+
+        <div>
+          <h2 style="font-size:15px;margin:0 0 8px;color:var(--slate-deep)">Deploy Morphic</h2>
+          <p style="margin:0 0 10px">Unzip the attachment to get <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code>. Copy it to <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">%PROGRAMDATA%\Morphic\</code> on Windows or <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">/Library/Application Support/Morphic/</code> on macOS, then install the MSI or PKG with your deployment tools. The Windows enterprise installer sets Morphic to auto-start for all users; on macOS, set auto-start through your MDM. Allow HTTPS to <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">*.morphic.org</code> if your network blocks outgoing traffic. Full details are in the deployment instructions.</p>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:15px">
+            <div><span style="color:var(--ink-soft)">Installer: </span><a href="{{ winMsi }}" style="font-weight:700">Windows (x64)</a> · <a href="{{ winArm }}" style="font-weight:700">Windows (ARM64)</a> · <a href="{{ macPkg }}" style="font-weight:700">macOS</a></div>
+            <div><span style="color:var(--ink-soft)">Deployment instructions: </span><a href="{{ winGuide }}" target="_blank" rel="noopener" style="font-weight:700">Windows</a> · <a href="{{ macGuide }}" target="_blank" rel="noopener" style="font-weight:700">macOS</a></div>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--line-soft);padding-top:16px;font-size:13px;color:var(--ink-soft);line-height:1.5">Sent from the Morphic Config Builder for {{ sumOrg }}. Questions? Reply to this email.</div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <footer style="margin-top:28px;padding:16px 4px 8px;border-top:1px solid var(--line-soft);display:flex;justify-content:center;font-size:13px">
+    <a href="https://docs.google.com/document/d/1SoSVZ7AEltFJV-sWi5x9lEVcWon_B_HS/edit?usp=sharing&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener" style="color:var(--slate-deep);font-weight:700">Privacy policy</a>
+  </footer>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    screen: 'home',
+    orgName: '', location: 'main',
+    measure: true, showDate: '',
+    autostart: true, scope: 'All local users',
+    counting: true, loadOwn: true, checkForUpdates: false, loadedSiteId: '',
+    emailCopy: true, ccOn: false, cc: '', errCc: false, emailSent: false, emailSentTo: '', emailFrom: '',
+    visibility: 'Show', position: 'Bottom right corner',
+    resetOnSignout: false,
+    advShown: false,
+    buttons: [],
+    seq: 1,
+    editingId: null,
+    dragId: null,
+    maxReached: 0,
+    uid: '',
+    email: '',
+    loadErr: '', loadedName: '',
+    errOrg: false, errEmail: false, err1Msg: '', errDate: false,
+    triedNext2: false,
+    confirmHome: false,
+  };
+
+  newUid = () => {
+    const a = '23456789abcdefghjkmnpqrstuvwxyz';
+    let out = '';
+    const buf = (window.crypto && window.crypto.getRandomValues) ? window.crypto.getRandomValues(new Uint32Array(8)) : null;
+    for (let i = 0; i < 8; i++) { const r = buf ? buf[i] : Math.floor(Math.random() * 1e9); out += a[r % a.length]; }
+    return out;
+  };
+  _draftKey = 'morphicConfigBuilderDraft';
+  _draftFields = ['orgName','email','location','measure','showDate','autostart','scope','counting','loadOwn','checkForUpdates','visibility','position','resetOnSignout','buttons','seq','uid','loadedSiteId','loadedName','maxReached'];
+  readDraft = () => { try { const d = JSON.parse(localStorage.getItem(this._draftKey) || 'null'); return (d && (d.orgName || d.email || (d.buttons && d.buttons.length))) ? d : null; } catch (_) { return null; } };
+  saveDraft = () => {
+    const s = this.state;
+    if (s.screen === 'home' || s.screen === 'downloads' || s.screen === 'done' || s.screen === 'email') return;
+    if (!this.isDirty()) return;
+    const d = {}; this._draftFields.forEach(k => { d[k] = s[k]; }); d.screen = s.screen; d.savedAt = Date.now();
+    try { localStorage.setItem(this._draftKey, JSON.stringify(d)); } catch (_) {}
+    if (!s.hasDraft) this.setState({ hasDraft: true, draftLabel: this.draftLabel(d) });
+  };
+  clearDraft = () => { try { localStorage.removeItem(this._draftKey); } catch (_) {} if (this.state.hasDraft) this.setState({ hasDraft: false }); };
+  draftLabel = (d) => { const bits = []; if (d.orgName) bits.push(d.orgName); if (d.buttons && d.buttons.length) bits.push(d.buttons.length + (d.buttons.length === 1 ? ' button' : ' buttons')); return bits.join(', ') || 'in progress'; };
+  resumeDraft = () => { const d = this.readDraft(); if (!d) { this.clearDraft(); return; } const st = {}; this._draftFields.forEach(k => { if (d[k] !== undefined) st[k] = d[k]; }); st.errOrg = false; st.errEmail = false; st.err1Msg = ''; st.errDate = false; st.triedNext2 = false; st.editingId = null; this.setState(st, () => this.go(d.screen || 'configure')); };
+  discardDraft = () => { this.clearDraft(); this.setState({ hasDraft: false }); };
+  componentDidUpdate() {
+    const s = this.state, last = this._lastSnap || {};
+    const changed = this._draftFields.some(k => s[k] !== last[k]) || s.screen !== last.screen;
+    if (!changed) return;
+    const snap = {}; this._draftFields.forEach(k => { snap[k] = s[k]; }); snap.screen = s.screen; this._lastSnap = snap;
+    this.saveDraft();
+  }
+  componentDidMount() {
+    if (!this.state.showDate) this.setState({ showDate: this.defaultShowDate() });
+    const d0 = this.readDraft(); if (d0) this.setState({ hasDraft: true, draftLabel: this.draftLabel(d0) });
+    this._onPop = this.onPopState;
+    window.addEventListener('popstate', this._onPop);
+    this._onResize = () => { this.fitBar(); this.checkNarrow(); };
+    this.checkNarrow();
+    window.addEventListener('resize', this._onResize);
+    try { history.replaceState({ mScreen: this.state.screen }, ''); } catch (_) {}
+  }
+  onPopState = (e) => {
+    let scr = (e.state && e.state.mScreen) ? e.state.mScreen : 'home';
+    if (scr === 'done' && !this.state.dlUrl) scr = 'home';
+    const ni = { configure: 0, customize: 1, advanced: 2, download: 3, done: 3 }[scr];
+    this.setState(st => ({ screen: scr, maxReached: (ni != null && ni > st.maxReached) ? ni : st.maxReached, confirmHome: false }));
+    if (window.scrollTo) window.scrollTo(0, 0);
+  };
+  componentWillUnmount() {
+    if (this._onPop) window.removeEventListener('popstate', this._onPop);
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+  }
+  checkNarrow = () => {
+    const n = window.innerWidth < 760;
+    if (n !== !!this.state.narrow) this.setState({ narrow: n });
+  };
+  _barOuter = (el) => { this._outerEl = el; this.fitBar(); };
+  _barInner = (el) => { this._innerEl = el; this.fitBar(); };
+  fitBar = () => {
+    const o = this._outerEl, i = this._innerEl;
+    if (!o || !i) return;
+    const avail = o.clientWidth;
+    const natural = i.scrollWidth;
+    if (!avail || !natural) return;
+    const scale = Math.min(1, avail / natural);
+    if (Math.abs((this.state.barScale ?? 1) - scale) > 0.005) this.setState({ barScale: scale });
+    o.style.height = Math.ceil(i.offsetHeight * scale) + 'px';
+  };
+  pushHist = (screen) => { try { history.pushState({ mScreen: screen }, ''); } catch (_) {} };
+  defaultShowDate = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 24);
+    const p = (n) => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  };
+  todayIso = () => {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  };
+  dateProblem = () => this.state.measure && !window.MorphicConfigFile.isShowDateAllowed(this.state.showDate, this.todayIso());
+  showDateError = () => {
+    this.setState({ errDate: true });
+    setTimeout(() => { const f = document.getElementById('showDate'); if (f) f.focus(); }, 0);
+  };
+  checkDate = () => {
+    if (!this.dateProblem()) return true;
+    this.showDateError();
+    return false;
+  };
+  fmtDate = (iso) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    if (!m) return iso || '—';
+    return new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+  effectiveSiteId = () => window.MorphicConfigFile.effectiveSiteId(this.state);
+
+  go = (screen, opts) => {
+    const ni = { configure: 0, customize: 1, advanced: 2, download: 3, done: 3 }[screen];
+    this.setState(st => ({ screen, maxReached: screen === 'home' ? 0 : ((ni != null && ni > st.maxReached) ? ni : st.maxReached), ...(screen !== 'downloads' ? { gateCfg: null, gateFileName: '', gateErr: '', gateButtons: 0, gateDrag: false } : {}) }));
+    if (!(opts && opts.fromPop)) this.pushHist(screen);
+    if (window.scrollTo) window.scrollTo(0, 0);
+  };
+  stepGo = (i) => () => { if (i <= this.state.maxReached) this.go(['configure', 'customize', 'advanced', 'download'][i]); };
+  goHome = () => { this.setState({ confirmHome: false }); this.go('home'); };
+  isDirty = () => {
+    const s = this.state;
+    return !!(s.orgName || s.email || (s.location && s.location !== 'main') || (s.buttons && s.buttons.length));
+  };
+  requestHome = () => { if (this.isDirty() && this.state.screen !== 'done') { this._prevFocus = document.activeElement; this.setState({ confirmHome: true }); } else { this.goHome(); } };
+  confirmHomeYes = () => { this.setState({ confirmHome: false }); this.go('home'); };
+  cancelHome = () => this.setState({ confirmHome: false });
+  stopProp = (e) => e.stopPropagation();
+  onDialogKey = (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); this.cancelHome(); return; }
+    if (e.key === 'Tab') {
+      const f = e.currentTarget.querySelectorAll('button');
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  };
+  stayRef = (el) => { this._stayEl = el; };
+  _focusDialog = () => { const el = this._stayEl; if (el) { try { el.focus(); } catch (_) {} } else { setTimeout(() => { if (this.state.confirmHome && this._stayEl) this._stayEl.focus(); }, 0); } };
+  goDownloads = () => this.go('downloads');
+  goConfigure = () => {
+    this.clearDraft();
+    this.setState({
+      orgName: '', email: '', location: 'main', showDate: this.defaultShowDate(),
+      autostart: true, scope: 'All local users', counting: true, loadOwn: true, checkForUpdates: false,
+      visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false, measure: true,
+      buttons: [], seq: 1, editingId: null, dragId: null, advShown: false,
+      errOrg: false, errEmail: false, err1Msg: '', errDate: false, triedNext2: false, btnError: false, maxReached: 0,
+      loadedName: '', loadErr: '', loadedSiteId: '', loadNotes: null, loadedFile: null, loadedEntries: null, uid: this.newUid(),
+      downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
+    }, () => this.go('configure'));
+  };
+
+
+  loadNoteText = () => {
+    const n = this.state.loadNotes || {};
+    const notes = [];
+    if (n.invalid) notes.push(n.invalid === 1 ? '1 entry in the file was invalid and was removed, so that Morphic can read the file.' : n.invalid + ' entries in the file were invalid and were removed, so that Morphic can read the file.');
+    if (n.leftOut) notes.push(n.leftOut === 1 ? '1 button was left out because Morphic can\'t use it.' : n.leftOut + ' buttons were left out because Morphic can\'t use them.');
+    if (n.updated) notes.push(n.updated === 1 ? '1 button was updated so that Morphic can use it.' : n.updated + ' buttons were updated so that Morphic can use them.');
+    if (n.dateUnreadable) notes.push('The date the MorphicBar first shows couldn\'t be read. Choose a new one on the Settings step.');
+    return notes.join(' ');
+  };
+  loadConfig = (cfg, fileName) => {
+    const entries = window.MorphicConfigFile.readConfig(cfg, this.defaultShowDate());
+    this.clearDraft();
+    this.setState({
+      ...entries,
+      loadedEntries: entries,
+      editingId: null, triedNext2: false, btnError: false,
+      errOrg: false, errEmail: false, err1Msg: '', errDate: false,
+      gateCfg: null, gateFileName: '', gateErr: '', gateButtons: 0,
+      uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
+      advShown: false, loadErr: '', loadedName: fileName || '',
+      screen: 'configure', maxReached: 0,
+    });
+    this.pushHist('configure');
+    if (window.scrollTo) window.scrollTo(0, 0);
+  };
+
+  onFileChosen = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) this.readConfigFile(file);
+    e.target.value = '';
+  };
+
+  onGateFileChosen = (e) => { const f = e.target.files && e.target.files[0]; if (f) this.readGateFile(f); e.target.value = ''; };
+  onGateDragOver = (e) => { e.preventDefault(); if (!this.state.gateDrag) this.setState({ gateDrag: true }); };
+  onGateDragLeave = () => this.setState({ gateDrag: false });
+  onGateDrop = (e) => { e.preventDefault(); this.setState({ gateDrag: false }); const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) this.readGateFile(f); };
+  onGateLabelKey = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const inp = e.currentTarget.querySelector('input[type=file]'); if (inp) inp.click(); } };
+  readGateFile = (file) => {
+    this.parseConfigFile(file, (cfg) => {
+      const items = (cfg.morphicBar && Array.isArray(cfg.morphicBar.extraItems)) ? cfg.morphicBar.extraItems : [];
+      this.setState({ gateCfg: cfg, gateFileName: file.name, gateErr: '', gateButtons: items.length });
+    }, (msg) => this.setState({ gateErr: msg }));
+  };
+  gateReset = () => this.setState({ gateCfg: null, gateFileName: '', gateErr: '', gateButtons: 0 });
+  gateEdit = () => { const { gateCfg, gateFileName } = this.state; if (gateCfg) this.loadConfig(gateCfg, gateFileName); };
+
+  readConfigFile = (file) => {
+    this.parseConfigFile(file, (cfg) => this.loadConfig(cfg, file.name), (msg) => this.setState({ loadErr: msg }));
+  };
+
+  parseConfigFile = (file, onOk, onErr) => {
+    const notConfig = "That file doesn't look like a Morphic config file. Choose the config.json you downloaded.";
+    if (/\.zip$/i.test(file.name)) { onErr("That's a .zip file. Unzip it, then choose the config.json inside."); return; }
+    if (!/\.json$/i.test(file.name)) { onErr(notConfig); return; }
+    if (file.size > 1024 * 1024) { onErr(notConfig); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const cfg = JSON.parse(reader.result);
+        if (!window.MorphicConfigFile.looksLikeConfig(cfg)) throw new Error('not a config');
+        onOk(cfg);
+      } catch (err) {
+        onErr(notConfig);
+      }
+    };
+    reader.onerror = () => onErr('Could not read that file. Please try again.');
+    reader.readAsText(file);
+  };
+  goOrganization = () => this.go('configure');
+  goCustomize = () => this.go('customize');
+  goAdvanced = () => { this.setState({ advShown: false }); this.go('advanced'); };
+  editAdvanced = () => { this.setState({ advShown: true }); this.go('advanced'); };
+  isIncomplete = (b) => (b.kind === 'app' && !(b.app || '').trim()) ||
+    (b.kind === 'url' && (!(b.label || '').trim() || !this.validUrl(b.url)));
+  checkButtons = () => {
+    const incomplete = (b) => this.isIncomplete(b);
+    const offender = this.state.buttons.find(incomplete);
+    if (offender) {
+      this.setState({ btnError: true, triedNext2: true, editingId: offender.id });
+      if (offender.kind === 'app') {
+        setTimeout(() => { const f = document.getElementById('appf-' + offender.id); if (f) f.focus(); }, 0);
+        return false;
+      }
+      const field =
+        !(offender.label || '').trim() ? 'urlf-label-' :
+        'urlf-url-';
+      setTimeout(() => { const f = document.getElementById(field + offender.id); if (f) f.focus(); }, 0);
+      return false;
+    }
+    this.setState({ btnError: false });
+    return true;
+  };
+  next2 = () => { if (this.checkButtons()) this.go('advanced'); };
+  validUrl = (u) => window.MorphicConfigFile.webAddressProblem(u) === '';
+  testUrl = (b) => () => { const u = (b.url || '').trim(); if (this.validUrl(u)) window.open(u, '_blank', 'noopener'); };
+  goDownload = () => { if (this.checkDate()) this.go('download'); };
+  duplicateConfig = () => {
+    this.setState({
+      location: 'main', loadedName: '', loadedSiteId: '', loadNotes: null, errOrg: false, errEmail: false, err1Msg: '', errDate: false,
+      screen: 'configure', triedNext2: false, btnError: false, maxReached: 0,
+      uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
+    });
+    this.pushHist('configure');
+    if (window.scrollTo) window.scrollTo(0, 0);
+  };
+
+  startAnother = () => {
+    this.clearDraft();
+    this.setState({
+      orgName: '', email: '', location: 'main', showDate: this.defaultShowDate(),
+      autostart: true, scope: 'All local users', counting: true, loadOwn: true, checkForUpdates: false,
+      visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false,
+      buttons: [], seq: 1, loadedSiteId: '', errOrg: false, errEmail: false, err1Msg: '', errDate: false, screen: 'configure', measure: true, triedNext2: false, btnError: false, maxReached: 0,
+      loadedName: '', loadErr: '', loadNotes: null, loadedFile: null, loadedEntries: null, editingId: null, advShown: false,
+      downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false, uid: this.newUid(),
+    });
+    this.pushHist('configure');
+    if (window.scrollTo) window.scrollTo(0, 0);
+  };
+
+  set = (k) => (e) => this.setState({ [k]: e.target.value });
+  setChecked = (k) => (e) => this.setState({ [k]: e.target.checked });
+
+  onOrg = (e) => this.setState({ orgName: e.target.value.replace(/["\\]/g, ''), errOrg: false, err1Msg: '' });
+  onLocation = (e) => this.setState({ location: e.target.value, err1Msg: '' });
+  onEmail = (e) => this.setState({ email: e.target.value, errEmail: false, err1Msg: '' });
+
+  togglePredef = (kind) => () => {
+    this.setState(s => {
+      const idx = s.buttons.findIndex(b => b.kind === kind);
+      if (idx >= 0) { const arr = [...s.buttons]; const [rm] = arr.splice(idx, 1); return { buttons: arr, editingId: rm.id === s.editingId ? null : s.editingId }; }
+      if (s.buttons.length >= 3) return {};
+      return { buttons: [...s.buttons, { id: s.seq, kind }], seq: s.seq + 1, editingId: s.seq };
+    });
+  };
+
+  addApp = () => this.setState(s => s.buttons.length >= 3 ? {} : { buttons: [...s.buttons, { id: s.seq, kind: 'app', app: '', tooltip: '' }], seq: s.seq + 1, editingId: s.seq, triedNext2: false, btnError: false });
+  addUrl = () => this.setState(s => s.buttons.length >= 3 ? {} : { buttons: [...s.buttons, { id: s.seq, kind: 'url', label: '', url: 'https://', tooltip: '' }], seq: s.seq + 1, editingId: s.seq, triedNext2: false, btnError: false });
+
+  hasContent = (b) => b.kind === 'kept' || (b.kind === 'app' && !!(b.app || '').trim()) || (b.kind === 'url' && !!((b.label || '').trim() || (b.tipHeader || '').trim() || (b.tipDesc || '').trim() || ((b.url || '').trim() && !/^https?:\/\/$/i.test((b.url || '').trim()))));
+  removeBtn = (id) => () => {
+    const b = this.state.buttons.find(x => x.id === id);
+    if (b && this.hasContent(b) && !window.confirm('Remove this ' + this.fullName(b) + ' button? Its settings will be lost.')) return;
+    this.setState(s => ({ buttons: s.buttons.filter(x => x.id !== id), editingId: s.editingId === id ? null : s.editingId }));
+  };
+  updateBtn = (id, patch) => this.setState(s => {
+    const buttons = s.buttons.map(b => b.id === id ? { ...b, ...patch } : b);
+    const stillBad = s.btnError && buttons.some(b => this.isIncomplete(b));
+    return { buttons, btnError: stillBad };
+  });
+  moveBtn = (id, newIndex) => this.setState(s => {    const arr = [...s.buttons];
+    const from = arr.findIndex(b => b.id === id);
+    if (from < 0 || newIndex < 0 || newIndex >= arr.length) return {};
+    const [it] = arr.splice(from, 1);
+    arr.splice(newIndex, 0, it);
+    const editing = arr.find(b => b.id === s.editingId);
+    return { buttons: arr, editingId: (editing && this.isIncomplete(editing)) ? s.editingId : (s.editingId === 'closed' ? 'closed' : null) };
+  });
+
+  toggleAdvShown = () => this.setState(s => ({ advShown: !s.advShown }));
+  onFileLabelKey = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const input = e.currentTarget.querySelector('input[type="file"]');
+      if (input) input.click();
+    }
+  };
+  askClear = () => this.setState({ confirmClear: true });
+  cancelClear = () => this.setState({ confirmClear: false });
+  clearStep2 = () => this.setState({ buttons: [], confirmClear: false });
+  removeLastOfKind = (kind) => () => this.setState(s => {
+    let idx = -1;
+    s.buttons.forEach((b, i) => { if (b.kind === kind) idx = i; });
+    if (idx < 0) return {};
+    const removedId = s.buttons[idx].id;
+    return { buttons: s.buttons.filter((_, i) => i !== idx), editingId: s.editingId === removedId ? null : s.editingId };
+  });
+  removeLastOfKindConfirm = (kind) => () => {
+    let last = null; this.state.buttons.forEach(b => { if (b.kind === kind) last = b; });
+    if (last && this.hasContent(last) && !window.confirm('Remove this ' + this.fullName(last) + ' button? Its settings will be lost.')) return;
+    this.removeLastOfKind(kind)();
+  };
+
+  checkOrganization = () => {
+    const errOrg = !this.state.orgName.trim();
+    const errEmail = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.state.email.trim());
+    if (errOrg || errEmail) {
+      this.setState({ errOrg, errEmail, err1Msg: '' });
+      const sel = errOrg ? 'Organization name' : 'Contact email';
+      setTimeout(() => { const f = document.querySelector('input[aria-label="' + sel + '"]'); if (f) f.focus(); }, 0);
+      return false;
+    }
+    return true;
+  };
+  next1 = () => { if (this.checkOrganization()) this.go('customize'); };
+
+  shortOf = (b) => b.kind === 'app' ? (window.MorphicConfigFile.applicationLabel(b.app) || b.app || 'App')
+    : b.kind === 'url' ? (b.label || 'Custom')
+    : b.kind === 'kept' ? (window.MorphicConfigFile.keptButtonLabel(b.original) || 'Button')
+    : ({ usb: 'USB', volume: 'Volume', voice: 'Voice', signout: 'Sign Out' })[b.kind];
+  fullName = (b) => {
+    if (b.kind === 'app') return b.app || 'Application';
+    if (b.kind === 'url') return (b.label || '').replace(/\s*\n\s*/g, ' ').trim() || 'Website button';
+    if (b.kind === 'kept') return window.MorphicConfigFile.keptButtonLabel(b.original).replace(/\s*\n\s*/g, ' ').trim() || 'Button';
+    return ({ usb: 'USB Open/Eject', volume: 'Volume', voice: 'Voice Control', signout: 'Sign Out' })[b.kind];
+  };
+
+  buildConfig = () => window.MorphicConfigFile.buildConfig(this.state);
+
+  areaSlug = () => {
+    const s = this.state;
+    const raw = (s.orgName || 'morphic') + (s.location ? '-' + s.location : '');
+    return raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'morphic-config';
+  };
+
+  crc32 = (bytes) => {
+    let c, crc = 0xFFFFFFFF;
+    for (let n = 0; n < bytes.length; n++) {
+      c = (crc ^ bytes[n]) & 0xFF;
+      for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      crc = (crc >>> 8) ^ c;
+    }
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  };
+
+  makeZip = (filename, text) => {
+    const enc = new TextEncoder();
+    const nameBytes = enc.encode(filename);
+    const data = enc.encode(text);
+    const crc = this.crc32(data);
+    const u16 = (n) => [n & 0xFF, (n >>> 8) & 0xFF];
+    const u32 = (n) => [n & 0xFF, (n >>> 8) & 0xFF, (n >>> 16) & 0xFF, (n >>> 24) & 0xFF];
+    const local = [].concat(
+      u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(crc), u32(data.length), u32(data.length),
+      u16(nameBytes.length), u16(0), [...nameBytes], [...data]
+    );
+    const central = [].concat(
+      u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(crc), u32(data.length), u32(data.length),
+      u16(nameBytes.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(0),
+      [...nameBytes]
+    );
+    const end = [].concat(
+      u32(0x06054b50), u16(0), u16(0), u16(1), u16(1),
+      u32(central.length), u32(local.length), u16(0)
+    );
+    return new Blob([new Uint8Array(local), new Uint8Array(central), new Uint8Array(end)], { type: 'application/zip' });
+  };
+
+  validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v || '').trim());
+  onEmailCopy = (e) => this.setState({ emailCopy: e.target.checked, errCc: false });
+  onCcToggle = (e) => this.setState({ ccOn: e.target.checked, errCc: false });
+  onCc = (e) => this.setState({ cc: e.target.value, errCc: false });
+  emailRecipients = () => {
+    const s = this.state;
+    if (s.emailSent) return s.emailSentTo;
+    const list = [s.email.trim()];
+    if (s.ccOn && this.validEmail(s.cc)) list.push(s.cc.trim());
+    return list.join(', ');
+  };
+  previewEmail = () => { this.setState({ emailFrom: this.state.screen }); this.go('email'); };
+  closeEmail = () => this.go(this.state.emailFrom || 'download');
+  download = () => {
+    if (!this.checkOrganization()) { this.go('configure'); return; }
+    if (!this.checkButtons()) { this.go('customize'); return; }
+    if (!this.checkDate()) { this.go('advanced'); return; }
+    if (this.state.emailCopy && this.state.ccOn && !this.validEmail(this.state.cc)) { this.setState({ errCc: true }); return; }
+    const json = JSON.stringify(this.buildConfig(), null, 2);
+    const blob = this.makeZip('config.json', json);
+    if (this.state.dlUrl) { try { URL.revokeObjectURL(this.state.dlUrl); } catch (e) {} }
+    const url = URL.createObjectURL(blob);
+    const name = this.areaSlug() + '.zip';
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    const sent = !!this.state.emailCopy;
+    this.clearDraft();
+    this.setState({ downloaded: true, downloadedName: name, dlUrl: url, dlName: name, screen: 'done', emailSent: sent, emailSentTo: sent ? this.emailRecipients() : '' });
+    this.pushHist('done');
+    if (window.scrollTo) window.scrollTo(0, 0);
+  };
+
+  sw(on) {
+    return {
+      track: `display:block;width:46px;height:26px;border-radius:999px;transition:background .15s;background:${on ? 'var(--green)' : '#c3ccd6'}`,
+      knob: `position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s;pointer-events:none;z-index:1;left:${on ? '23px' : '3px'}`,
+    };
+  }
+
+  paletteCard(added, disabled) {
+    const base = 'font:inherit;text-align:left;width:100%;display:flex;gap:12px;align-items:center;border-radius:10px;padding:11px 14px;transition:border-color .12s,background .12s;';
+    if (disabled) return base + 'border:1px solid var(--line-soft);background:#fafbfc;cursor:not-allowed';
+    if (added) return base + 'border:1.5px solid var(--green);background:#f1f9f4;cursor:pointer';
+    return base + 'border:1px solid var(--field);background:#fff;cursor:pointer';
+  }
+  addPill(added, disabled) {
+    const base = 'flex:none;font-weight:700;font-size:13px;border-radius:999px;padding:5px 12px;';
+    if (added) return base + 'background:var(--green);color:#fff';
+    if (disabled) return base + 'background:#eef1f4;color:#5c6674;opacity:.7';
+    return base + 'background:#eaf0f6;color:var(--slate-deep)';
+  }
+  arrowStyle(disabled) {
+    return `font:inherit;font-size:11px;line-height:1;width:28px;height:20px;display:inline-flex;align-items:center;justify-content:center;border-radius:5px;border:1.5px solid var(--field);background:#fff;color:var(--slate-deep);cursor:${disabled ? 'not-allowed' : 'pointer'}${disabled ? ';opacity:.4' : ''}`;
+  }
+  urlFieldStyle(err, flex) {
+    const base = `font:inherit;padding:9px 11px;border:${err ? '2px' : '1.5px'} solid ${err ? 'var(--error)' : 'var(--field)'};border-radius:8px;background:${err ? '#fdf3f2' : '#fff'};`;
+    return base + (flex ? 'flex:1;min-width:0' : 'width:100%');
+  }
+  inputStyle(err) {    return `font:inherit;width:100%;max-width:360px;padding:10px 12px;border:${err ? '2px' : '1.5px'} solid ${err ? 'var(--error)' : 'var(--field)'};border-radius:8px;background:${err ? '#fdf3f2' : '#fbfcfb'};color:var(--ink)`;
+  }
+  moveArrowStyle(disabled) {
+    return `font:inherit;font-size:13px;line-height:1;padding:7px 12px;border-radius:8px;border:1px solid ${disabled ? 'var(--line)' : 'var(--navy)'};background:#fff;color:var(--navy);cursor:${disabled ? 'not-allowed' : 'pointer'};opacity:${disabled ? '.4' : '1'}`;
+  }
+
+  componentDidUpdate() {
+    this.fitBar();
+    const was = !!this._wasConfirm, now = !!this.state.confirmHome;
+    this._wasConfirm = now;
+    if (!was && now) { this._focusDialog(); }
+    else if (was && !now && this._prevFocus && this._prevFocus.focus && document.contains(this._prevFocus)) { this._prevFocus.focus(); }
+  }
+  renderVals() {
+    const s = this.state;
+    const idx = { configure: 0, customize: 1, advanced: 2, download: 3, done: 3 }[s.screen];
+
+    const mk = (i) => {
+      const st = idx > i ? 'done' : (idx === i ? 'current' : 'todo');
+      const bg = st === 'done' ? 'var(--green)' : st === 'current' ? 'var(--navy)' : '#5c6674';
+      const clickable = i <= s.maxReached && i !== idx;
+      return {
+        mark: st === 'done' ? '✓' : String(i + 1),
+        ariaCurrent: st === 'current' ? 'step' : null,
+        onClick: clickable ? this.stepGo(i) : null,
+        role: clickable ? 'button' : null,
+        tabIndex: clickable ? 0 : null,
+        onKeyDown: clickable ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.stepGo(i)(); } } : null,
+        dotStyle: `width:27px;height:27px;border-radius:50%;background:${bg};color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px`,
+        boxStyle: `display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:2px solid ${st === 'current' ? 'var(--navy)' : 'transparent'};${clickable ? 'cursor:pointer' : ''}`,
+        labelStyle: `font-size:13px;white-space:nowrap;${st === 'current' ? 'color:var(--slate-deep);font-weight:700' : 'color:var(--ink-soft)'}${(s.narrow && st !== 'current') ? ';display:none' : ''}`,
+      };
+    };
+    const rule = (reached) => `width:${s.narrow ? '14px' : '32px'};height:2px;flex:none;background:var(--navy);opacity:${reached ? '.6' : '.25'}`;
+
+    const has = (k) => s.buttons.some(b => b.kind === k);
+    const full = s.buttons.length >= 3;
+
+    const editId = s.editingId === 'closed' ? null : (s.buttons.some(b => b.id === s.editingId) ? s.editingId : (s.buttons[0] ? s.buttons[0].id : null));
+    const typeDescOf = { usb: 'Opens or safely ejects USB drives', volume: 'Turns the volume up or down, and mutes', voice: 'Turns on voice control in Windows', signout: 'Signs the user out of Windows', app: 'Opens an app on the computer', url: 'Opens a web page', kept: "Kept as it was in your file. It can't be edited here." };
+    const slots = [0, 1, 2].map(i => {
+      const b = s.buttons[i];
+      if (!b) return { isEmpty: true, isUsb: false, isVolume: false, isVoice: false, isSignout: false, isChip: false, emptyText: 'Empty', label: '', pipStyle: 'width:12px;height:12px;border-radius:50%;border:2px solid #b7bdc0;box-sizing:border-box;background:#fff' };
+      return { isEmpty: false, isUsb: b.kind === 'usb', isVolume: b.kind === 'volume', isVoice: b.kind === 'voice', isSignout: b.kind === 'signout', isChip: b.kind === 'app' || b.kind === 'url' || b.kind === 'kept', pipStyle: 'width:12px;height:12px;border-radius:50%;background:var(--green)', emptyText: '', label: this.shortOf(b) };
+    });
+
+    const tried = s.triedNext2;
+    const items = s.buttons.map((b, i) => ({
+      id: b.id, kind: b.kind,
+      isApp: b.kind === 'app', isUrl: b.kind === 'url',
+      canEdit: b.kind === 'app' || b.kind === 'url',
+      isOpen: (b.kind === 'app' || b.kind === 'url') && editId === b.id,
+      showEditBtn: (b.kind === 'app' || b.kind === 'url') && editId !== b.id,
+      hasEditor: (b.kind === 'app' || b.kind === 'url') && editId === b.id,
+      toggleLabel: editId === b.id ? 'Done' : 'Edit',
+      onToggle: () => this.setState({ editingId: b.id }),
+      doneDisabled: this.isIncomplete(b),
+      showDoneHint: s.triedNext2 && this.isIncomplete(b) && editId === b.id && [!(b.label || '').trim(), !this.validUrl(b.url)].filter(Boolean).length > 1,
+      doneHintMsg: (() => {
+        if (b.kind !== 'url') return '';
+        const n = [!(b.label || '').trim(), !this.validUrl(b.url)].filter(Boolean).length;
+        return n > 1 ? 'Fill in the highlighted fields to finish this button.' : '';
+      })(),
+      doneStyle: this.isIncomplete(b)
+        ? 'font:inherit;font-weight:700;font-size:13px;border-radius:999px;padding:8px 22px;cursor:not-allowed;background:#eef1f4;border:1.5px solid var(--field);color:#7b8794'
+        : 'font:inherit;font-weight:700;font-size:13px;border-radius:999px;padding:8px 22px;cursor:pointer;background:#fff;border:1.5px solid var(--slate);color:var(--slate-deep)',
+      onDone: () => { if (this.isIncomplete(b)) { this.setState({ triedNext2: true }); } else { this.setState({ editingId: 'closed' }); } },
+      name: this.fullName(b), typeLabel: (() => {
+        if (b.kind === 'app') return b.app ? `Opens ${b.app}` : 'Opens an application';
+        if (b.kind === 'url') { try { return this.validUrl(b.url) ? `Opens ${new URL(b.url).hostname.replace(/^www\./, '')}` : 'Opens a website'; } catch (e) { return 'Opens a website'; } }
+        return typeDescOf[b.kind];
+      })(),
+      slotNum: i + 1,
+      removeLabel: 'Remove ' + this.fullName(b),
+      app: b.app, label: b.label, url: b.url, tooltip: b.tooltip || '',
+      tipHeader: b.tipHeader || '', tipDesc: b.tipDesc || '',
+      pvLabel: b.label || 'Your label', pvHeader: b.tipHeader || 'Header text', pvDesc: b.tipDesc || 'Description text',
+      idLabel: 'urlf-label-' + b.id, idUrl: 'urlf-url-' + b.id, idTipHeader: 'urlf-tiph-' + b.id, idTipDesc: 'urlf-tipd-' + b.id,
+      errLabel: tried && b.kind === 'url' && !(b.label || '').trim(),
+      errUrl: tried && b.kind === 'url' && !this.validUrl(b.url),
+      errUrlMsg: ({ empty: 'Enter a web address.', credentials: 'Remove the user name and password from the web address.' })[window.MorphicConfigFile.webAddressProblem(b.url)] || 'Enter a complete web address, including a domain like .org, .edu, or .com \u2014 for example https://example.org.',
+      idApp: 'appf-' + b.id,
+      errApp: tried && b.kind === 'app' && !(b.app || '').trim(),
+      appSelectStyle: `font:inherit;padding:9px 11px;border:${tried && b.kind === 'app' && !(b.app || '').trim() ? '2px solid var(--error)' : '1.5px solid var(--field)'};border-radius:8px;background:${tried && b.kind === 'app' && !(b.app || '').trim() ? '#fdf3f2' : '#fff'};flex:1;min-width:200px`,
+      showCollapsedError: tried && editId !== b.id && (
+        (b.kind === 'app' && !(b.app || '').trim()) ||
+        (b.kind === 'url' && (!(b.label || '').trim() || !this.validUrl(b.url)))
+      ),
+      labelStyle: this.urlFieldStyle(tried && b.kind === 'url' && !(b.label || '').trim(), false),
+      urlStyle: this.urlFieldStyle(tried && b.kind === 'url' && !this.validUrl(b.url), true),
+      tipHeaderStyle: this.urlFieldStyle(false, false),
+      tipDescStyle: this.urlFieldStyle(false, false),
+      onApp: (e) => this.updateBtn(b.id, { app: e.target.value }),
+      onLabelKeyDown: (e) => {
+        if (e.key === 'Enter' && /\r|\n/.test(String(e.target.value))) e.preventDefault();
+      },
+      onLabel: (e) => {
+        const parts = String(e.target.value).split(/\r\n|\r|\n/);
+        const v = parts.length > 2 ? parts[0] + '\n' + parts.slice(1).join(' ') : parts.join('\n');
+        this.updateBtn(b.id, { label: v });
+      },
+      onUrl: (e) => this.updateBtn(b.id, { url: window.MorphicConfigFile.withScheme(e.target.value) }),
+      onTipHeader: (e) => this.updateBtn(b.id, { tipHeader: e.target.value }),
+      onTipDesc: (e) => this.updateBtn(b.id, { tipDesc: e.target.value }),
+      onTest: this.testUrl(b),
+      testDisabled: !this.validUrl(b.url),
+      testStyle: `font:inherit;font-weight:700;font-size:13px;padding:9px 14px;border-radius:8px;border:1.5px solid var(--slate);flex:none;${this.validUrl(b.url) ? 'background:#eef4ef;color:var(--slate-deep);cursor:pointer' : 'background:#f1f3f5;color:#aeb8c3;cursor:not-allowed'}`,
+      onRemove: this.removeBtn(b.id),
+      onUp: () => this.moveBtn(b.id, i - 1),
+      onDown: () => this.moveBtn(b.id, i + 1),
+      upDisabled: i === 0, downDisabled: i === s.buttons.length - 1,
+      upStyle: this.arrowStyle(i === 0), downStyle: this.arrowStyle(i === s.buttons.length - 1),
+      onDragStart: (e) => { try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(b.id)); } catch (_) {} this.setState({ dragId: b.id }); },
+      onDragOver: (e) => e.preventDefault(),
+      onDragEnter: () => { const st = this.state; if (st.dragId != null && st.dragId !== b.id) { const ti = st.buttons.findIndex(x => x.id === b.id); this.moveBtn(st.dragId, ti); } },
+      onDragEnd: () => this.setState({ dragId: null }),
+      cardStyle: `position:relative;border:1.5px solid ${(s.triedNext2 && editId !== b.id && ((b.kind === 'app' && !(b.app || '').trim()) || (b.kind === 'url' && (!(b.label || '').trim() || !this.validUrl(b.url))))) ? 'var(--error)' : 'var(--green)'};background:#f1f9f4;border-radius:10px;padding:10px 14px 8px;display:flex;flex-direction:column;gap:10px;align-items:stretch;${s.dragId === b.id ? 'opacity:.45' : ''}`,
+    }));
+
+    const typeLabels = { usb: 'USB Open/Eject', volume: 'Volume', voice: 'Voice Control', signout: 'Sign Out', app: 'Application', url: 'Website', kept: 'Kept from your file' };
+    const buttonSummary = s.buttons.map((b, i) => ({ pos: i + 1, label: this.shortOf(b), typeLabel: typeLabels[b.kind] }));
+
+    const cfg = this.buildConfig();
+    const predefPill = (kind) => (has(kind) ? '\u2713 Added' : (full ? 'Full' : '+ Add'));
+
+    return {
+      hasDraft: !!s.hasDraft && s.screen === 'home', draftLabel: s.draftLabel || 'in progress', resumeDraft: this.resumeDraft, discardDraft: this.discardDraft,
+      isHome: s.screen === 'home', isDownloads: s.screen === 'downloads', isConfigure: s.screen === 'configure',
+      isCustomize: s.screen === 'customize', isAdvanced: s.screen === 'advanced', isDownload: s.screen === 'download', isDone: s.screen === 'done', isEmail: s.screen === 'email',
+      emailCopy: !!s.emailCopy, onEmailCopy: this.onEmailCopy, ccOn: !!s.ccOn, onCcToggle: this.onCcToggle, cc: s.cc || '', onCc: this.onCc, errCc: !!s.errCc, ccInputStyle: this.inputStyle(s.errCc) + ';max-width:420px',
+      previewEmail: this.previewEmail, closeEmail: this.closeEmail, emailSent: !!s.emailSent, emailRecipients: this.emailRecipients(),
+      emailPreviewNote: s.emailSent ? 'Sent ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Preview — this is what will be sent when you download',
+      emailDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      dlUrl: s.dlUrl || '#', dlName: s.dlName || 'config.zip', backToDownload: () => this.go('download'),
+      showChrome: s.screen !== 'home' && s.screen !== 'downloads' && s.screen !== 'email',
+      goHome: this.goHome, requestHome: this.requestHome, confirmHomeYes: this.confirmHomeYes, cancelHome: this.cancelHome,
+      confirmHome: s.confirmHome, stopProp: this.stopProp, onDialogKey: this.onDialogKey, stayRef: this.stayRef, goDownloads: this.goDownloads,
+      gateClosed: !s.gateCfg, gateOpen: !!s.gateCfg, gateErr: s.gateErr || '', hasGateErr: !!s.gateErr,
+      gateOrg: s.gateCfg ? ((typeof s.gateCfg.organizationName === 'string' && s.gateCfg.organizationName) || 'your organization') : '',
+      gateLocation: s.gateCfg ? ((s.gateCfg._builder && s.gateCfg._builder.location) || 'main') : '',
+      gateFileName: s.gateFileName || '', gateButtonsText: s.gateButtons === 1 ? '1 extra button' : (s.gateButtons || 0) + ' extra buttons',
+      onGateFileChosen: this.onGateFileChosen, onGateDragOver: this.onGateDragOver, onGateDragLeave: this.onGateDragLeave, onGateDrop: this.onGateDrop, onGateLabelKey: this.onGateLabelKey, gateReset: this.gateReset, gateEdit: this.gateEdit,
+      gateDropStyle: `position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;border:2px dashed ${s.gateDrag ? 'var(--green)' : '#7c848b'};border-radius:12px;padding:30px 22px;background:${s.gateDrag ? '#eef7f0' : '#fbfcfb'};cursor:pointer`,
+      winHref: 'https://app.morphic.org/downloads/MorphicEnterpriseSetup-x64.msi',
+      winArmHref: 'https://app.morphic.org/downloads/MorphicEnterpriseSetup-arm64.msi',
+      macHref: 'https://app.morphic.org/downloads/Morphic.pkg',
+      winGuideHref: 'https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit?usp=share_link&rtpof=true&sd=true',
+      macGuideHref: 'https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit?usp=share_link&rtpof=true&sd=true', goConfigure: this.goConfigure, goOrganization: this.goOrganization, goCustomize: this.goCustomize, goAdvanced: this.goAdvanced, editAdvanced: this.editAdvanced, goDownload: this.goDownload,
+      next2: this.next2, btnError: s.btnError && !(s.buttons.filter(b => this.isIncomplete(b)).length === 1 && s.buttons.some(b => b.id === editId && this.isIncomplete(b))),
+      step2Ready: s.buttons.length > 0 && !s.btnError && !s.buttons.some(b => this.isIncomplete(b)),
+      btnErrorMsg: (() => {
+        const appMissing = s.buttons.some(b => b.kind === 'app' && !(b.app || '').trim());
+        const urlMissing = s.buttons.some(b => b.kind === 'url' && (!(b.label || '').trim() || !this.validUrl(b.url)));
+        if (appMissing && urlMissing) return 'Finish the highlighted fields on your Application and Website buttons before continuing.';
+        if (appMissing) return 'Choose an application for your Application button before continuing.';
+        return 'Finish the highlighted fields on your Website button before continuing.';
+      })(),
+
+      st0: mk(0), st1: mk(1), st2: mk(2), st3: mk(3), rule0: rule(idx >= 1), rule1: rule(idx >= 2), rule2: rule(idx >= 3),
+
+      orgName: s.orgName, location: s.location, siteId: this.effectiveSiteId(), hasSiteId: !!this.effectiveSiteId(), onOrg: this.onOrg, onLocation: this.onLocation,
+      onFileChosen: this.onFileChosen,
+      loadErr: s.loadErr, hasLoadErr: !!s.loadErr, loadedName: s.loadedName, hasLoadedName: !!s.loadedName,
+      loadNoteText: this.loadNoteText(), hasLoadNotes: !!s.loadedName && !!this.loadNoteText(),
+      email: s.email, onEmail: this.onEmail, errEmail: s.errEmail, emailInputStyle: this.inputStyle(s.errEmail),
+      errOrg: s.errOrg,
+      orgInputStyle: this.inputStyle(s.errOrg), siteInputStyle: this.inputStyle(false),
+      orgErrId: s.errOrg ? 'org-err' : null, emailErrId: s.errEmail ? 'email-err' : null,
+      onFileLabelKey: this.onFileLabelKey,
+      fileLabelStyle: 'font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:12px 32px;cursor:pointer;background:#fff;border:1.5px solid var(--green);color:var(--green-deep);display:inline-block;text-align:center;flex:1 1 260px',
+      measure: s.measure, measureNoChecked: !s.measure,
+      measureYes: () => this.setState({ measure: true }), measureNo: () => this.setState({ measure: false, errDate: false }),
+      showDate: s.showDate, onShowDate: (e) => this.setState({ showDate: e.target.value, errDate: false }), todayISO: this.todayIso(),
+      errDate: !!s.errDate, showDateDescribedBy: s.errDate ? 'showDate-err showDate-hint' : 'showDate-hint',
+      showDateStyle: `font:inherit;padding:9px 11px;border:${s.errDate ? '2px solid var(--error)' : '1.5px solid var(--field)'};border-radius:8px;background:${s.errDate ? '#fdf3f2' : '#fbfcfb'};width:180px`,
+      dateRowStyle: `margin:8px 0 4px 40px;align-items:baseline;gap:12px;flex-wrap:wrap;${s.measure ? 'display:flex' : 'display:none'}`,
+      advShown: s.advShown, advHidden: !s.advShown, toggleAdvShown: this.toggleAdvShown,
+      autostart: s.autostart, onAutostart: this.setChecked('autostart'), autostartState: s.autostart ? 'On' : 'Off', autostartSw: this.sw(s.autostart),
+      scope: s.scope, onScope: this.set('scope'), autostartOff: !s.autostart,
+      counting: s.counting, onCounting: this.setChecked('counting'), countingState: s.counting ? 'On' : 'Off', countingSw: this.sw(s.counting),
+      loadOwn: s.loadOwn, onLoadOwn: this.setChecked('loadOwn'), loadOwnState: s.loadOwn ? 'On' : 'Off', loadOwnSw: this.sw(s.loadOwn),
+      checkForUpdates: s.checkForUpdates, onCheckUpdates: this.setChecked('checkForUpdates'), checkUpdatesState: s.checkForUpdates ? 'On' : 'Off', checkUpdatesSw: this.sw(s.checkForUpdates),
+      visibility: s.visibility, onVisibility: this.set('visibility'),
+      position: s.position, onPosition: this.set('position'),
+      resetOnSignout: s.resetOnSignout, onReset: this.setChecked('resetOnSignout'), resetState: s.resetOnSignout ? 'On' : 'Off', resetSw: this.sw(s.resetOnSignout),
+      next1: this.next1,
+      emailErrMsg: s.email.trim() ? 'Enter a valid email address, like you@organization.org.' : 'Enter a contact email.',
+      step1Ready: !!(s.orgName.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim())),
+
+      onUsb: this.togglePredef('usb'), onVolume: this.togglePredef('volume'), onVoice: this.togglePredef('voice'), onSignout: this.togglePredef('signout'),
+      usbDis: full && !has('usb'), volumeDis: full && !has('volume'), voiceDis: full && !has('voice'), signoutDis: full && !has('signout'),
+      usbCardStyle: this.paletteCard(has('usb'), full && !has('usb')),
+      volumeCardStyle: this.paletteCard(has('volume'), full && !has('volume')),
+      voiceCardStyle: this.paletteCard(has('voice'), full && !has('voice')),
+      signoutCardStyle: this.paletteCard(has('signout'), full && !has('signout')),
+      usbAddStyle: this.addPill(has('usb'), full && !has('usb')), usbAddLabel: predefPill('usb'),
+      volumeAddStyle: this.addPill(has('volume'), full && !has('volume')), volumeAddLabel: predefPill('volume'),
+      voiceAddStyle: this.addPill(has('voice'), full && !has('voice')), voiceAddLabel: predefPill('voice'),
+      signoutAddStyle: this.addPill(has('signout'), full && !has('signout')), signoutAddLabel: predefPill('signout'),
+      addApp: this.addApp, addUrl: this.addUrl,
+      appNotAdded: !has('app'), appAdded: has('app'), urlNotAdded: !has('url'), urlAdded: has('url'),
+      appAddCardStyle: this.paletteCard(false, full), urlAddCardStyle: this.paletteCard(false, full),
+      appAddStyle: this.addPill(false, full), urlAddStyle: this.addPill(false, full), customAddLabel: full ? 'Full' : '+ Add',
+      addedCardStyle: 'display:flex;gap:12px;align-items:flex-start;border-radius:10px;padding:11px 14px;border:1.5px solid var(--green);background:#f1f9f4',
+      addedPillStyle: 'flex:none;font:inherit;font-weight:700;font-size:13px;border-radius:999px;padding:5px 12px;background:var(--green);color:#fff;border:none;cursor:pointer',
+      removeApp: this.removeLastOfKindConfirm('app'), removeUrl: this.removeLastOfKindConfirm('url'),
+      addAnotherStyle: 'font:inherit;font-size:13px;font-weight:700;background:none;border:none;text-decoration:underline;text-underline-offset:3px;padding:0;margin-top:10px;color:var(--slate-deep);cursor:pointer',
+      fullTextStyle: 'font-size:13px;font-weight:700;color:var(--ink-soft);margin-top:10px',
+      notFull: !full,
+
+      full,
+      slotStatus: full ? '\u2713 All 3 slots full \u2014 remove one to swap in a different button' : `${3 - s.buttons.length} slot${(3 - s.buttons.length) === 1 ? '' : 's'} still free`,
+      slotStatusStyle: `font-weight:700;font-size:13px;${full ? 'color:var(--green-deep)' : 'color:var(--navy)'}`,
+      slotsUsed: s.buttons.length,
+      barOuter: this._barOuter, barInner: this._barInner,
+      barScaleStyle: `display:flex;align-items:flex-end;gap:16px;width:max-content;transform:scale(${s.barScale ?? 1});transform-origin:top left`,
+      slots, items, clearStep2: this.clearStep2, askClear: this.askClear, cancelClear: this.cancelClear, confirmClear: !!s.confirmClear, notConfirmClear: !s.confirmClear,
+
+      json: JSON.stringify(cfg, null, 2),
+      reviewOpen: !!s.reviewOpen, onReviewToggle: (e) => { e.preventDefault(); this.setState(st => ({ reviewOpen: !st.reviewOpen })); }, reviewLabel: s.reviewOpen ? 'Hide' : 'Show', reviewChevron: 'flex:none;transition:transform .15s;transform:rotate(' + (s.reviewOpen ? '180deg' : '0') + ')',
+      jsonOpen: !!s.jsonOpen, onJsonToggle: (e) => { e.preventDefault(); this.setState(st => ({ jsonOpen: !st.jsonOpen })); }, jsonLabel: s.jsonOpen ? 'Hide' : 'Show', jsonChevron: 'flex:none;transition:transform .15s;transform:rotate(' + (s.jsonOpen ? '180deg' : '0') + ')',
+      sumOrg: s.orgName || '—', sumSite: this.effectiveSiteId() || '—', sumEmail: s.email || '—', sumLocation: s.location || '—',
+      sumMeasure: s.measure ? `Yes — show the MorphicBar on ${this.fmtDate(s.showDate)}` : 'No — show the MorphicBar right away',
+      sumAutostart: s.autostart ? `On (${s.scope})` : 'Off',
+      sumLoadOwn: s.loadOwn ? 'On' : 'Off',
+      sumCheckUpdates: s.checkForUpdates ? 'On' : 'Off',
+      sumVisibility: s.visibility, sumPosition: s.position,
+      sumReset: s.resetOnSignout ? 'On' : 'Off',
+      buttonSummary, hasButtons: s.buttons.length > 0, hasMultiple: s.buttons.length > 1, noButtons: s.buttons.length === 0,
+      download: this.download, startAnother: this.startAnother, duplicateConfig: this.duplicateConfig,
+      zipName: this.areaSlug() + '.zip',
+      downloaded: !!s.downloaded, downloadedName: s.downloadedName || '',
+      winMsi: 'https://app.morphic.org/downloads/MorphicEnterpriseSetup-x64.msi',
+      winArm: 'https://app.morphic.org/downloads/MorphicEnterpriseSetup-arm64.msi',
+      macPkg: 'https://app.morphic.org/downloads/Morphic.pkg',
+      winGuide: 'https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit?usp=share_link&rtpof=true&sd=true',
+      macGuide: 'https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit?usp=share_link&rtpof=true&sd=true',
+    };
+  }
+}
+</script>
 </body>
 </html>
