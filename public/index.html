@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./config-file.js"></script>
+<script src="./vendor/react/react.production.min.js"></script>
+<script src="./vendor/react/react-dom.production.min.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+<link href="vendor/open-sans/open-sans.css" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
   body{margin:0;background:#f2f4f2;color:#24313f;font-family:'Open Sans','Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.5}
@@ -195,6 +196,31 @@
       </div>
     </div>
 
+    <div role="status" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">{{ englishAnnouncement }}</div>
+    <sc-if value="{{ needsEnglish }}">
+    <div style="padding:20px 0;border-top:1px solid var(--line-soft);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 28px;align-items:start">
+      <div>
+        <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Organization name in English</div>
+        <div id="english-hint" style="color:var(--ink-soft);font-size:15px;margin-top:5px;max-width:52ch">Please provide your organization's name in English.</div>
+      </div>
+      <div>
+        <input type="text" value="{{ orgNameEnglish }}" onInput="{{ onOrgEnglish }}" aria-label="Organization name in English" aria-invalid="{{ errEnglish }}" aria-describedby="{{ englishDescribedBy }}" style="{{ englishInputStyle }}">
+        <sc-if value="{{ errEnglish }}"><div id="english-err" style="color:var(--error);font-size:13px;margin-top:7px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>{{ englishErrMsg }}</div></sc-if>
+      </div>
+    </div>
+    </sc-if>
+
+    <div style="padding:20px 0;border-top:1px solid var(--line-soft);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 28px;align-items:start">
+      <div>
+        <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Organization domain</div>
+        <div id="domain-hint" style="color:var(--ink-soft);font-size:15px;margin-top:5px;max-width:52ch">Your organization's website address, such as example.org.</div>
+      </div>
+      <div>
+        <input type="text" value="{{ domain }}" onInput="{{ onDomain }}" placeholder="example.org" aria-label="Organization domain" aria-invalid="{{ errDomain }}" aria-describedby="{{ domainDescribedBy }}" style="{{ domainInputStyle }}">
+        <sc-if value="{{ errDomain }}"><div id="domain-err" style="color:var(--error);font-size:13px;margin-top:7px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>Enter your organization's domain, such as example.org.</div></sc-if>
+      </div>
+    </div>
+
     <div style="padding:20px 0;border-top:1px solid var(--line-soft);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 28px;align-items:start">
       <div>
         <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Contact email</div>
@@ -210,12 +236,13 @@
       <div>
         <div style="font-weight:700;color:var(--slate-deep);font-size:15px">Location <span style="font-size:15px;font-weight:400;color:var(--ink-soft)">(optional)</span></div>
         <div style="color:var(--ink-soft);font-size:15px;margin-top:5px;max-width:52ch">
-          <div style="margin-bottom:10px">A name for the group of computers this config goes on, e.g. Library, Lab 2, Staff.</div>
+          <div style="margin-bottom:10px">A name for the group of computers this config goes on, e.g. Library, Lab2, Staff.</div>
           <div>Leave as <b style="color:var(--ink)">main</b> if one config file covers everything. Use a different name if a group of computers needs different buttons.</div>
         </div>
       </div>
       <div>
-        <input type="text" value="{{ location }}" onInput="{{ onLocation }}" placeholder="main" aria-label="Location" style="{{ siteInputStyle }}">
+        <input type="text" value="{{ location }}" onInput="{{ onLocation }}" placeholder="main" maxlength="32" aria-label="Location" aria-invalid="{{ errLocation }}" aria-describedby="{{ locationErrId }}" style="{{ locationInputStyle }}">
+        <sc-if value="{{ errLocation }}"><div id="location-err" style="color:var(--error);font-size:13px;margin-top:7px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>Use only letters and numbers, with no spaces or symbols.</div></sc-if>
         <sc-if value="{{ hasSiteId }}"><div style="font-size:13px;color:var(--ink-soft);margin-top:7px">We'll use this as your site ID: <b style="color:var(--slate-deep)">{{ siteId }}</b>.</div></sc-if>
       </div>
     </div>
@@ -252,9 +279,9 @@
       <div style="{{ dateRowStyle }}">
         <label for="showDate" style="font-size:15px;font-weight:700;color:var(--slate-deep);flex:none">Show the MorphicBar on</label>
         <div style="display:flex;flex-direction:column;gap:5px">
-          <input type="date" id="showDate" value="{{ showDate }}" min="{{ todayISO }}" onInput="{{ onShowDate }}" aria-invalid="{{ errDate }}" aria-describedby="{{ showDateDescribedBy }}" style="{{ showDateStyle }}">
-          <sc-if value="{{ errDate }}"><div id="showDate-err" style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>Choose a date, today or later.</div></sc-if>
-          <div id="showDate-hint" style="font-size:13px;color:var(--ink-soft)">Pick a date 3–4 weeks after your planned rollout.</div>
+          <input type="date" id="showDate" value="{{ showDate }}" min="0001-01-01" max="9999-12-31" onInput="{{ onShowDate }}" aria-invalid="{{ errDate }}" aria-describedby="{{ showDateDescribedBy }}" style="{{ showDateStyle }}">
+          <sc-if value="{{ errDate }}"><div id="showDate-err" style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>Choose a date.</div></sc-if>
+          <div id="showDate-hint" style="font-size:13px;color:var(--ink-soft)"><span id="showDate-past" role="status" style="display:block">{{ showDatePastNote }}</span>Pick a date 3–4 weeks after your planned rollout.</div>
         </div>
       </div>
       <label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;cursor:pointer" style-hover="background:#eef4ef">
@@ -795,7 +822,7 @@
 class Component extends DCLogic {
   state = {
     screen: 'home',
-    orgName: '', location: 'main',
+    orgName: '', location: '', domain: '', orgNameEnglish: '',
     measure: true, showDate: '',
     autostart: true, scope: 'All local users',
     counting: true, loadOwn: true, checkForUpdates: false, loadedSiteId: '',
@@ -824,8 +851,8 @@ class Component extends DCLogic {
     return out;
   };
   _draftKey = 'morphicConfigBuilderDraft';
-  _draftFields = ['orgName','email','location','measure','showDate','autostart','scope','counting','loadOwn','checkForUpdates','visibility','position','resetOnSignout','buttons','seq','uid','loadedSiteId','loadedName','maxReached'];
-  readDraft = () => { try { const d = JSON.parse(localStorage.getItem(this._draftKey) || 'null'); return (d && (d.orgName || d.email || (d.buttons && d.buttons.length))) ? d : null; } catch (_) { return null; } };
+  _draftFields = ['orgName','email','location','domain','orgNameEnglish','measure','showDate','autostart','scope','counting','loadOwn','checkForUpdates','visibility','position','resetOnSignout','buttons','seq','uid','loadedSiteId','loadedName','maxReached'];
+  readDraft = () => { try { const d = JSON.parse(localStorage.getItem(this._draftKey) || 'null'); return (d && (d.orgName || d.email || d.domain || (d.buttons && d.buttons.length))) ? d : null; } catch (_) { return null; } };
   saveDraft = () => {
     const s = this.state;
     if (s.screen === 'home' || s.screen === 'downloads' || s.screen === 'done' || s.screen === 'email') return;
@@ -836,7 +863,7 @@ class Component extends DCLogic {
   };
   clearDraft = () => { try { localStorage.removeItem(this._draftKey); } catch (_) {} if (this.state.hasDraft) this.setState({ hasDraft: false }); };
   draftLabel = (d) => { const bits = []; if (d.orgName) bits.push(d.orgName); if (d.buttons && d.buttons.length) bits.push(d.buttons.length + (d.buttons.length === 1 ? ' button' : ' buttons')); return bits.join(', ') || 'in progress'; };
-  resumeDraft = () => { const d = this.readDraft(); if (!d) { this.clearDraft(); return; } const st = {}; this._draftFields.forEach(k => { if (d[k] !== undefined) st[k] = d[k]; }); st.errOrg = false; st.errEmail = false; st.err1Msg = ''; st.errDate = false; st.triedNext2 = false; st.editingId = null; this.setState(st, () => this.go(d.screen || 'configure')); };
+  resumeDraft = () => { const d = this.readDraft(); if (!d) { this.clearDraft(); return; } const st = {}; this._draftFields.forEach(k => { if (d[k] !== undefined) st[k] = d[k]; }); st.errOrg = false; st.errEmail = false; st.errDomain = false; st.errEnglish = ''; st.errLocation = false; st.err1Msg = ''; st.errDate = false; st.triedNext2 = false; st.editingId = null; this.setState(st, () => this.go(d.screen || 'configure')); };
   discardDraft = () => { this.clearDraft(); this.setState({ hasDraft: false }); };
   componentDidUpdate() {
     const s = this.state, last = this._lastSnap || {};
@@ -894,7 +921,7 @@ class Component extends DCLogic {
     const p = (n) => String(n).padStart(2, '0');
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
   };
-  dateProblem = () => this.state.measure && !window.MorphicConfigFile.isShowDateAllowed(this.state.showDate, this.todayIso());
+  dateProblem = () => this.state.measure && !window.MorphicConfigFile.isShowDateAllowed(this.state.showDate);
   showDateError = () => {
     this.setState({ errDate: true });
     setTimeout(() => { const f = document.getElementById('showDate'); if (f) f.focus(); }, 0);
@@ -943,11 +970,11 @@ class Component extends DCLogic {
   goConfigure = () => {
     this.clearDraft();
     this.setState({
-      orgName: '', email: '', location: 'main', showDate: this.defaultShowDate(),
+      orgName: '', email: '', location: '', domain: '', orgNameEnglish: '', showDate: this.defaultShowDate(),
       autostart: true, scope: 'All local users', counting: true, loadOwn: true, checkForUpdates: false,
       visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false, measure: true,
       buttons: [], seq: 1, editingId: null, dragId: null, advShown: false,
-      errOrg: false, errEmail: false, err1Msg: '', errDate: false, triedNext2: false, btnError: false, maxReached: 0,
+      errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false, triedNext2: false, btnError: false, maxReached: 0,
       loadedName: '', loadErr: '', loadedSiteId: '', loadNotes: null, loadedFile: null, loadedEntries: null, uid: this.newUid(),
       downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
     }, () => this.go('configure'));
@@ -961,6 +988,7 @@ class Component extends DCLogic {
     if (n.leftOut) notes.push(n.leftOut === 1 ? '1 button was left out because Morphic can\'t use it.' : n.leftOut + ' buttons were left out because Morphic can\'t use them.');
     if (n.updated) notes.push(n.updated === 1 ? '1 button was updated so that Morphic can use it.' : n.updated + ' buttons were updated so that Morphic can use them.');
     if (n.dateUnreadable) notes.push('The date the MorphicBar first shows couldn\'t be read. Choose a new one on the Settings step.');
+    if (n.counterOn) notes.push('The settings were mismatched: measurements are now turned on so you can see your impact.');
     return notes.join(' ');
   };
   loadConfig = (cfg, fileName) => {
@@ -970,7 +998,7 @@ class Component extends DCLogic {
       ...entries,
       loadedEntries: entries,
       editingId: null, triedNext2: false, btnError: false,
-      errOrg: false, errEmail: false, err1Msg: '', errDate: false,
+      errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false,
       gateCfg: null, gateFileName: '', gateErr: '', gateButtons: 0,
       uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
       advShown: false, loadErr: '', loadedName: fileName || '',
@@ -1052,7 +1080,7 @@ class Component extends DCLogic {
   goDownload = () => { if (this.checkDate()) this.go('download'); };
   duplicateConfig = () => {
     this.setState({
-      location: 'main', loadedName: '', loadedSiteId: '', loadNotes: null, errOrg: false, errEmail: false, err1Msg: '', errDate: false,
+      location: '', loadedName: '', loadedSiteId: '', loadNotes: null, errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false,
       screen: 'configure', triedNext2: false, btnError: false, maxReached: 0,
       uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
     });
@@ -1063,10 +1091,10 @@ class Component extends DCLogic {
   startAnother = () => {
     this.clearDraft();
     this.setState({
-      orgName: '', email: '', location: 'main', showDate: this.defaultShowDate(),
+      orgName: '', email: '', location: '', domain: '', orgNameEnglish: '', showDate: this.defaultShowDate(),
       autostart: true, scope: 'All local users', counting: true, loadOwn: true, checkForUpdates: false,
       visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false,
-      buttons: [], seq: 1, loadedSiteId: '', errOrg: false, errEmail: false, err1Msg: '', errDate: false, screen: 'configure', measure: true, triedNext2: false, btnError: false, maxReached: 0,
+      buttons: [], seq: 1, loadedSiteId: '', errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false, screen: 'configure', measure: true, triedNext2: false, btnError: false, maxReached: 0,
       loadedName: '', loadErr: '', loadNotes: null, loadedFile: null, loadedEntries: null, editingId: null, advShown: false,
       downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false, uid: this.newUid(),
     });
@@ -1078,7 +1106,9 @@ class Component extends DCLogic {
   setChecked = (k) => (e) => this.setState({ [k]: e.target.checked });
 
   onOrg = (e) => this.setState({ orgName: e.target.value.replace(/["\\]/g, ''), errOrg: false, err1Msg: '' });
-  onLocation = (e) => this.setState({ location: e.target.value, err1Msg: '' });
+  onLocation = (e) => this.setState({ location: e.target.value, errLocation: false, err1Msg: '' });
+  onDomain = (e) => this.setState({ domain: e.target.value, errDomain: false, err1Msg: '' });
+  onOrgEnglish = (e) => this.setState({ orgNameEnglish: e.target.value, errEnglish: '', err1Msg: '' });
   onEmail = (e) => this.setState({ email: e.target.value, errEmail: false, err1Msg: '' });
 
   togglePredef = (kind) => () => {
@@ -1137,16 +1167,24 @@ class Component extends DCLogic {
     this.removeLastOfKind(kind)();
   };
 
+  organizationProblems = () => {
+    const s = this.state, file = window.MorphicConfigFile;
+    return {
+      errOrg: !s.orgName.trim(),
+      errEnglish: file.needsEnglishName(s) ? file.englishNameProblem(s.orgNameEnglish) : '',
+      errDomain: file.domainMissing(s),
+      errEmail: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim()),
+      errLocation: !file.isLocation(s.location),
+    };
+  };
   checkOrganization = () => {
-    const errOrg = !this.state.orgName.trim();
-    const errEmail = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.state.email.trim());
-    if (errOrg || errEmail) {
-      this.setState({ errOrg, errEmail, err1Msg: '' });
-      const sel = errOrg ? 'Organization name' : 'Contact email';
-      setTimeout(() => { const f = document.querySelector('input[aria-label="' + sel + '"]'); if (f) f.focus(); }, 0);
-      return false;
-    }
-    return true;
+    const problems = this.organizationProblems();
+    const labels = { errOrg: 'Organization name', errEnglish: 'Organization name in English', errDomain: 'Organization domain', errEmail: 'Contact email', errLocation: 'Location' };
+    const first = Object.keys(labels).find((key) => problems[key]);
+    if (!first) return true;
+    this.setState(Object.assign({}, problems, { err1Msg: '' }));
+    setTimeout(() => { const f = document.querySelector('input[aria-label="' + labels[first] + '"]'); if (f) f.focus(); }, 0);
+    return false;
   };
   next1 = () => { if (this.checkOrganization()) this.go('customize'); };
 
@@ -1429,13 +1467,22 @@ class Component extends DCLogic {
       loadNoteText: this.loadNoteText(), hasLoadNotes: !!s.loadedName && !!this.loadNoteText(),
       email: s.email, onEmail: this.onEmail, errEmail: s.errEmail, emailInputStyle: this.inputStyle(s.errEmail),
       errOrg: s.errOrg,
-      orgInputStyle: this.inputStyle(s.errOrg), siteInputStyle: this.inputStyle(false),
+      orgInputStyle: this.inputStyle(s.errOrg),
       orgErrId: s.errOrg ? 'org-err' : null, emailErrId: s.errEmail ? 'email-err' : null,
+      domain: s.domain || '', onDomain: this.onDomain, errDomain: !!s.errDomain, domainInputStyle: this.inputStyle(s.errDomain),
+      domainDescribedBy: s.errDomain ? 'domain-err domain-hint' : 'domain-hint',
+      needsEnglish: window.MorphicConfigFile.needsEnglishName(s),
+      englishAnnouncement: window.MorphicConfigFile.needsEnglishName(s) ? 'Please provide your organization\'s name in English, under Organization name.' : '',
+      orgNameEnglish: s.orgNameEnglish || '', onOrgEnglish: this.onOrgEnglish, errEnglish: !!s.errEnglish,
+      englishErrMsg: s.errEnglish === 'characters' ? 'Use only letters, numbers and spaces.' : 'Enter your organization name in English.',
+      englishInputStyle: this.inputStyle(!!s.errEnglish), englishDescribedBy: s.errEnglish ? 'english-err english-hint' : 'english-hint',
+      errLocation: !!s.errLocation, locationInputStyle: this.inputStyle(s.errLocation), locationErrId: s.errLocation ? 'location-err' : null,
       onFileLabelKey: this.onFileLabelKey,
       fileLabelStyle: 'font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:12px 32px;cursor:pointer;background:#fff;border:1.5px solid var(--green);color:var(--green-deep);display:inline-block;text-align:center;flex:1 1 260px',
       measure: s.measure, measureNoChecked: !s.measure,
       measureYes: () => this.setState({ measure: true }), measureNo: () => this.setState({ measure: false, errDate: false }),
-      showDate: s.showDate, onShowDate: (e) => this.setState({ showDate: e.target.value, errDate: false }), todayISO: this.todayIso(),
+      showDate: s.showDate, onShowDate: (e) => this.setState({ showDate: e.target.value, errDate: false }),
+      showDatePastNote: s.measure && window.MorphicConfigFile.isPastDate(s.showDate, this.todayIso()) ? 'This date is in the past, so the MorphicBar will show right away.' : '',
       errDate: !!s.errDate, showDateDescribedBy: s.errDate ? 'showDate-err showDate-hint' : 'showDate-hint',
       showDateStyle: `font:inherit;padding:9px 11px;border:${s.errDate ? '2px solid var(--error)' : '1.5px solid var(--field)'};border-radius:8px;background:${s.errDate ? '#fdf3f2' : '#fbfcfb'};width:180px`,
       dateRowStyle: `margin:8px 0 4px 40px;align-items:baseline;gap:12px;flex-wrap:wrap;${s.measure ? 'display:flex' : 'display:none'}`,
@@ -1450,7 +1497,7 @@ class Component extends DCLogic {
       resetOnSignout: s.resetOnSignout, onReset: this.setChecked('resetOnSignout'), resetState: s.resetOnSignout ? 'On' : 'Off', resetSw: this.sw(s.resetOnSignout),
       next1: this.next1,
       emailErrMsg: s.email.trim() ? 'Enter a valid email address, like you@organization.org.' : 'Enter a contact email.',
-      step1Ready: !!(s.orgName.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim())),
+      step1Ready: !Object.values(this.organizationProblems()).some(Boolean),
 
       onUsb: this.togglePredef('usb'), onVolume: this.togglePredef('volume'), onVoice: this.togglePredef('voice'), onSignout: this.togglePredef('signout'),
       usbDis: full && !has('usb'), volumeDis: full && !has('volume'), voiceDis: full && !has('voice'), signoutDis: full && !has('signout'),
@@ -1484,7 +1531,7 @@ class Component extends DCLogic {
       json: JSON.stringify(cfg, null, 2),
       reviewOpen: !!s.reviewOpen, onReviewToggle: (e) => { e.preventDefault(); this.setState(st => ({ reviewOpen: !st.reviewOpen })); }, reviewLabel: s.reviewOpen ? 'Hide' : 'Show', reviewChevron: 'flex:none;transition:transform .15s;transform:rotate(' + (s.reviewOpen ? '180deg' : '0') + ')',
       jsonOpen: !!s.jsonOpen, onJsonToggle: (e) => { e.preventDefault(); this.setState(st => ({ jsonOpen: !st.jsonOpen })); }, jsonLabel: s.jsonOpen ? 'Hide' : 'Show', jsonChevron: 'flex:none;transition:transform .15s;transform:rotate(' + (s.jsonOpen ? '180deg' : '0') + ')',
-      sumOrg: s.orgName || '—', sumSite: this.effectiveSiteId() || '—', sumEmail: s.email || '—', sumLocation: s.location || '—',
+      sumOrg: s.orgName || '—', sumSite: this.effectiveSiteId() || '—', sumEmail: s.email || '—', sumLocation: s.location || 'main',
       sumMeasure: s.measure ? `Yes — show the MorphicBar on ${this.fmtDate(s.showDate)}` : 'No — show the MorphicBar right away',
       sumAutostart: s.autostart ? `On (${s.scope})` : 'Off',
       sumLoadOwn: s.loadOwn ? 'On' : 'Off',

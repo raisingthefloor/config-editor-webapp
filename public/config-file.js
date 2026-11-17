@@ -34,27 +34,79 @@
     return year >= 1 && daysInMonth !== undefined && day >= 1 && day <= daysInMonth;
   }
 
-  function isShowDateAllowed(value, today) {
-    return isCalendarDate(value) && value >= today;
+  function isShowDateAllowed(value) {
+    return isCalendarDate(value);
   }
 
-  function siteIdFrom(org, loc) {
-    const clean = (s) => (s || '').replace(/[^a-zA-Z0-9\s]/g, ' ').trim();
-    const piece = (w) => {
-      if (/^\d+$/.test(w)) return w;
-      const a = w.toLowerCase().slice(0, 4);
-      return a.charAt(0).toUpperCase() + a.slice(1);
-    };
-    const pieces = (str) => clean(str).split(/\s+/).filter(Boolean).map(piece).join('');
-    let orgPart = pieces(org);
-    orgPart = orgPart.charAt(0).toLowerCase() + orgPart.slice(1);
-    const locPart = pieces(loc);
-    return (orgPart + locPart).replace(/[^a-zA-Z0-9]/g, '');
+  function isPastDate(value, today) {
+    return isCalendarDate(value) && value < today;
+  }
+
+  const SITE_ID_PART_MAX_LENGTH = 32;
+
+  const isAscii = (text) => /^[\x00-\x7f]*$/.test(text);
+
+  function domainHost(raw) {
+    let host = String(raw || '').trim().replace(/^[a-z][a-z0-9+.-]*:\/\//i, '');
+    host = host.split(/[/?#\\]/)[0];
+    host = host.slice(host.lastIndexOf('@') + 1);
+    return host.replace(/:\d*$/, '').replace(/\.$/, '');
+  }
+
+  function isDomain(raw) {
+    return /^[\p{L}\p{N}-]+(\.[\p{L}\p{N}-]+)+$/u.test(domainHost(raw));
+  }
+
+  const PLAIN_FORMS = {
+    'ß': 'ss', 'ẞ': 'SS', 'æ': 'ae', 'Æ': 'AE', 'ø': 'o', 'Ø': 'O', 'œ': 'oe', 'Œ': 'OE', 'ł': 'l', 'Ł': 'L',
+    'đ': 'd', 'Đ': 'D', 'ð': 'd', 'Ð': 'D', 'þ': 'th', 'Þ': 'TH', 'ı': 'i',
+  };
+
+  function plainLettersOf(text) {
+    const kept = String(text || '').normalize('NFD').replace(/\p{M}/gu, '')
+      .replace(/[ßẞæÆøØœŒłŁđĐðÐþÞı]/g, (letter) => PLAIN_FORMS[letter])
+      .replace(/[^\p{L}\p{N}]/gu, '');
+    return isAscii(kept) ? kept : null;
+  }
+
+  function keepsLoadedSiteId(s) {
+    return !!s.loadedSiteId && ((s.location || '').trim() || 'main') === ((s.loadedLoc || '').trim() || 'main');
+  }
+
+  function domainMissing(s) {
+    return !keepsLoadedSiteId(s) && !isDomain(s.domain);
+  }
+
+  function needsEnglishName(s) {
+    const host = domainHost(s.domain);
+    return !keepsLoadedSiteId(s) && host !== '' && !isAscii(host) && !plainLettersOf(s.orgName);
+  }
+
+  function englishNameProblem(name) {
+    const text = String(name || '').trim();
+    if (text !== '' && !/^[A-Za-z0-9 ._-]+$/.test(text)) return 'characters';
+    return /[A-Za-z0-9]/.test(text) ? '' : 'empty';
+  }
+
+  function isLocation(location) {
+    return /^[A-Za-z0-9]{0,32}$/.test(String(location || ''));
+  }
+
+  function siteIdFrom(s) {
+    const host = domainHost(s.domain);
+    if (!host) return '';
+    const organization = isAscii(host)
+      ? host.replace(/^www\./i, '').replace(/[^A-Za-z0-9]/g, '')
+      : plainLettersOf(s.orgName) || String(s.orgNameEnglish || '').replace(/[^A-Za-z0-9]/g, '');
+    if (!organization) return '';
+    const location = String(s.location || '').replace(/[^A-Za-z0-9]/g, '') || 'main';
+    return organization.slice(0, SITE_ID_PART_MAX_LENGTH).toLowerCase() + '-' +
+      location.slice(0, SITE_ID_PART_MAX_LENGTH).toLowerCase();
   }
 
   function effectiveSiteId(s) {
-    if (s.loadedSiteId && s.location === s.loadedLoc) return s.loadedSiteId;
-    return siteIdFrom(s.orgName, s.location) || s.loadedSiteId || '';
+    if (keepsLoadedSiteId(s)) return s.loadedSiteId;
+    return siteIdFrom(s) || s.loadedSiteId || '';
   }
 
   function buildConfig(s) {
@@ -103,6 +155,9 @@
     for (const setting of SETTINGS) {
       if (setting.entries.every((key) => s[key] === was[key])) continue;
       putPath(out, setting.path, getPath(written, setting.path));
+    }
+    if (s.measure && getPath(out, ['features', 'atUseCounter', 'enabled']) !== true) {
+      putPath(out, ['features', 'atUseCounter', 'enabled'], true);
     }
     if (effectiveSiteId(s) !== effectiveSiteId(was)) putPath(out, ['telemetry', 'siteId'], written.telemetry.siteId);
     const buttons = written.morphicBar.extraItems;
@@ -182,11 +237,15 @@
     const loadedDate = isoDate(hideUntil);
     const showDate = measure ? (isCalendarDate(loadedDate) ? loadedDate : '') : defaultShowDate;
     if (measure && !isCalendarDate(loadedDate)) loadNotes.dateUnreadable = true;
+    const counting = isSection(feat.atUseCounter) && feat.atUseCounter.enabled === true;
+    if (measure && !counting) loadNotes.counterOn = true;
     const location = typeof b.location === 'string' ? b.location : '';
     return {
       orgName: cfg.organizationName || '',
       location,
       email: '',
+      domain: '',
+      orgNameEnglish: '',
       loadedSiteId: (cfg.telemetry && cfg.telemetry.siteId) || '',
       loadedOrg: cfg.organizationName || '',
       loadedLoc: location,
@@ -303,9 +362,10 @@
   }
 
   const api = {
-    APPLICATIONS, applicationLabel, keptButtonLabel, isCalendarDate, isShowDateAllowed, looksLikeConfig,
+    APPLICATIONS, applicationLabel, keptButtonLabel, isCalendarDate, isShowDateAllowed, isPastDate, looksLikeConfig,
     withScheme, webAddressProblem,
-    siteIdFrom, effectiveSiteId, buildConfig, readConfig,
+    domainHost, isDomain, plainLettersOf, keepsLoadedSiteId, domainMissing, needsEnglishName, englishNameProblem,
+    isLocation, siteIdFrom, effectiveSiteId, buildConfig, readConfig,
   };
   if (typeof module === 'object' && module && module.exports) {
     module.exports = api;
