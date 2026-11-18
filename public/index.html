@@ -43,11 +43,11 @@
   <sc-if value="{{ confirmHome }}">
     <div onClick="{{ cancelHome }}" style="position:fixed;inset:0;background:rgba(28,44,84,.45);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px">
       <div role="alertdialog" aria-modal="true" aria-labelledby="leave-title" aria-describedby="leave-desc" onClick="{{ stopProp }}" onKeyDown="{{ onDialogKey }}" style="background:#fff;border-radius:14px;padding:26px 28px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(28,44,84,.3)">
-        <h2 id="leave-title" style="font-size:18px;margin:0 0 8px;color:var(--slate-deep)">Leave for now?</h2>
-        <p id="leave-desc" style="margin:0 0 22px;color:var(--ink);font-size:15px;line-height:1.5">You haven't downloaded this config file yet. Your entries are saved on this computer, and you can continue from the home page later.</p>
+        <h2 id="leave-title" style="font-size:18px;margin:0 0 8px;color:var(--slate-deep)">Leave without downloading?</h2>
+        <p id="leave-desc" style="margin:0 0 22px;color:var(--ink);font-size:15px;line-height:1.5">You haven't downloaded your config file yet. If you leave this page, your entries will be lost.</p>
         <div style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap">
-          <button ref="{{ stayRef }}" onClick="{{ cancelHome }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:10px 24px;cursor:pointer;background:#fff;border:1.5px solid var(--slate);color:var(--slate-deep)" style-hover="background:#eef4ef">Stay</button>
-          <button onClick="{{ confirmHomeYes }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:10px 24px;cursor:pointer;background:var(--green);border:1.5px solid var(--green);color:#fff">Leave</button>
+          <button ref="{{ stayRef }}" onClick="{{ cancelHome }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:10px 24px;cursor:pointer;background:var(--green);border:1.5px solid var(--green);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Stay</button>
+          <button onClick="{{ confirmHomeYes }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:10px 24px;cursor:pointer;background:#fff;border:1.5px solid var(--slate);color:var(--slate-deep)" style-hover="background:#eef4ef">Leave anyway</button>
         </div>
       </div>
     </div>
@@ -101,15 +101,6 @@
         </div>
       </div>
 
-      <sc-if value="{{ hasDraft }}">
-        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;background:#eef7f0;border:1px solid #bfe0cc;border-radius:10px;padding:12px 16px;margin-bottom:14px">
-          <div style="font-size:15px;color:var(--ink)"><b style="color:var(--slate-deep)">You have an unfinished config file</b><span style="color:var(--ink-soft)"> — {{ draftLabel }}</span></div>
-          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
-            <button onClick="{{ discardDraft }}" style="font:inherit;font-size:15px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Discard</button>
-            <button onClick="{{ resumeDraft }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:9px 20px;cursor:pointer;background:var(--green);border:1.5px solid var(--green);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Continue where you left off</button>
-          </div>
-        </div>
-      </sc-if>
       <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between">
         <label role="button" tabindex="0" onKeyDown="{{ onFileLabelKey }}" style="{{ fileLabelStyle }}" style-hover="background:#eef7f0">Edit an existing config file<input type="file" accept=".json,application/json" onChange="{{ onFileChosen }}" tabindex="-1" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden"></label>
         <button onClick="{{ goConfigure }}" style="font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:12px 32px;cursor:pointer;background:var(--green);border:1.5px solid var(--green);color:#fff;text-align:center;flex:1 1 260px" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Start a new config file</button>
@@ -183,7 +174,7 @@
     <h1 style="font-size:22px;margin:0 0 6px;color:var(--slate-deep)">Organization details</h1>
     <sc-if value="{{ hasLoadedName }}"><div style="display:flex;gap:8px;align-items:center;background:#eef7f0;border:1px solid #bfe0cc;border-radius:10px;padding:9px 14px;margin:0 0 14px;color:var(--green-deep);font-size:13px;font-weight:700"><span aria-hidden="true">✓</span> Loaded from {{ loadedName }} — review and edit below.</div></sc-if>
     <sc-if value="{{ hasLoadNotes }}"><div role="alert" style="display:flex;gap:8px;align-items:flex-start;background:#fff4e0;border:1.5px solid #c77700;border-radius:10px;padding:9px 14px;margin:-6px 0 14px;color:var(--ink);font-size:13px;font-weight:700;line-height:1.45"><span aria-hidden="true" style="color:#8a5300;font-size:15px;line-height:1.2">⚠</span><span>{{ loadNoteText }}</span></div></sc-if>
-    <p style="color:var(--ink);margin:0 0 4px;max-width:82ch;line-height:1.55;font-size:16px">These details are saved in your config file and let us reach you if there's a problem with your deployment.</p>
+    <p style="color:var(--ink);margin:0 0 4px;max-width:82ch;line-height:1.55;font-size:16px">We use these details only to reach you if there's a problem with your deployment.</p>
 
     <div style="padding:20px 0;border-top:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 28px;align-items:start">
       <div>
@@ -264,17 +255,18 @@
     <section aria-labelledby="measureH" style="border:1.5px solid var(--slate);border-radius:10px;padding:18px 20px;background:#f5f8f5">
       <h2 id="measureH" style="margin:0 0 4px;font-size:16px;color:var(--slate-deep)">See your impact</h2>
       <div style="color:var(--ink-soft);font-size:15px;margin:0 0 14px;line-height:1.55">
-        <p style="margin:0 0 10px">Morphic can stay hidden until a date you choose while it counts how often the built-in accessibility features are used, so you can compare use <b style="color:var(--ink)">before</b> and <b style="color:var(--ink)">after</b> the MorphicBar appears.</p>
+        <p style="margin:0 0 10px">Morphic counts how often people use the computer's built-in accessibility features. You can keep the MorphicBar hidden for a while first, then compare use before and after it appears.</p>
         <ul style="margin:0;padding-left:20px;line-height:1.5">
-          <li style="margin-bottom:6px">Shows how much Morphic increases feature use — useful for justifying its value in reports.</li>
-          <li style="margin-bottom:6px">Organizations that measured saw feature use jump <b style="color:var(--slate-deep)">7× or more</b>.</li>
-          <li>Counts are <b style="color:var(--ink)">anonymous and cumulative</b> for this location — no individual-use data is gathered.</li>
+          <li style="margin-bottom:6px">Useful for showing Morphic's value in reports.</li>
+          <li>Counts are recorded per computer, then added up in your reports.</li>
         </ul>
       </div>
 
+      <fieldset style="border:0;margin:0;padding:0;min-width:0">
+      <legend style="padding:0;margin:0 0 4px;font-weight:700;color:var(--slate-deep);font-size:15px">When should the MorphicBar appear?</legend>
       <label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;cursor:pointer" style-hover="background:#eef4ef">
         <input type="radio" name="measure" checked="{{ measure }}" onChange="{{ measureYes }}" style="margin-top:4px;accent-color:var(--slate);width:17px;height:17px">
-        <span style="font-size:15px"><b style="color:var(--slate-deep)">Yes, measure it</b> — keep the MorphicBar hidden at first, then show it on a date I choose <span style="color:var(--ink-soft)">(recommended)</span></span>
+        <span style="font-size:15px"><b style="color:var(--slate-deep)">On a date I choose</b> <span style="color:var(--ink-soft)">(recommended)</span>. Morphic counts feature use before and after.</span>
       </label>
       <div style="{{ dateRowStyle }}">
         <label for="showDate" style="font-size:15px;font-weight:700;color:var(--slate-deep);flex:none">Show the MorphicBar on</label>
@@ -286,8 +278,9 @@
       </div>
       <label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;cursor:pointer" style-hover="background:#eef4ef">
         <input type="radio" name="measure" checked="{{ measureNoChecked }}" onChange="{{ measureNo }}" style="margin-top:4px;accent-color:var(--slate);width:17px;height:17px">
-        <span style="font-size:15px"><b style="color:var(--slate-deep)">No</b> — show the MorphicBar right away</span>
+        <span style="font-size:15px"><b style="color:var(--slate-deep)">Right away</b>. Morphic still counts feature use, but you won't have a "before" to compare against.</span>
       </label>
+      </fieldset>
     </section>
 
     <h2 style="font-size:16px;color:var(--slate-deep);margin:28px 0 6px">Other settings</h2>
@@ -366,6 +359,7 @@
           <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Change this only if that corner is used by sign-in or session-timer software.</div>
         </div>
 
+        <sc-if value="{{ resetShown }}">
         <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;padding:12px 0;border-top:1px solid var(--line-soft);align-items:center">
           <div style="font-weight:700;color:var(--ink);font-size:15px">Reset display settings when a user signs out</div>
           <div style="display:flex;align-items:center">
@@ -375,8 +369,9 @@
             </span>
             <span style="font-size:13px;font-weight:700;color:var(--ink-soft);width:26px;margin-left:8px">{{ resetState }}</span>
           </div>
-          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Returns text size, contrast, color, and dark/night mode to defaults. Recommended for shared or public computers. Not needed if you use Deep Freeze or similar.</div>
+          <div style="grid-column:1;color:var(--ink-soft);font-size:13px;max-width:58ch">Returns text size, contrast, color, and dark/night mode to defaults.</div>
         </div>
+        </sc-if>
 
     </div>
     </sc-if>
@@ -665,13 +660,13 @@
     <div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:24px">
       <div style="background:#f6f8f6;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-weight:700;color:var(--slate-deep);font-size:18px">Settings</span><button onClick="{{ editAdvanced }}" style="font:inherit;font-size:13px;font-weight:700;background:none;border:none;color:var(--slate-deep);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Edit</button></div>
       <div style="padding:6px 20px">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Measure impact</div><div style="font-weight:700">{{ sumMeasure }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">When the MorphicBar appears</div><div style="font-weight:700">{{ sumMeasure }}</div></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Start automatically at login</div><div style="font-weight:700">{{ sumAutostart }}</div></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Let users load their own bars</div><div style="font-weight:700">{{ sumLoadOwn }}</div></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Check for updates automatically</div><div style="font-weight:700">{{ sumCheckUpdates }}</div></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Visibility after login</div><div style="font-weight:700">{{ sumVisibility }}</div></div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-bottom:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Where the bar appears</div><div style="font-weight:700">{{ sumPosition }}</div></div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0"><div style="color:var(--ink-soft)">Reset display on sign-out</div><div style="font-weight:700">{{ sumReset }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0"><div style="color:var(--ink-soft)">Where the bar appears</div><div style="font-weight:700">{{ sumPosition }}</div></div>
+        <sc-if value="{{ resetShown }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px 20px;padding:11px 0;border-top:1px solid var(--line-soft)"><div style="color:var(--ink-soft)">Reset display on sign-out</div><div style="font-weight:700">{{ sumReset }}</div></div></sc-if>
       </div>
     </div>
 
@@ -684,26 +679,7 @@
     <div style="border:1.5px solid var(--green);border-radius:12px;padding:18px 20px;margin-bottom:20px;background:#f5faf6">
       <h2 style="font-weight:700;color:var(--slate-deep);font-size:15px;margin:0 0 6px">Download your config file</h2>
       <div style="color:var(--ink-soft);font-size:15px;line-height:1.5;margin:0 0 14px;display:flex;flex-direction:column;gap:8px"><div>Downloads as <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">{{ zipName }}</code>. The name includes your organization and location so you can tell config files apart if you make more than one. Unzip it to get <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code>.</div></div>
-      <div style="border-top:1px solid #cfe3d6;padding-top:14px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px">
-        <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:15px;color:var(--ink);line-height:1.5">
-          <input type="checkbox" checked="{{ emailCopy }}" onChange="{{ onEmailCopy }}" style="width:18px;height:18px;margin:4px 0 0;accent-color:var(--green);flex:none">
-          <span>Email a copy of this config and the deployment instructions to <b style="color:var(--slate-deep)">{{ sumEmail }}</b></span>
-        </label>
-        <sc-if value="{{ emailCopy }}">
-          <div style="padding-left:28px;display:flex;flex-direction:column;gap:8px">
-            <label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:15px;color:var(--ink-soft);line-height:1.5">
-              <input type="checkbox" checked="{{ ccOn }}" onChange="{{ onCcToggle }}" style="width:18px;height:18px;margin:3px 0 0;accent-color:var(--green);flex:none">
-              <span>Also send to whoever runs the deployment</span>
-            </label>
-            <sc-if value="{{ ccOn }}">
-              <input type="email" value="{{ cc }}" onInput="{{ onCc }}" placeholder="colleague@example.org" aria-label="Also send to" aria-invalid="{{ errCc }}" style="{{ ccInputStyle }}">
-              <sc-if value="{{ errCc }}"><div style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true">⚠</span>Enter a valid email address, or untick the box.</div></sc-if>
-            </sc-if>
-            <button onClick="{{ previewEmail }}" style="font:inherit;font-size:13px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0;align-self:flex-start">Preview the email →</button>
-          </div>
-        </sc-if>
-        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:15px;color:var(--ink);line-height:1.5"><b style="color:var(--slate-deep)">Raising the Floor,<span style="font-weight: normal;"> the organization that makes Morphic</span>, will also receive your config file and contact details.</b> This tells us which organizations are deploying Morphic and how it's set up, so we can help if something goes wrong.</div>
-      </div>
+      <div style="border-top:1px solid #cfe3d6;padding-top:14px;margin-bottom:16px;font-size:15px;color:var(--ink);line-height:1.5"><b style="color:var(--slate-deep)">Raising the Floor,<span style="font-weight: normal;"> the organization that makes Morphic</span>, will also receive your config file and contact details.</b> This tells us which organizations are deploying Morphic and how it's set up, so we can help if something goes wrong.</div>
       <div style="display:flex;justify-content:flex-end"><button onClick="{{ download }}" style="font:inherit;font-weight:700;border-radius:999px;padding:12px 28px;cursor:pointer;font-size:15px;background:var(--green);border:1.5px solid var(--green);color:#fff" style-hover="background:var(--green-deep);border-color:var(--green-deep)"><span style="display:inline-flex;align-items:center;gap:9px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M12 3v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 20h16"></path></svg>Download config file</span></button></div>
     </div>
 
@@ -727,87 +703,11 @@
             <a href="{{ dlUrl }}" download="{{ dlName }}" style="font-size:13px;color:var(--ink-soft)">Didn't download? <b style="color:var(--slate-deep)">Download it again</b></a>
             <a href="{{ winGuide }}" target="_blank" rel="noopener" style="font:inherit;font-weight:700;border-radius:999px;padding:11px 24px;font-size:15px;background:var(--green);border:1.5px solid var(--green);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px" style-hover="background:var(--green-deep);border-color:var(--green-deep)">Deployment instructions <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
           </div>
-          <sc-if value="{{ emailSent }}">
-            <div style="margin-top:14px;padding-top:12px;border-top:1px solid #cfe3d6;font-size:13px;color:var(--ink-soft);line-height:1.5">A copy was emailed to <b style="color:var(--slate-deep)">{{ emailRecipients }}</b>. <button onClick="{{ previewEmail }}" style="font:inherit;font-size:13px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">View the email</button></div>
-          </sc-if>
         </div>
       </div>
     </div>
 
     <div style="margin-top:34px;padding-top:18px;border-top:1px solid var(--line-soft);font-size:15px;color:var(--ink);line-height:1.6;text-wrap:pretty">Need different buttons for some of your computers? <button onClick="{{ duplicateConfig }}" style="font:inherit;font-size:15px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">Duplicate this config</button> and change the location, or <button onClick="{{ startAnother }}" style="font:inherit;font-size:15px;background:none;border:none;color:var(--slate-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">start fresh</button>.</div>
-  </main>
-  </sc-if>
-
-  <sc-if value="{{ isEmail }}">
-  <main style="max-width:760px;margin:0 auto">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
-      <button onClick="{{ closeEmail }}" style="font:inherit;background:none;border:none;color:var(--slate-deep);font-weight:700;font-size:13px;cursor:pointer;padding:0">← Back</button>
-      <div style="font-size:13px;color:var(--ink-soft)">{{ emailPreviewNote }}</div>
-    </div>
-
-    <div style="background:#fff;border:1.5px solid var(--slate);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(36,49,63,.06),0 6px 24px rgba(36,49,63,.05)">
-      <div style="padding:14px 22px;border-bottom:1px solid var(--line-soft);font-size:13px;color:var(--ink-soft);display:grid;grid-template-columns:max-content 1fr;gap:4px 14px">
-        <span>From</span><span style="color:var(--ink)">Morphic for Organizations &lt;support@morphic.org&gt;</span>
-        <span>To</span><span style="color:var(--ink)">{{ emailRecipients }}</span>
-        <span>Subject</span><span style="color:var(--ink);font-weight:700">Your Morphic config for {{ sumOrg }} ({{ sumLocation }})</span>
-        <span>Attached</span><span style="color:var(--ink)"><span style="display:inline-flex;align-items:center;gap:6px;background:#e0e8f0;border-radius:6px;padding:2px 9px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12l-8 8a5 5 0 0 1-7-7l9-9a3 3 0 0 1 4 4l-9 9a1 1 0 0 1-2-2l8-8"></path></svg>{{ zipName }}</span></span>
-      </div>
-
-      <div style="padding:28px 22px 30px;font-size:15px;line-height:1.55;color:var(--ink);display:flex;flex-direction:column;gap:22px">
-        <div style="display:flex;align-items:center;gap:11px">
-          <img src="assets/morphic-logo.png" alt="Morphic" style="width:34px;height:34px;display:block">
-          <span style="font-weight:700;font-size:15px;color:var(--slate-deep)">Morphic for Organizations</span>
-        </div>
-
-        <div>
-          <h1 style="font-size:22px;margin:0 0 8px;color:var(--slate-deep)">Your config file for {{ sumOrg }}</h1>
-          <p style="margin:0">Here's a record of the MorphicBar you set up on {{ emailDate }}. The config file is attached. Keep this email. If you need to change the buttons later, open the attached file in the Config Builder and edit it there.</p>
-        </div>
-
-        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
-          <div style="background:#f6f8f6;padding:9px 16px;font-weight:700;color:var(--slate-deep);font-size:15px">Organization</div>
-          <div style="padding:4px 16px;font-size:15px">
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Organization</span><span style="font-weight:700">{{ sumOrg }}</span></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Location</span><span style="font-weight:700">{{ sumLocation }}</span></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Site ID</span><code style="background:#e0e8f0;padding:1px 6px;border-radius:5px;justify-self:start">{{ sumSite }}</code></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0"><span style="color:var(--ink-soft)">Contact</span><span style="font-weight:700">{{ sumEmail }}</span></div>
-          </div>
-        </div>
-
-        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
-          <div style="background:#f6f8f6;padding:9px 16px;font-weight:700;color:var(--slate-deep);font-size:15px">MorphicBar buttons</div>
-          <div style="padding:4px 16px;font-size:15px">
-            <sc-if value="{{ noButtons }}"><div style="padding:9px 0;color:var(--ink-soft)">No extra buttons. The standard MorphicBar will be shown.</div></sc-if>
-            <sc-for list="{{ buttonSummary }}" as="b" hint-placeholder-count="2">
-              <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Button {{ b.pos }}</span><span><b>{{ b.label }}</b> <span style="color:var(--ink-soft)">· {{ b.typeLabel }}</span></span></div>
-            </sc-for>
-          </div>
-        </div>
-
-        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
-          <div style="background:#f6f8f6;padding:9px 16px;font-weight:700;color:var(--slate-deep);font-size:15px">Settings</div>
-          <div style="padding:4px 16px;font-size:15px">
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Measure impact</span><span>{{ sumMeasure }}</span></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Auto-start</span><span>{{ sumAutostart }}</span></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Check for updates</span><span>{{ sumCheckUpdates }}</span></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Visibility after login</span><span>{{ sumVisibility }}</span></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line-soft)"><span style="color:var(--ink-soft)">Bar position</span><span>{{ sumPosition }}</span></div>
-            <div style="display:grid;grid-template-columns:minmax(120px,160px) 1fr;gap:4px 14px;padding:9px 0"><span style="color:var(--ink-soft)">Reset on sign-out</span><span>{{ sumReset }}</span></div>
-          </div>
-        </div>
-
-        <div>
-          <h2 style="font-size:15px;margin:0 0 8px;color:var(--slate-deep)">Deploy Morphic</h2>
-          <p style="margin:0 0 10px">Unzip the attachment to get <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">config.json</code>. Copy it to <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">%PROGRAMDATA%\Morphic\</code> on Windows or <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">/Library/Application Support/Morphic/</code> on macOS, then install the MSI or PKG with your deployment tools. The Windows enterprise installer sets Morphic to auto-start for all users; on macOS, set auto-start through your MDM. Allow HTTPS to <code style="background:#e0e8f0;padding:1px 6px;border-radius:5px">*.morphic.org</code> if your network blocks outgoing traffic. Full details are in the deployment instructions.</p>
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:15px">
-            <div><span style="color:var(--ink-soft)">Installer: </span><a href="{{ winMsi }}" style="font-weight:700">Windows (x64)</a> · <a href="{{ winArm }}" style="font-weight:700">Windows (ARM64)</a> · <a href="{{ macPkg }}" style="font-weight:700">macOS</a></div>
-            <div><span style="color:var(--ink-soft)">Deployment instructions: </span><a href="{{ winGuide }}" target="_blank" rel="noopener" style="font-weight:700">Windows</a> · <a href="{{ macGuide }}" target="_blank" rel="noopener" style="font-weight:700">macOS</a></div>
-          </div>
-        </div>
-
-        <div style="border-top:1px solid var(--line-soft);padding-top:16px;font-size:13px;color:var(--ink-soft);line-height:1.5">Sent from the Morphic Config Builder for {{ sumOrg }}. Questions? Reply to this email.</div>
-      </div>
-    </div>
   </main>
   </sc-if>
 
@@ -826,9 +726,8 @@ class Component extends DCLogic {
     measure: true, showDate: '',
     autostart: true, scope: 'All local users',
     counting: true, loadOwn: true, checkForUpdates: false, loadedSiteId: '',
-    emailCopy: true, ccOn: false, cc: '', errCc: false, emailSent: false, emailSentTo: '', emailFrom: '',
     visibility: 'Show', position: 'Bottom right corner',
-    resetOnSignout: false,
+    resetOnSignout: false, resetShown: false,
     advShown: false,
     buttons: [],
     seq: 1,
@@ -850,31 +749,8 @@ class Component extends DCLogic {
     for (let i = 0; i < 8; i++) { const r = buf ? buf[i] : Math.floor(Math.random() * 1e9); out += a[r % a.length]; }
     return out;
   };
-  _draftKey = 'morphicConfigBuilderDraft';
-  _draftFields = ['orgName','email','location','domain','orgNameEnglish','measure','showDate','autostart','scope','counting','loadOwn','checkForUpdates','visibility','position','resetOnSignout','buttons','seq','uid','loadedSiteId','loadedName','maxReached'];
-  readDraft = () => { try { const d = JSON.parse(localStorage.getItem(this._draftKey) || 'null'); return (d && (d.orgName || d.email || d.domain || (d.buttons && d.buttons.length))) ? d : null; } catch (_) { return null; } };
-  saveDraft = () => {
-    const s = this.state;
-    if (s.screen === 'home' || s.screen === 'downloads' || s.screen === 'done' || s.screen === 'email') return;
-    if (!this.isDirty()) return;
-    const d = {}; this._draftFields.forEach(k => { d[k] = s[k]; }); d.screen = s.screen; d.savedAt = Date.now();
-    try { localStorage.setItem(this._draftKey, JSON.stringify(d)); } catch (_) {}
-    if (!s.hasDraft) this.setState({ hasDraft: true, draftLabel: this.draftLabel(d) });
-  };
-  clearDraft = () => { try { localStorage.removeItem(this._draftKey); } catch (_) {} if (this.state.hasDraft) this.setState({ hasDraft: false }); };
-  draftLabel = (d) => { const bits = []; if (d.orgName) bits.push(d.orgName); if (d.buttons && d.buttons.length) bits.push(d.buttons.length + (d.buttons.length === 1 ? ' button' : ' buttons')); return bits.join(', ') || 'in progress'; };
-  resumeDraft = () => { const d = this.readDraft(); if (!d) { this.clearDraft(); return; } const st = {}; this._draftFields.forEach(k => { if (d[k] !== undefined) st[k] = d[k]; }); st.errOrg = false; st.errEmail = false; st.errDomain = false; st.errEnglish = ''; st.errLocation = false; st.err1Msg = ''; st.errDate = false; st.triedNext2 = false; st.editingId = null; this.setState(st, () => this.go(d.screen || 'configure')); };
-  discardDraft = () => { this.clearDraft(); this.setState({ hasDraft: false }); };
-  componentDidUpdate() {
-    const s = this.state, last = this._lastSnap || {};
-    const changed = this._draftFields.some(k => s[k] !== last[k]) || s.screen !== last.screen;
-    if (!changed) return;
-    const snap = {}; this._draftFields.forEach(k => { snap[k] = s[k]; }); snap.screen = s.screen; this._lastSnap = snap;
-    this.saveDraft();
-  }
   componentDidMount() {
     if (!this.state.showDate) this.setState({ showDate: this.defaultShowDate() });
-    const d0 = this.readDraft(); if (d0) this.setState({ hasDraft: true, draftLabel: this.draftLabel(d0) });
     this._onPop = this.onPopState;
     window.addEventListener('popstate', this._onPop);
     this._onResize = () => { this.fitBar(); this.checkNarrow(); };
@@ -948,7 +824,7 @@ class Component extends DCLogic {
   goHome = () => { this.setState({ confirmHome: false }); this.go('home'); };
   isDirty = () => {
     const s = this.state;
-    return !!(s.orgName || s.email || (s.location && s.location !== 'main') || (s.buttons && s.buttons.length));
+    return !!(s.orgName || s.email || s.domain || (s.location && s.location !== 'main') || (s.buttons && s.buttons.length));
   };
   requestHome = () => { if (this.isDirty() && this.state.screen !== 'done') { this._prevFocus = document.activeElement; this.setState({ confirmHome: true }); } else { this.goHome(); } };
   confirmHomeYes = () => { this.setState({ confirmHome: false }); this.go('home'); };
@@ -968,15 +844,14 @@ class Component extends DCLogic {
   _focusDialog = () => { const el = this._stayEl; if (el) { try { el.focus(); } catch (_) {} } else { setTimeout(() => { if (this.state.confirmHome && this._stayEl) this._stayEl.focus(); }, 0); } };
   goDownloads = () => this.go('downloads');
   goConfigure = () => {
-    this.clearDraft();
     this.setState({
       orgName: '', email: '', location: '', domain: '', orgNameEnglish: '', showDate: this.defaultShowDate(),
       autostart: true, scope: 'All local users', counting: true, loadOwn: true, checkForUpdates: false,
-      visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false, measure: true,
+      visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false, resetShown: false, measure: true,
       buttons: [], seq: 1, editingId: null, dragId: null, advShown: false,
       errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false, triedNext2: false, btnError: false, maxReached: 0,
       loadedName: '', loadErr: '', loadedSiteId: '', loadNotes: null, loadedFile: null, loadedEntries: null, uid: this.newUid(),
-      downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
+      downloaded: false, downloadedName: '', dlUrl: '', dlName: '',
     }, () => this.go('configure'));
   };
 
@@ -993,14 +868,14 @@ class Component extends DCLogic {
   };
   loadConfig = (cfg, fileName) => {
     const entries = window.MorphicConfigFile.readConfig(cfg, this.defaultShowDate());
-    this.clearDraft();
     this.setState({
       ...entries,
       loadedEntries: entries,
+      resetShown: entries.resetOnSignout === true,
       editingId: null, triedNext2: false, btnError: false,
       errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false,
       gateCfg: null, gateFileName: '', gateErr: '', gateButtons: 0,
-      uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
+      uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '',
       advShown: false, loadErr: '', loadedName: fileName || '',
       screen: 'configure', maxReached: 0,
     });
@@ -1082,21 +957,20 @@ class Component extends DCLogic {
     this.setState({
       location: '', loadedName: '', loadedSiteId: '', loadNotes: null, errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false,
       screen: 'configure', triedNext2: false, btnError: false, maxReached: 0,
-      uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false,
+      uid: this.newUid(), downloaded: false, downloadedName: '', dlUrl: '', dlName: '',
     });
     this.pushHist('configure');
     if (window.scrollTo) window.scrollTo(0, 0);
   };
 
   startAnother = () => {
-    this.clearDraft();
     this.setState({
       orgName: '', email: '', location: '', domain: '', orgNameEnglish: '', showDate: this.defaultShowDate(),
       autostart: true, scope: 'All local users', counting: true, loadOwn: true, checkForUpdates: false,
-      visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false,
+      visibility: 'Show', position: 'Bottom right corner', resetOnSignout: false, resetShown: false,
       buttons: [], seq: 1, loadedSiteId: '', errOrg: false, errEmail: false, errDomain: false, errEnglish: '', errLocation: false, err1Msg: '', errDate: false, screen: 'configure', measure: true, triedNext2: false, btnError: false, maxReached: 0,
       loadedName: '', loadErr: '', loadNotes: null, loadedFile: null, loadedEntries: null, editingId: null, advShown: false,
-      downloaded: false, downloadedName: '', dlUrl: '', dlName: '', emailSent: false, emailSentTo: '', ccOn: false, cc: '', errCc: false, uid: this.newUid(),
+      downloaded: false, downloadedName: '', dlUrl: '', dlName: '', uid: this.newUid(),
     });
     this.pushHist('configure');
     if (window.scrollTo) window.scrollTo(0, 0);
@@ -1242,24 +1116,10 @@ class Component extends DCLogic {
     return new Blob([new Uint8Array(local), new Uint8Array(central), new Uint8Array(end)], { type: 'application/zip' });
   };
 
-  validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v || '').trim());
-  onEmailCopy = (e) => this.setState({ emailCopy: e.target.checked, errCc: false });
-  onCcToggle = (e) => this.setState({ ccOn: e.target.checked, errCc: false });
-  onCc = (e) => this.setState({ cc: e.target.value, errCc: false });
-  emailRecipients = () => {
-    const s = this.state;
-    if (s.emailSent) return s.emailSentTo;
-    const list = [s.email.trim()];
-    if (s.ccOn && this.validEmail(s.cc)) list.push(s.cc.trim());
-    return list.join(', ');
-  };
-  previewEmail = () => { this.setState({ emailFrom: this.state.screen }); this.go('email'); };
-  closeEmail = () => this.go(this.state.emailFrom || 'download');
   download = () => {
     if (!this.checkOrganization()) { this.go('configure'); return; }
     if (!this.checkButtons()) { this.go('customize'); return; }
     if (!this.checkDate()) { this.go('advanced'); return; }
-    if (this.state.emailCopy && this.state.ccOn && !this.validEmail(this.state.cc)) { this.setState({ errCc: true }); return; }
     const json = JSON.stringify(this.buildConfig(), null, 2);
     const blob = this.makeZip('config.json', json);
     if (this.state.dlUrl) { try { URL.revokeObjectURL(this.state.dlUrl); } catch (e) {} }
@@ -1268,9 +1128,7 @@ class Component extends DCLogic {
     const a = document.createElement('a');
     a.href = url; a.download = name;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    const sent = !!this.state.emailCopy;
-    this.clearDraft();
-    this.setState({ downloaded: true, downloadedName: name, dlUrl: url, dlName: name, screen: 'done', emailSent: sent, emailSentTo: sent ? this.emailRecipients() : '' });
+    this.setState({ downloaded: true, downloadedName: name, dlUrl: url, dlName: name, screen: 'done' });
     this.pushHist('done');
     if (window.scrollTo) window.scrollTo(0, 0);
   };
@@ -1427,15 +1285,10 @@ class Component extends DCLogic {
     const predefPill = (kind) => (has(kind) ? '\u2713 Added' : (full ? 'Full' : '+ Add'));
 
     return {
-      hasDraft: !!s.hasDraft && s.screen === 'home', draftLabel: s.draftLabel || 'in progress', resumeDraft: this.resumeDraft, discardDraft: this.discardDraft,
       isHome: s.screen === 'home', isDownloads: s.screen === 'downloads', isConfigure: s.screen === 'configure',
-      isCustomize: s.screen === 'customize', isAdvanced: s.screen === 'advanced', isDownload: s.screen === 'download', isDone: s.screen === 'done', isEmail: s.screen === 'email',
-      emailCopy: !!s.emailCopy, onEmailCopy: this.onEmailCopy, ccOn: !!s.ccOn, onCcToggle: this.onCcToggle, cc: s.cc || '', onCc: this.onCc, errCc: !!s.errCc, ccInputStyle: this.inputStyle(s.errCc) + ';max-width:420px',
-      previewEmail: this.previewEmail, closeEmail: this.closeEmail, emailSent: !!s.emailSent, emailRecipients: this.emailRecipients(),
-      emailPreviewNote: s.emailSent ? 'Sent ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Preview — this is what will be sent when you download',
-      emailDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      isCustomize: s.screen === 'customize', isAdvanced: s.screen === 'advanced', isDownload: s.screen === 'download', isDone: s.screen === 'done',
       dlUrl: s.dlUrl || '#', dlName: s.dlName || 'config.zip', backToDownload: () => this.go('download'),
-      showChrome: s.screen !== 'home' && s.screen !== 'downloads' && s.screen !== 'email',
+      showChrome: s.screen !== 'home' && s.screen !== 'downloads',
       goHome: this.goHome, requestHome: this.requestHome, confirmHomeYes: this.confirmHomeYes, cancelHome: this.cancelHome,
       confirmHome: s.confirmHome, stopProp: this.stopProp, onDialogKey: this.onDialogKey, stayRef: this.stayRef, goDownloads: this.goDownloads,
       gateClosed: !s.gateCfg, gateOpen: !!s.gateCfg, gateErr: s.gateErr || '', hasGateErr: !!s.gateErr,
@@ -1494,7 +1347,7 @@ class Component extends DCLogic {
       checkForUpdates: s.checkForUpdates, onCheckUpdates: this.setChecked('checkForUpdates'), checkUpdatesState: s.checkForUpdates ? 'On' : 'Off', checkUpdatesSw: this.sw(s.checkForUpdates),
       visibility: s.visibility, onVisibility: this.set('visibility'),
       position: s.position, onPosition: this.set('position'),
-      resetOnSignout: s.resetOnSignout, onReset: this.setChecked('resetOnSignout'), resetState: s.resetOnSignout ? 'On' : 'Off', resetSw: this.sw(s.resetOnSignout),
+      resetOnSignout: s.resetOnSignout, resetShown: !!s.resetShown, onReset: this.setChecked('resetOnSignout'), resetState: s.resetOnSignout ? 'On' : 'Off', resetSw: this.sw(s.resetOnSignout),
       next1: this.next1,
       emailErrMsg: s.email.trim() ? 'Enter a valid email address, like you@organization.org.' : 'Enter a contact email.',
       step1Ready: !Object.values(this.organizationProblems()).some(Boolean),
@@ -1532,7 +1385,7 @@ class Component extends DCLogic {
       reviewOpen: !!s.reviewOpen, onReviewToggle: (e) => { e.preventDefault(); this.setState(st => ({ reviewOpen: !st.reviewOpen })); }, reviewLabel: s.reviewOpen ? 'Hide' : 'Show', reviewChevron: 'flex:none;transition:transform .15s;transform:rotate(' + (s.reviewOpen ? '180deg' : '0') + ')',
       jsonOpen: !!s.jsonOpen, onJsonToggle: (e) => { e.preventDefault(); this.setState(st => ({ jsonOpen: !st.jsonOpen })); }, jsonLabel: s.jsonOpen ? 'Hide' : 'Show', jsonChevron: 'flex:none;transition:transform .15s;transform:rotate(' + (s.jsonOpen ? '180deg' : '0') + ')',
       sumOrg: s.orgName || '—', sumSite: this.effectiveSiteId() || '—', sumEmail: s.email || '—', sumLocation: s.location || 'main',
-      sumMeasure: s.measure ? `Yes — show the MorphicBar on ${this.fmtDate(s.showDate)}` : 'No — show the MorphicBar right away',
+      sumMeasure: s.measure ? `On ${this.fmtDate(s.showDate)}` : 'Right away',
       sumAutostart: s.autostart ? `On (${s.scope})` : 'Off',
       sumLoadOwn: s.loadOwn ? 'On' : 'Off',
       sumCheckUpdates: s.checkForUpdates ? 'On' : 'Off',
@@ -1542,11 +1395,7 @@ class Component extends DCLogic {
       download: this.download, startAnother: this.startAnother, duplicateConfig: this.duplicateConfig,
       zipName: this.areaSlug() + '.zip',
       downloaded: !!s.downloaded, downloadedName: s.downloadedName || '',
-      winMsi: 'https://app.morphic.org/downloads/MorphicEnterpriseSetup-x64.msi',
-      winArm: 'https://app.morphic.org/downloads/MorphicEnterpriseSetup-arm64.msi',
-      macPkg: 'https://app.morphic.org/downloads/Morphic.pkg',
       winGuide: 'https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit?usp=share_link&rtpof=true&sd=true',
-      macGuide: 'https://docs.google.com/document/d/1YQ85l8IHtfFefGM2xxswMt26yUGmnkxE/edit?usp=share_link&rtpof=true&sd=true',
     };
   }
 }

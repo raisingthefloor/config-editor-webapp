@@ -70,7 +70,7 @@
   }
 
   function keepsLoadedSiteId(s) {
-    return !!s.loadedSiteId && ((s.location || '').trim() || 'main') === ((s.loadedLoc || '').trim() || 'main');
+    return !!s.loadedSiteId && !s.loadedSiteIdFollows;
   }
 
   function domainMissing(s) {
@@ -124,6 +124,8 @@
     { path: ['morphicBar', 'defaultLocation'], entries: ['position'] },
     { path: ['morphicBar', 'visibilityAfterLogin'], entries: ['visibility'] },
     { path: ['hideMorphicAfterLoginUntil'], entries: ['measure', 'showDate'] },
+    { path: ['_builder', 'domain'], entries: ['domain'] },
+    { path: ['_builder', 'organizationNameInEnglish'], entries: ['orgNameEnglish'] },
     { path: ['_builder', 'location'], entries: ['location'] },
   ];
 
@@ -205,11 +207,21 @@
         visibilityAfterLogin: visMap[s.visibility] || 'show',
       },
       telemetry: { siteId: effectiveSiteId(s) },
-      _builder: { location: s.location || 'main' },
+      _builder: builderSection(s),
       version: 0,
     };
     if (s.measure && isCalendarDate(s.showDate)) cfg.hideMorphicAfterLoginUntil = s.showDate;
     return cfg;
+  }
+
+  function builderSection(s) {
+    const section = {};
+    const domain = String(s.domain || '').trim();
+    if (domain) section.domain = domain;
+    const english = String(s.orgNameEnglish || '').trim();
+    if (english && needsEnglishName(s)) section.organizationNameInEnglish = english;
+    section.location = s.location || 'main';
+    return section;
   }
 
   function readConfig(raw, defaultShowDate) {
@@ -240,14 +252,19 @@
     const counting = isSection(feat.atUseCounter) && feat.atUseCounter.enabled === true;
     if (measure && !counting) loadNotes.counterOn = true;
     const location = typeof b.location === 'string' ? b.location : '';
+    const orgName = cfg.organizationName || '';
+    const domain = typeof b.domain === 'string' ? b.domain : '';
+    const orgNameEnglish = typeof b.organizationNameInEnglish === 'string' ? b.organizationNameInEnglish : '';
+    const loadedSiteId = (cfg.telemetry && cfg.telemetry.siteId) || '';
     return {
-      orgName: cfg.organizationName || '',
+      orgName,
       location,
       email: '',
-      domain: '',
-      orgNameEnglish: '',
-      loadedSiteId: (cfg.telemetry && cfg.telemetry.siteId) || '',
-      loadedOrg: cfg.organizationName || '',
+      domain,
+      orgNameEnglish,
+      loadedSiteId,
+      loadedSiteIdFollows: loadedSiteId.includes('-') && loadedSiteId === siteIdFrom({ domain, orgName, orgNameEnglish, location }),
+      loadedOrg: orgName,
       loadedLoc: location,
       measure,
       showDate,
