@@ -374,6 +374,10 @@
     }
   }
 
+  function notificationBody(contactEmail, configFileText) {
+    return JSON.stringify({ contactEmail: String(contactEmail || '').trim(), configJson: configFileText });
+  }
+
   function keptButtonLabel(item) {
     return (item && (item.label || item.function || item.feature)) || '';
   }
@@ -382,7 +386,7 @@
     APPLICATIONS, applicationLabel, keptButtonLabel, isCalendarDate, isShowDateAllowed, isPastDate, looksLikeConfig,
     withScheme, webAddressProblem,
     domainHost, isDomain, plainLettersOf, keepsLoadedSiteId, domainMissing, needsEnglishName, englishNameProblem,
-    isLocation, siteIdFrom, effectiveSiteId, buildConfig, readConfig,
+    isLocation, siteIdFrom, effectiveSiteId, buildConfig, readConfig, notificationBody,
   };
   if (typeof module === 'object' && module && module.exports) {
     module.exports = api;

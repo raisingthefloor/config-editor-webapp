@@ -1128,9 +1128,26 @@ class Component extends DCLogic {
     const a = document.createElement('a');
     a.href = url; a.download = name;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    this.notify(json);
     this.setState({ downloaded: true, downloadedName: name, dlUrl: url, dlName: name, screen: 'done' });
     this.pushHist('done');
     if (window.scrollTo) window.scrollTo(0, 0);
+  };
+
+  notify = (json) => {
+    const warn = (what, detail) => { try { console.warn('Config Builder: download notification ' + what + '.', detail); } catch (e) {} };
+    try {
+      fetch('/api/v1/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: window.MorphicConfigFile.notificationBody(this.state.email, json),
+        keepalive: true,
+      })
+        .then((response) => { if (!response.ok) warn('was refused', 'HTTP ' + response.status); })
+        .catch((error) => warn('was not sent', error));
+    } catch (error) {
+      warn('was not sent', error);
+    }
   };
 
   sw(on) {
