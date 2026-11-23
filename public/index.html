@@ -271,7 +271,7 @@
       <div style="{{ dateRowStyle }}">
         <label for="showDate" style="font-size:15px;font-weight:700;color:var(--slate-deep);flex:none">Show the MorphicBar on</label>
         <div style="display:flex;flex-direction:column;gap:5px">
-          <input type="date" id="showDate" value="{{ showDate }}" min="0001-01-01" max="9999-12-31" onInput="{{ onShowDate }}" aria-invalid="{{ errDate }}" aria-describedby="{{ showDateDescribedBy }}" style="{{ showDateStyle }}">
+          <input type="{{ showDateType }}" id="showDate" value="{{ showDate }}" min="0001-01-01" max="9999-12-31" onInput="{{ onShowDate }}" aria-invalid="{{ errDate }}" aria-describedby="{{ showDateDescribedBy }}" style="{{ showDateStyle }}">
           <sc-if value="{{ errDate }}"><div id="showDate-err" style="color:var(--error);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px"><span aria-hidden="true" style="font-size:15px">⚠</span>Choose a date.</div></sc-if>
           <div id="showDate-hint" style="font-size:13px;color:var(--ink-soft)"><span id="showDate-past" role="status" style="display:block">{{ showDatePastNote }}</span>Pick a date 3–4 weeks after your planned rollout.</div>
         </div>
@@ -1351,7 +1351,7 @@ class Component extends DCLogic {
       fileLabelStyle: 'font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:12px 32px;cursor:pointer;background:#fff;border:1.5px solid var(--green);color:var(--green-deep);display:inline-block;text-align:center;flex:1 1 260px',
       measure: s.measure, measureNoChecked: !s.measure,
       measureYes: () => this.setState({ measure: true }), measureNo: () => this.setState({ measure: false, errDate: false }),
-      showDate: s.showDate, onShowDate: (e) => this.setState({ showDate: e.target.value, errDate: false }),
+      showDate: s.showDate, showDateType: 'date', onShowDate: (e) => this.setState({ showDate: e.target.value, errDate: false }),
       showDatePastNote: s.measure && window.MorphicConfigFile.isPastDate(s.showDate, this.todayIso()) ? 'This date is in the past, so the MorphicBar will show right away.' : '',
       errDate: !!s.errDate, showDateDescribedBy: s.errDate ? 'showDate-err showDate-hint' : 'showDate-hint',
       showDateStyle: `font:inherit;padding:9px 11px;border:${s.errDate ? '2px solid var(--error)' : '1.5px solid var(--field)'};border-radius:8px;background:${s.errDate ? '#fdf3f2' : '#fbfcfb'};width:180px`,
